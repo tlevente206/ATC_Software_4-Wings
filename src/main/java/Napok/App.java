@@ -21,6 +21,9 @@ public class App extends Application {
         //komment
         //megtöbb komment
         //commit to tesztBranch
+
+
+        
     }
 
 }
