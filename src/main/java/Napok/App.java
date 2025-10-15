@@ -22,6 +22,7 @@ public class App extends Application {
         //megtöbb komment
         //commit to tesztBranch
         //teszt commit by tlevente
+        //legyen meg egy teszt
 
 
         
