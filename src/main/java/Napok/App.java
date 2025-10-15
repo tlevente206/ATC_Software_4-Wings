@@ -19,6 +19,7 @@ public class App extends Application {
         stage.setTitle("Repter Iranyitas");
         stage.show();
         //komment
+        //megtöbb komment
     }
 
 }
