@@ -7,4 +7,9 @@ public class MainController {
     private void initialize() {
 
     }
+
+    private void test()
+    {
+
+    }
 }
