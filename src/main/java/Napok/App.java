@@ -20,6 +20,7 @@ public class App extends Application {
         stage.show();
         //komment
         //megtöbb komment
+        //commit to tesztBranch
     }
 
 }
