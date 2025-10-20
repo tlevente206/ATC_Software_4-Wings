@@ -20,7 +20,6 @@ public class App extends Application {
         stage.show();
         //komment
         //megtöbb komment
-        //commentek aradata
     }
 
 }
