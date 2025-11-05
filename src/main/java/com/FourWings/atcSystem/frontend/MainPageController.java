@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.springframework.stereotype.Component;
@@ -38,11 +39,22 @@ public class MainPageController {
     @FXML
     private TextField userInput;
 
+    @FXML
+    private Label registerLabel;
+
     String email;
     String password;
     String phone;
     String user;
     String name;
+
+    private void clearForm() {
+        nevInput.clear();
+        userInput.clear();
+        emailInput.clear();
+        passInput.clear();
+        phoneInput.clear();
+    }
 
     public void register(ActionEvent event) {
         if (userInput.getText().isBlank() || passInput.getText().isBlank()) {
@@ -62,7 +74,11 @@ public class MainPageController {
         new Thread(() -> {
             try {
                 userService.register(u);
-                Platform.runLater(() -> System.out.println("Sikeres regisztráció"));
+                Platform.runLater(() -> {
+                    registerLabel.setText("Sikeres regisztracio");
+                    clearForm();
+                });
+
             } catch (Exception ex) {
                 Platform.runLater(() -> System.out.println("Hiba: " + ex.getMessage()));
             }

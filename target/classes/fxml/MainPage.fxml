@@ -21,5 +21,6 @@
       <Label layoutX="32.0" layoutY="210.0" text="Jelszo" />
       <Label layoutX="29.0" layoutY="243.0" text="Telefon" />
       <Button fx:id="registerButton" layoutX="174.0" layoutY="286.0" mnemonicParsing="false" onAction="#register" text="Regisztracio" />
+      <Label fx:id="registerLabel" layoutX="104.0" layoutY="338.0" />
    </children>
 </AnchorPane>

@@ -14,6 +14,5 @@ public class UserService {
     @Transactional
     public void register(User u) {
         userRepository.save(u);
-
     }
 }
