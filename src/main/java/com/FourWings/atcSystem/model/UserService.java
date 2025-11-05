@@ -9,10 +9,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    public UserService(UserRepository userRepository) { this.userRepository = userRepository; }
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository,  PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public boolean isUsernameAvailable(String username) {
+        return !userRepository.existsByUsername(username);
+    }
 
     @Transactional
     public void register(User u) {
+        u.setPassword(passwordEncoder.encode(u.getPassword()));
         userRepository.save(u);
     }
 }

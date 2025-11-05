@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.frontend;
 import com.FourWings.atcSystem.model.User;
 import com.FourWings.atcSystem.model.UserService;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @Component
 public class MainPageController {
@@ -21,32 +23,15 @@ public class MainPageController {
         this.userService = userService;
     }
 
-    @FXML
-    private TextField emailInput;
+    @FXML private TextField emailInput;
+    @FXML private TextField nevInput;
+    @FXML private PasswordField passInput;
+    @FXML private TextField phoneInput;
+    @FXML private Button registerButton;
+    @FXML private TextField userInput;
+    @FXML private Label registerLabel;
 
-    @FXML
-    private TextField nevInput;
-
-    @FXML
-    private PasswordField passInput;
-
-    @FXML
-    private TextField phoneInput;
-
-    @FXML
-    private Button registerButton;
-
-    @FXML
-    private TextField userInput;
-
-    @FXML
-    private Label registerLabel;
-
-    String email;
-    String password;
-    String phone;
-    String user;
-    String name;
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._-]{3,20}$");
 
     private void clearForm() {
         nevInput.clear();
@@ -57,32 +42,57 @@ public class MainPageController {
     }
 
     public void register(ActionEvent event) {
-        if (userInput.getText().isBlank() || passInput.getText().isBlank()) {
-            System.out.println("Felhasználónév és jelszó kötelező.");
+        String username = userInput.getText().trim();
+        String password = passInput.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            registerLabel.setText("Kitöltés kötelező: felhasználónév és jelszó.");
             return;
         }
-        User u = User.builder()
-                .name(nevInput.getText().trim())
-                .username(userInput.getText().trim())
-                .email(emailInput.getText().trim())
-                .password(passInput.getText())          // (élesben: hash-eld!)
-                .phone(phoneInput.getText().trim())
-                .IsAdmin(false)
-                .build();
+        if (!USERNAME_PATTERN.matcher(username).matches()) {
+            registerLabel.setText("Felhasználónév: 3–20 karakter, csak betűk, számok, ._- engedélyezett.");
+            return;
+        }
+        if (password.length() < 8) {
+            registerLabel.setText("Jelszó túl rövid (min. 8 karakter).");
+            return;
+        }
 
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // DB ellenőrzés
+                boolean available = userService.isUsernameAvailable(username);
+                if (!available) {
+                    throw new IllegalStateException("A felhasználónév már foglalt.");
+                }
 
-        new Thread(() -> {
-            try {
-                userService.register(u);
-                Platform.runLater(() -> {
-                    registerLabel.setText("Sikeres regisztracio");
-                    clearForm();
-                });
+                User u = User.builder()
+                        .name(nevInput.getText().trim())
+                        .username(username)
+                        .email(emailInput.getText().trim())
+                        .password(password)   // a service fogja hash-elni
+                        .phone(phoneInput.getText().trim())
+                        .IsAdmin(false)
+                        .build();
 
-            } catch (Exception ex) {
-                Platform.runLater(() -> System.out.println("Hiba: " + ex.getMessage()));
+                userService.register(u); // mentés + jelszó-hash a service-ben
+                return null;
             }
-        }, "save-user").start();
+        };
+
+        task.setOnSucceeded(e -> {
+            registerLabel.setText("Sikeres regisztráció.");
+            clearForm();
+        });
+
+        task.setOnFailed(e -> {
+            Throwable ex = task.getException();
+            registerLabel.setText("Hiba: " + (ex != null ? ex.getMessage() : "ismeretlen"));
+        });
+
+        new Thread(task, "check-and-save-user").start();
+
     }
 
 }
