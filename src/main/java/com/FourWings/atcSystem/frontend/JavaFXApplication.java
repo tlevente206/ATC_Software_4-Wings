@@ -1,16 +1,34 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.AtcSystemApplication;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class JavaFXApplication extends Application {
+    private ConfigurableApplicationContext ctx;
+
     @Override
     public void start(Stage stage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainPage.fxml"));
+        ctx = SpringApplication.run(AtcSystemApplication.class);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainPage.fxml"));
+        loader.setControllerFactory(ctx::getBean);
+        Parent root = loader.load();
         stage.setScene(new Scene(root));
         stage.show();
     }
+
+    @Override
+    public void stop() {
+        if (ctx != null) {
+            ctx.close();
+        }
+        Platform.exit();
+    }
+
 }
