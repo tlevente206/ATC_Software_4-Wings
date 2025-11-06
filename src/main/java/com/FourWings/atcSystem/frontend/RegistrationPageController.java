@@ -88,12 +88,12 @@ public class RegistrationPageController {
                         .name(nevInput.getText().trim())
                         .username(username)
                         .email(emailInput.getText().trim())
-                        .password(password)   // a service fogja hash-elni
+                        .password(password)
                         .phone(phoneInput.getText().trim())
                         .IsAdmin(false)
                         .build();
 
-                userService.register(u); // mentés + jelszó-hash a service-ben
+                userService.register(u);
                 return null;
             }
         };

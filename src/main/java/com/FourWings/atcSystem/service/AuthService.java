@@ -13,13 +13,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean login(String username, String rawPassword) {
+    public User loginAndGetUser(String username, String rawPassword) {
         var userOpt = userRepository.findByUsername(username);
-
-        if (userOpt.isEmpty()) return false;
+        if (userOpt.isEmpty()) return null;
 
         User u = userOpt.get();
-
-        return passwordEncoder.matches(rawPassword, u.getPassword());
+        if (passwordEncoder.matches(rawPassword, u.getPassword())) {
+            return u;
+        }
+        return null;
     }
 }

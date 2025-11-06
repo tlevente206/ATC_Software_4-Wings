@@ -17,10 +17,8 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            // Spring Boot indítása
             ctx = SpringApplication.run(AtcSystemApplication.class);
 
-            // Főképernyő betöltése – controller Springből
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainPage.fxml"));
             loader.setControllerFactory(ctx::getBean);
             Parent root = loader.load();

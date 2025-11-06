@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SpringContext;
+import com.FourWings.atcSystem.model.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -36,7 +37,6 @@ public class MainPageController {
     @FXML
     private void goToRegister(ActionEvent event) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RegistrationPage.fxml"));
-        // FONTOS: Spring példányosítja a controllert
         loader.setControllerFactory(SpringContext::getBean);
         Parent root = loader.load();
 
@@ -46,23 +46,45 @@ public class MainPageController {
         stage.show();
     }
 
+    private void openUserDataPage(Stage currentStage, Object loggedInUser) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserDataPage.fxml"));
+            loader.setControllerFactory(com.FourWings.atcSystem.config.SpringContext::getBean);
+            Parent root = loader.load();
+
+            UserDataPageController ctrl = loader.getController();
+            if (loggedInUser != null) {
+                ctrl.initWithUser((User) loggedInUser);
+            }
+
+            currentStage.setScene(new Scene(root, 600, 400));
+            currentStage.setTitle("ATC – Dashboard");
+            currentStage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            statusLabel.setText("Nem sikerült megnyitni a Dashboardot: " + ex.getMessage());
+        }
+    }
+
     @FXML
     private void onLogin(ActionEvent event) {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        // háttérszálon futtatni érdemes, mint a regisztrációt
-        Task<Boolean> task = new Task<>() {
+        Task<User> task = new Task<>() {
             @Override
-            protected Boolean call() {
-                return authService.login(username, password);
+            protected User call() {
+                return authService.loginAndGetUser(username, password);
             }
         };
 
         task.setOnSucceeded(e -> {
-            if (task.getValue()) {
+            User loggedUser = task.getValue();
+            if (loggedUser != null) {
                 statusLabel.setText("Sikeres bejelentkezés!");
-                // itt lehet átmenni másik ablakra
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                openUserDataPage(stage, loggedUser);  // <-- átadod!!!
             } else {
                 statusLabel.setText("Hibás felhasználónév vagy jelszó");
             }
