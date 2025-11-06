@@ -2,25 +2,24 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.MainPageController">
    <children>
-      <TextField fx:id="nevInput" layoutX="98.0" layoutY="109.0" />
-      <TextField fx:id="userInput" layoutX="98.0" layoutY="144.0" />
-      <PasswordField fx:id="passInput" layoutX="98.0" layoutY="206.0" />
-      <TextField fx:id="emailInput" layoutX="98.0" layoutY="175.0" />
-      <TextField fx:id="phoneInput" layoutX="98.0" layoutY="239.0" />
-      <Label layoutX="119.0" layoutY="84.0" text="Add meg az adataidat" />
-      <Label layoutX="38.0" layoutY="113.0" text="Nev" />
-      <Label layoutX="25.0" layoutY="148.0" text="Felh. nev" />
-      <Label layoutX="32.0" layoutY="179.0" text="E-mail" />
-      <Label layoutX="32.0" layoutY="210.0" text="Jelszo" />
-      <Label layoutX="29.0" layoutY="243.0" text="Telefon" />
-      <Button fx:id="registerButton" layoutX="174.0" layoutY="286.0" mnemonicParsing="false" onAction="#register" text="Regisztracio" />
-      <Label fx:id="registerLabel" layoutX="104.0" layoutY="338.0" />
+      <Label layoutX="206.0" layoutY="36.0" text="Bejelentkezés">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <TextField fx:id="usernameField" layoutX="220.0" layoutY="107.0" />
+      <TextField fx:id="passwordField" layoutX="220.0" layoutY="143.0" />
+      <Label fx:id="statusLabel" layoutX="285.0" layoutY="253.0" prefHeight="17.0" prefWidth="0.0" />
+      <Label layoutX="117.0" layoutY="111.0" text="Felhasználónév" />
+      <Label layoutX="167.0" layoutY="148.0" text="Jelszó" />
+      <Button fx:id="loginButton" layoutX="253.0" layoutY="187.0" mnemonicParsing="false" text="Bejelentkezés" />
+      <Button fx:id="registerButton" layoutX="257.0" layoutY="249.0" mnemonicParsing="false" onAction="#goToRegister" text="Regisztráció" />
+      <Label layoutX="228.0" layoutY="226.0" text="Ha nincs fiókod, regisztrálj:" />
    </children>
 </AnchorPane>

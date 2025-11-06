@@ -1,7 +1,9 @@
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/AtcSystemApplication.java
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/config/SecurityConfig.java
+/Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/config/SpringContext.java
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/frontend/JavaFXApplication.java
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/frontend/MainPageController.java
+/Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/frontend/RegistrationPageController.java
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/model/User.java
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/model/UserRepository.java
 /Users/tothleventelaszlo/Desktop/Projekthez/src/main/java/com/FourWings/atcSystem/model/UserService.java
