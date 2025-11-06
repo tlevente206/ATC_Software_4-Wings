@@ -3,3 +3,5 @@ com/FourWings/atcSystem/config/SecurityConfig.class
 com/FourWings/atcSystem/model/UserService.class
 com/FourWings/atcSystem/frontend/RegistrationPageController.class
 com/FourWings/atcSystem/config/SpringContext.class
+com/FourWings/atcSystem/frontend/MainPageController$1.class
+com/FourWings/atcSystem/service/AuthService.class

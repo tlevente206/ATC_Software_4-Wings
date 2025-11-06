@@ -1,6 +1,8 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SpringContext;
+import com.FourWings.atcSystem.service.AuthService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
@@ -17,9 +20,16 @@ import java.io.IOException;
 
 @Component
 public class MainPageController {
+
+    private final AuthService authService;
+
+    public MainPageController(AuthService authService) {
+        this.authService = authService;
+    }
+
     @FXML Label statusLabel;
     @FXML private TextField usernameField;
-    @FXML private TextField passwordField;
+    @FXML private PasswordField passwordField;
     @FXML private Button loginButton;
     @FXML private Button registerButton;
 
@@ -34,5 +44,30 @@ public class MainPageController {
         stage.setScene(new Scene(root, 600, 400));
         stage.setTitle("Regisztráció");
         stage.show();
+    }
+
+    @FXML
+    private void onLogin(ActionEvent event) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+        // háttérszálon futtatni érdemes, mint a regisztrációt
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return authService.login(username, password);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            if (task.getValue()) {
+                statusLabel.setText("Sikeres bejelentkezés!");
+                // itt lehet átmenni másik ablakra
+            } else {
+                statusLabel.setText("Hibás felhasználónév vagy jelszó");
+            }
+        });
+
+        new Thread(task).start();
     }
 }

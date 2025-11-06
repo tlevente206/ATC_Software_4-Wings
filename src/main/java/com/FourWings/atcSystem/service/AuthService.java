@@ -1,0 +1,25 @@
+package com.FourWings.atcSystem.service;
+
+import com.FourWings.atcSystem.model.User;
+import com.FourWings.atcSystem.model.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public boolean login(String username, String rawPassword) {
+        var userOpt = userRepository.findByUsername(username);
+
+        if (userOpt.isEmpty()) return false;
+
+        User u = userOpt.get();
+
+        return passwordEncoder.matches(rawPassword, u.getPassword());
+    }
+}
