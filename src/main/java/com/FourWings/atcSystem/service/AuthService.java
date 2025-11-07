@@ -1,7 +1,7 @@
 package com.FourWings.atcSystem.service;
 
-import com.FourWings.atcSystem.model.User;
-import com.FourWings.atcSystem.model.UserRepository;
+import com.FourWings.atcSystem.model.user.User;
+import com.FourWings.atcSystem.model.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.FourWings.atcSystem.model;
+package com.FourWings.atcSystem.model.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

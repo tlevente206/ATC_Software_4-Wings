@@ -1,4 +1,4 @@
-package com.FourWings.atcSystem.model;
+package com.FourWings.atcSystem.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

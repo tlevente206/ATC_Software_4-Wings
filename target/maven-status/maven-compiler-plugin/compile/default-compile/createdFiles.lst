@@ -1,7 +1,10 @@
+com/FourWings/atcSystem/model/user/User$UserBuilder.class
+com/FourWings/atcSystem/model/user/UserRepository.class
+com/FourWings/atcSystem/model/user/UserService.class
 com/FourWings/atcSystem/frontend/UserDataPageController.class
+com/FourWings/atcSystem/model/user/User.class
 com/FourWings/atcSystem/frontend/RegistrationPageController$1.class
 com/FourWings/atcSystem/config/SecurityConfig.class
-com/FourWings/atcSystem/model/UserService.class
 com/FourWings/atcSystem/frontend/RegistrationPageController.class
 com/FourWings/atcSystem/config/SpringContext.class
 com/FourWings/atcSystem/frontend/MainPageController$1.class

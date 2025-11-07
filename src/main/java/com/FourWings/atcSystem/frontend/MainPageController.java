@@ -1,7 +1,7 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SpringContext;
-import com.FourWings.atcSystem.model.User;
+import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -16,8 +16,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public class MainPageController {

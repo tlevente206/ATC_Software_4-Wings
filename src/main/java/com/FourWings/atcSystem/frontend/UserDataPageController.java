@@ -1,6 +1,6 @@
 package com.FourWings.atcSystem.frontend;
 
-import com.FourWings.atcSystem.model.User;
+import com.FourWings.atcSystem.model.user.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.springframework.stereotype.Component;

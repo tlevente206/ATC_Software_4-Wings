@@ -1,8 +1,8 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SpringContext;
-import com.FourWings.atcSystem.model.User;
-import com.FourWings.atcSystem.model.UserService;
+import com.FourWings.atcSystem.model.user.User;
+import com.FourWings.atcSystem.model.user.UserService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
