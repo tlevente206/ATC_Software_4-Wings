@@ -1,6 +1,8 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SpringContext;
+import com.FourWings.atcSystem.model.airport.Airports;
+import com.FourWings.atcSystem.model.airport.AirportsService;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;
@@ -21,9 +23,11 @@ import org.springframework.stereotype.Component;
 public class MainPageController {
 
     private final AuthService authService;
+    private final AirportsService airportsService;
 
-    public MainPageController(AuthService authService) {
+    public MainPageController(AuthService authService, AirportsService airportsService) {
         this.authService = authService;
+        this.airportsService = airportsService;
     }
 
     @FXML Label statusLabel;
@@ -44,7 +48,7 @@ public class MainPageController {
         stage.show();
     }
 
-    private void openUserDataPage(Stage currentStage, Object loggedInUser) {
+    private void openUserDataPage(Stage currentStage, Object loggedInUser, Object lastAirport) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserDataPage.fxml"));
             loader.setControllerFactory(com.FourWings.atcSystem.config.SpringContext::getBean);
@@ -53,6 +57,7 @@ public class MainPageController {
             UserDataPageController ctrl = loader.getController();
             if (loggedInUser != null) {
                 ctrl.initWithUser((User) loggedInUser);
+                ctrl.setLastAirport((Airports) lastAirport);
             }
 
             currentStage.setScene(new Scene(root, 600, 400));
@@ -70,19 +75,24 @@ public class MainPageController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        Task<User> task = new Task<>() {
+        record LoginOutcome(User user, Airports lastAirport) {}
+
+        Task<LoginOutcome> task = new Task<>() {
             @Override
-            protected User call() {
-                return authService.loginAndGetUser(username, password);
+            protected LoginOutcome call() {
+                User u = authService.loginAndGetUser(username, password);
+                if (u == null) return new LoginOutcome(null, null);
+                Airports last = airportsService.getLastAdded();
+                return new LoginOutcome(u, last);
             }
         };
 
         task.setOnSucceeded(e -> {
-            User loggedUser = task.getValue();
-            if (loggedUser != null) {
+            LoginOutcome out = task.getValue();
+            if (out.user() != null) {
                 statusLabel.setText("Sikeres bejelentkezés!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                openUserDataPage(stage, loggedUser);  // <-- átadod!!!
+                openUserDataPage(stage, out.user(), out.lastAirport());  // <-- átadod!!!
             } else {
                 statusLabel.setText("Hibás felhasználónév vagy jelszó");
             }

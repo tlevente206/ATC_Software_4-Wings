@@ -21,5 +21,4 @@ public class User {
     String email;
     String phone;
     boolean IsAdmin;
-
 }
