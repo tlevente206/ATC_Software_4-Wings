@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.model.aircraft.Aircraft;
+import com.FourWings.atcSystem.model.airline.Airline;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.user.User;
 import javafx.fxml.FXML;
@@ -21,6 +22,7 @@ public class UserDataPageController {
     private User loggedUser;
     private Airports airports;
     private Aircraft aircraft;
+    private Airline airline;
 
     public void initWithUser(User user) {
         this.loggedUser = user;
@@ -38,5 +40,10 @@ public class UserDataPageController {
     public void setLastAircraft(Aircraft aircraft) {
         this.aircraft = aircraft;
         System.out.println(aircraft.toString());
+    }
+
+    public void setLastAirline(Airline airline) {
+        this.airline = airline;
+        System.out.println(airline.toString());
     }
 }
