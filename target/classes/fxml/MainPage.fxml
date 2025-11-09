@@ -19,6 +19,7 @@
             <image>
                <Image url="@../images/1.png" />
             </image></ImageView>
+         <Label fx:id="motivaion" layoutX="69.0" layoutY="307.0" prefHeight="85.0" prefWidth="213.0" text="Ide jön a motivációs üzenet" textFill="WHITE" />
         </children>
     </AnchorPane>
 
@@ -33,11 +34,12 @@
             <Label layoutX="93.0" layoutY="113.0" text="Felhasználónév" />
             <TextField id="UsernameField" fx:id="usernameField" layoutX="213.0" layoutY="109.0" text="username" />
             <Label layoutX="118.0" layoutY="149.0" prefHeight="17.0" prefWidth="40.0" text="Jelszó" />
-            <PasswordField id="PasswordField" fx:id="passwordField" layoutX="213.0" layoutY="145.0" promptText="password" />
+            <PasswordField id="PasswordField" fx:id="passwordField" layoutX="213.0" layoutY="145.0" text="password" />
             <Button id="Button" fx:id="loginButton" layoutX="183.0" layoutY="239.0" onAction="#onLogin" prefHeight="25.0" prefWidth="90.0" text="Bejelentkezés" />
         <!-- onLogin -->
             <Label layoutX="156.0" layoutY="321.0" text="Ha nincs fiókod, regisztrálj:" />
-         <Button layoutX="188.0" layoutY="350.0" mnemonicParsing="false" text="Regisztráció" />
+         <Button fx:id="registerButton" layoutX="188.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToRegister" text="Regisztráció" />
+            <Label fx:id="statusLabel" layoutX="82.0" layoutY="274.0" prefHeight="41.0" prefWidth="346.0" />
         </children>
     </AnchorPane>
 </HBox>
