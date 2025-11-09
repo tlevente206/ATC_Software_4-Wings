@@ -48,7 +48,7 @@ public class MainPageController {
         Parent root = loader.load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root, 800, 400));
         stage.setTitle("Regisztráció");
         stage.show();
     }
@@ -66,7 +66,7 @@ public class MainPageController {
                 ctrl.setLastAircraft((Aircraft)  lastAircraft);
             }
 
-            currentStage.setScene(new Scene(root, 600, 400));
+            currentStage.setScene(new Scene(root, 800, 400));
             currentStage.setTitle("ATC – Dashboard");
             currentStage.show();
 

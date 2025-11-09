@@ -23,20 +23,21 @@
     </AnchorPane>
 
     <!-- Jobb oldal: Login form -->
-    <AnchorPane>
+    <AnchorPane prefHeight="400.0" prefWidth="458.0" style="-fx-background-color: #ADD8E6;">
         <children>
-            <Label layoutX="100.0" layoutY="36.0" text="Bejelentkezés">
+            <Label layoutX="132.0" layoutY="36.0" text="Bejelentkezés">
                 <font>
                     <Font size="32.0" />
                 </font>
             </Label>
-            <Label layoutX="60.0" layoutY="111.0" text="Felhasználónév" />
-            <TextField fx:id="usernameField" layoutX="180.0" layoutY="107.0" />
-            <Label layoutX="110.0" layoutY="148.0" text="Jelszó" />
-            <PasswordField fx:id="passwordField" layoutX="180.0" layoutY="144.0" />
+            <Label layoutX="93.0" layoutY="113.0" text="Felhasználónév" />
+            <TextField id="UsernameField" fx:id="usernameField" layoutX="213.0" layoutY="109.0" text="username" />
+            <Label layoutX="118.0" layoutY="149.0" prefHeight="17.0" prefWidth="40.0" text="Jelszó" />
+            <PasswordField id="PasswordField" fx:id="passwordField" layoutX="213.0" layoutY="145.0" promptText="password" />
+            <Button id="Button" fx:id="loginButton" layoutX="183.0" layoutY="239.0" onAction="#onLogin" prefHeight="25.0" prefWidth="90.0" text="Bejelentkezés" />
         <!-- onLogin -->
-            <Label layoutX="150.0" layoutY="226.0" text="Ha nincs fiókod, regisztrálj:" />
-            <Button fx:id="registerButton" layoutX="180.0" layoutY="249.0" />
+            <Label layoutX="156.0" layoutY="321.0" text="Ha nincs fiókod, regisztrálj:" />
+         <Button layoutX="188.0" layoutY="350.0" mnemonicParsing="false" text="Regisztráció" />
         </children>
     </AnchorPane>
 </HBox>

@@ -24,7 +24,7 @@ public class JavaFXApplication extends Application {
             Parent root = loader.load();
 
             stage.setTitle("ATC System");
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 800, 400));
             stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
