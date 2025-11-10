@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.frontend;
 import com.FourWings.atcSystem.model.aircraft.Aircraft;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.user.User;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.springframework.stereotype.Component;
@@ -38,5 +39,8 @@ public class UserDataPageController {
     public void setLastAircraft(Aircraft aircraft) {
         this.aircraft = aircraft;
         System.out.println(aircraft.toString());
+    }
+
+    public void toHome(ActionEvent actionEvent) {
     }
 }
