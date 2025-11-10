@@ -76,6 +76,41 @@ public class MainPageController {
         }
     }
 
+    /*private void openHomePage(Stage currentStage, Object loggedInUser, Object lastAirport, Object lastAircraft) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            HomePageController ctrl = loader.getController();
+            if (loggedInUser != null) {
+                ctrl.initWithUser((User) loggedInUser);
+                ctrl.setLastAirport((Airports) lastAirport);
+                ctrl.setLastAircraft((Aircraft)  lastAircraft);
+            }
+
+            currentStage.setScene(new Scene(root, 600, 400));
+            currentStage.setTitle("ATC – Dashboard");
+            currentStage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            statusLabel.setText("Nem sikerült megnyitni a Dashboardot: " + ex.getMessage());
+        }
+    }*/
+
+    @FXML
+    private void openHomePage(ActionEvent event) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
+        loader.setControllerFactory(SpringContext::getBean);
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 600, 400));
+        stage.setTitle("Regisztráció");
+        stage.show();
+    }
+
     @FXML
     private void onLogin(ActionEvent event) {
         String username = usernameField.getText().trim();
@@ -99,7 +134,7 @@ public class MainPageController {
             if (out.user() != null) {
                 statusLabel.setText("Sikeres bejelentkezés!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                openUserDataPage(stage, out.user(), out.lastAirport(), out.lastAircraft());  // <-- átadod!!!
+                openHomePage();  // <-- átadod!!!
             } else {
                 statusLabel.setText("Hibás felhasználónév vagy jelszó");
             }
