@@ -2,7 +2,9 @@ package com.FourWings.atcSystem.frontend;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HomePageController {
 
     @FXML

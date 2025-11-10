@@ -3,7 +3,6 @@ package com.FourWings.atcSystem.frontend;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.aircraft.Aircraft;
 import com.FourWings.atcSystem.model.aircraft.AircraftService;
-import com.FourWings.atcSystem.model.aircraft.AircraftStatus;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
 import com.FourWings.atcSystem.model.user.User;
@@ -100,15 +99,14 @@ public class MainPageController {
     }*/
 
     @FXML
-    private void openHomePage(ActionEvent event) throws Exception {
+    private void openHomePage(Stage currentStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
         loader.setControllerFactory(SpringContext::getBean);
         Parent root = loader.load();
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
-        stage.setTitle("Regisztráció");
-        stage.show();
+        currentStage.setScene(new Scene(root, 600, 400));
+        currentStage.setTitle("ATC – Dashboard");
+        currentStage.show();
     }
 
     @FXML
@@ -134,7 +132,11 @@ public class MainPageController {
             if (out.user() != null) {
                 statusLabel.setText("Sikeres bejelentkezés!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                openHomePage(stage);  // <-- átadod!!!
+                try {
+                    openHomePage(stage);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             } else {
                 statusLabel.setText("Hibás felhasználónév vagy jelszó");
             }
