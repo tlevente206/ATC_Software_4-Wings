@@ -134,7 +134,7 @@ public class MainPageController {
             if (out.user() != null) {
                 statusLabel.setText("Sikeres bejelentkezés!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                openHomePage();  // <-- átadod!!!
+                openHomePage(stage);  // <-- átadod!!!
             } else {
                 statusLabel.setText("Hibás felhasználónév vagy jelszó");
             }
