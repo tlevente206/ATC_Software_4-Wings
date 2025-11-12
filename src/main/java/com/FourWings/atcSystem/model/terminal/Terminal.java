@@ -1,5 +1,6 @@
-package com.FourWings.atcSystem.model.gate;
+package com.FourWings.atcSystem.model.terminal;
 
+import com.FourWings.atcSystem.model.airport.Airports;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,25 +13,37 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "gates")
-public class Gate {
+@Table(name = "terminals")
+@ToString(exclude = "airport")   
+public class Terminal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gate_id")
+    @Column(name = "terminal_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "terminal_id", referencedColumnName = "terminal_id")
-    @ToString.Exclude
-    private Terminal terminal;
+    @JoinColumn(name = "airport_id", referencedColumnName = "airport_id")
+    private Airports airport;
 
     @Column(name = "code", length = 20, nullable = false)
     private String code;
 
-    @Convert(converter = GateStatusConverter.class)
+    @Convert(converter = TerminalStatusConverter.class) // DB-ben kisbetűs
     @Column(name = "status")
-    private GateStatus status;
+    private TerminalStatus status;
+
+    @Column(name = "gates_count")
+    private Short gatesCount;
+
+    @Column(name = "has_departures_hall")
+    private Boolean hasDeparturesHall;
+
+    @Column(name = "has_arrivals_hall")
+    private Boolean hasArrivalsHall;
+
+    @Column(name = "has_cargo_facility")
+    private Boolean hasCargoFacility;
 
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
