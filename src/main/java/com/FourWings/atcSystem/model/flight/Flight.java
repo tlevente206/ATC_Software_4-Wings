@@ -50,8 +50,7 @@ public class Flight {
     @Column(name = "flight_number", length = 10, nullable = false)
     private String flightNumber;
 
-    @Convert(converter = FlightStatusConverter.class) // csak ha kisbetűs enum az adatbázisban
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = FlightStatusConverter.class)
     @Column(name = "status")
     private FlightStatus status;
 
@@ -86,4 +85,27 @@ public class Flight {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "id=" + id +
+                ", departureAirport=" + departureAirport +
+                ", arrivalAirport=" + arrivalAirport +
+                ", airline=" + airline +
+                ", aircraft=" + aircraft +
+                ", gate=" + gate +
+                ", flightNumber='" + flightNumber + '\'' +
+                ", status=" + status +
+                ", scheduledDeparture=" + scheduledDeparture +
+                ", scheduledArrival=" + scheduledArrival +
+                ", estimatedDeparture=" + estimatedDeparture +
+                ", actualDeparture=" + actualDeparture +
+                ", estimatedArrival=" + estimatedArrival +
+                ", actualArrival=" + actualArrival +
+                ", note='" + note + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

@@ -8,6 +8,12 @@ import com.FourWings.atcSystem.model.airline.Airline;
 import com.FourWings.atcSystem.model.airline.AirlineService;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
+import com.FourWings.atcSystem.model.flight.Flight;
+import com.FourWings.atcSystem.model.flight.FlightService;
+import com.FourWings.atcSystem.model.gate.Gate;
+import com.FourWings.atcSystem.model.gate.GateService;
+import com.FourWings.atcSystem.model.terminal.Terminal;
+import com.FourWings.atcSystem.model.terminal.TerminalService;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;
@@ -31,12 +37,19 @@ public class MainPageController {
     private final AirportsService airportsService;
     private final AircraftService aircraftService;
     private final AirlineService airlineService;
+    private final FlightService flightService;
+    private final TerminalService terminalService;
+    private final GateService gateService;
 
-    public MainPageController(AuthService authService, AirportsService airportsService, AircraftService aircraftService, AirlineService airlineService) {
+
+    public MainPageController(AuthService authService, AirportsService airportsService, AircraftService aircraftService, AirlineService airlineService, FlightService flightService, TerminalService terminalService, GateService gateService) {
         this.authService = authService;
         this.airportsService = airportsService;
         this.aircraftService = aircraftService;
         this.airlineService = airlineService;
+        this.flightService = flightService;
+        this.terminalService = terminalService;
+        this.gateService = gateService;
     }
 
     @FXML Label statusLabel;
@@ -57,7 +70,7 @@ public class MainPageController {
         stage.show();
     }
 
-    private void openUserDataPage(Stage currentStage, Object loggedInUser, Object lastAirport, Object lastAircraft, Object lastAirline) {
+    private void openUserDataPage(Stage currentStage, Object loggedInUser, Object lastAirport, Object lastAircraft, Object lastAirline, Object lastFlight, Object lastGate, Object lastTerminal) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserDataPage.fxml"));
             loader.setControllerFactory(com.FourWings.atcSystem.config.SpringContext::getBean);
@@ -69,6 +82,9 @@ public class MainPageController {
                 ctrl.setLastAirport((Airports) lastAirport);
                 ctrl.setLastAircraft((Aircraft)  lastAircraft);
                 ctrl.setLastAirline((Airline)  lastAirline);
+                ctrl.setLastGate((Gate) lastGate);
+                ctrl.setLastFlight((Flight) lastFlight);
+                ctrl.setLastTerminal((Terminal) lastTerminal);
             }
 
             currentStage.setScene(new Scene(root, 600, 400));
@@ -86,17 +102,20 @@ public class MainPageController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        record LoginOutcome(User user, Airports lastAirport, Aircraft lastAircraft, Airline lastAirline) {}
+        record LoginOutcome(User user, Airports lastAirport, Aircraft lastAircraft, Airline lastAirline, Terminal lastTerminal, Gate lastGate, Flight lastFlight) {}
 
         Task<LoginOutcome> task = new Task<>() {
             @Override
             protected LoginOutcome call() {
                 User u = authService.loginAndGetUser(username, password);
-                if (u == null) return new LoginOutcome(null, null, null, null);
+                if (u == null) return new LoginOutcome(null, null, null, null, null, null, null);
                 Airports lastAirport = airportsService.getLastAdded();
                 Aircraft lastAircraft = aircraftService.getLastAdded();
                 Airline lastAirline = airlineService.getLastAddedWithAirport();
-                return new LoginOutcome(u, lastAirport, lastAircraft, lastAirline);
+                Terminal lastTerminal = terminalService.getLastAdded();
+                Gate lastGate = gateService.getLastAdded();
+                Flight lastFlight = flightService.getLastAdded();
+                return new LoginOutcome(u, lastAirport, lastAircraft, lastAirline, lastTerminal, lastGate, lastFlight);
             }
         };
 
@@ -105,7 +124,7 @@ public class MainPageController {
             if (out.user() != null) {
                 statusLabel.setText("Sikeres bejelentkezés!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                openUserDataPage(stage, out.user(), out.lastAirport(), out.lastAircraft(), out.lastAirline());  // <-- átadod!!!
+                openUserDataPage(stage, out.user(), out.lastAirport(), out.lastAircraft(), out.lastAirline(), out.lastFlight(), out.lastGate(), out.lastTerminal());  // <-- átadod!!!
             } else {
                 statusLabel.setText("Hibás felhasználónév vagy jelszó");
             }

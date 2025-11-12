@@ -9,6 +9,6 @@ public class AirportsService {
     private final AirportsRepository repo;
 
     public Airports getLastAdded() {
-        return repo.findTopByOrderByAirportIdDesc();
+        return repo.findTopByOrderByIdDesc();
     }
 }

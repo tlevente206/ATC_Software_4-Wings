@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "terminals")
-@ToString(exclude = "airport")   
+@ToString(exclude = "airport")
 public class Terminal {
 
     @Id
@@ -55,4 +55,21 @@ public class Terminal {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return "Terminal{" +
+                "id=" + id +
+                ", airport=" + airport +
+                ", code='" + code + '\'' +
+                ", status=" + status +
+                ", gatesCount=" + gatesCount +
+                ", hasDeparturesHall=" + hasDeparturesHall +
+                ", hasArrivalsHall=" + hasArrivalsHall +
+                ", hasCargoFacility=" + hasCargoFacility +
+                ", note='" + note + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.model.gate;
 
+import com.FourWings.atcSystem.model.terminal.Terminal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,9 +21,9 @@ public class Gate {
     @Column(name = "gate_id")
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "terminal_id", referencedColumnName = "terminal_id")
-    @ToString.Exclude
     private Terminal terminal;
 
     @Column(name = "code", length = 20, nullable = false)
@@ -42,4 +43,17 @@ public class Gate {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return "Gate{" +
+                "id=" + id +
+                ", terminal=" + terminal +
+                ", code='" + code + '\'' +
+                ", status=" + status +
+                ", note='" + note + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

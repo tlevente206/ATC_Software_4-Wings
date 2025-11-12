@@ -19,7 +19,7 @@ public class Airports {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "airport_id")
-    private Long airportId;
+    private Long Id;
 
     @Column(name = "icao_code", length = 4, nullable = false)
     private String icaoCode;
@@ -77,7 +77,7 @@ public class Airports {
     @Override
     public String toString() {
         return "Airports{" +
-                "airportId=" + airportId +
+                "airportId=" + Id +
                 ", icaoCode='" + icaoCode + '\'' +
                 ", iataCode='" + iataCode + '\'' +
                 ", name='" + name + '\'' +

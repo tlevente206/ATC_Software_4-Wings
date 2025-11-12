@@ -10,5 +10,16 @@ public class GateService {
     private final GateRepository repo;
 
     @Transactional(readOnly = true)
-    public Gate getLastAdded() { return repo.findTopByOrderByIdDesc(); }
+    public Gate getGateWithTerminal(Long id) {
+        return repo.findByIdFetchTerminal(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Gate getLastAdded() {
+        Gate last = repo.findTopByOrderByIdDesc();
+        if (last != null) {
+            return repo.findByIdFetchTerminal(last.getId());
+        }
+        return null;
+    }
 }
