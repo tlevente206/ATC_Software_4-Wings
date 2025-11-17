@@ -1,5 +1,7 @@
 package com.FourWings.atcSystem.frontend;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import com.FourWings.atcSystem.AtcSystemApplication;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,8 +26,9 @@ public class JavaFXApplication extends Application {
             Parent root = loader.load();
 
             stage.setTitle("ATC System");
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 800, 400));
             stage.centerOnScreen();
+            stage.getIcons().add(new Image(getClass().getResource("/images/1.png").toExternalForm()));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

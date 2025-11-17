@@ -36,10 +36,6 @@ public class MainPageController {
     private final AuthService authService;
     private final AirportsService airportsService;
     private final AircraftService aircraftService;
-    private final AirlineService airlineService;
-    private final FlightService flightService;
-    private final TerminalService terminalService;
-    private final GateService gateService;
 
 
     public MainPageController(AuthService authService, AirportsService airportsService, AircraftService aircraftService, AirlineService airlineService, FlightService flightService, TerminalService terminalService, GateService gateService) {
@@ -95,6 +91,40 @@ public class MainPageController {
             ex.printStackTrace();
             statusLabel.setText("Nem sikerült megnyitni a Dashboardot: " + ex.getMessage());
         }
+    }
+
+    /*private void openHomePage(Stage currentStage, Object loggedInUser, Object lastAirport, Object lastAircraft) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            HomePageController ctrl = loader.getController();
+            if (loggedInUser != null) {
+                ctrl.initWithUser((User) loggedInUser);
+                ctrl.setLastAirport((Airports) lastAirport);
+                ctrl.setLastAircraft((Aircraft)  lastAircraft);
+            }
+
+            currentStage.setScene(new Scene(root, 600, 400));
+            currentStage.setTitle("ATC – Dashboard");
+            currentStage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            statusLabel.setText("Nem sikerült megnyitni a Dashboardot: " + ex.getMessage());
+        }
+    }*/
+
+    @FXML
+    private void openHomePage(Stage currentStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
+        loader.setControllerFactory(SpringContext::getBean);
+        Parent root = loader.load();
+
+        currentStage.setScene(new Scene(root, 600, 400));
+        currentStage.setTitle("ATC – Dashboard");
+        currentStage.show();
     }
 
     @FXML

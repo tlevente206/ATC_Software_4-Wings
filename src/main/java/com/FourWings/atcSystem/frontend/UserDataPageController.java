@@ -10,6 +10,7 @@ import com.FourWings.atcSystem.model.user.User;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import lombok.ToString;
@@ -73,5 +74,8 @@ public class UserDataPageController {
     public void setLastTerminal(Terminal terminal) {
         this.terminal = terminal;
         System.out.println("Terminal id=" + terminal.getId());
+    }
+
+    public void toHome(ActionEvent actionEvent) {
     }
 }

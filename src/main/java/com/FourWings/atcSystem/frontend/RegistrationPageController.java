@@ -53,7 +53,7 @@ public class RegistrationPageController {
         Parent root = loader.load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root, 800, 400));
         stage.setTitle("Bejelentkezés");
         stage.show();
     }
