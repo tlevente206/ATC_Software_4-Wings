@@ -36,6 +36,10 @@ public class MainPageController {
     private final AuthService authService;
     private final AirportsService airportsService;
     private final AircraftService aircraftService;
+    private final AirlineService airlineService;
+    private final FlightService flightService;
+    private final TerminalService terminalService;
+    private final GateService gateService;
 
 
     public MainPageController(AuthService authService, AirportsService airportsService, AircraftService aircraftService, AirlineService airlineService, FlightService flightService, TerminalService terminalService, GateService gateService) {
