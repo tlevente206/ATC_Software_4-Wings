@@ -2,8 +2,12 @@ package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.model.user.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,6 +33,26 @@ public class HomePageController {
                     // Itt lehet majd oldalváltás
                 }
             });
+        }
+    }
+
+    @FXML
+    private void onLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainPage.fxml"));
+            loader.setControllerFactory(com.FourWings.atcSystem.config.SpringContext::getBean);
+            Parent root = loader.load();
+
+            // Aktuális stage megszerzése
+            Stage stage = (Stage) menuComboBox.getScene().getWindow();
+
+            stage.setScene(new Scene(root, 800, 400));
+            stage.setTitle("ATC – Bejelentkezés");
+            stage.show();
+        }
+        catch (Exception ex) {
+            System.out.println("Logout error: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }

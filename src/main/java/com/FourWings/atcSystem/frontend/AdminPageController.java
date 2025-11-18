@@ -47,5 +47,25 @@ public class AdminPageController {
         stage.show();
     }
 
+    @FXML
+    private void onLogout(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainPage.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            // Stage megszerzése az eseményt kiváltó gombból
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root, 800, 400));
+            stage.setTitle("ATC – Bejelentkezés");
+            stage.show();
+        }
+        catch (Exception ex) {
+            System.out.println("Logout error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
 
 }

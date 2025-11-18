@@ -9,5 +9,10 @@
    <children>
       <Label layoutX="243.0" layoutY="21.0" text="Admin bejelentkezve" />
       <Button fx:id="FelhasznalokButton" layoutX="255.0" layoutY="59.0" mnemonicParsing="false" onAction="#goToUserAdminPage" text="Felhasznalok" />
+       <Button fx:id="logoutButton"
+               text="Kijelentkezés"
+               onAction="#onLogout"
+               layoutX="500"
+               layoutY="10"/>
    </children>
 </AnchorPane>
