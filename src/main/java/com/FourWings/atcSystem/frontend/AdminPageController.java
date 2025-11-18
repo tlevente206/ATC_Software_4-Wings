@@ -1,10 +1,16 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.user.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +29,16 @@ public class AdminPageController {
     }
 
     @FXML
-    void goToUserAdminPage(ActionEvent event) {
-        // ide jön majd a felhasználókezelő oldalra lépés
+    public void goToUserAdminPage(ActionEvent event) throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserAdminPage.fxml"));
+        loader.setControllerFactory(SpringContext::getBean);
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Bejelentkezés");
+        stage.show();
     }
+
+
 }

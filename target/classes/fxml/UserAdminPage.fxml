@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.AdminPageController"
+            prefWidth="1400.0" prefHeight="900.0">
+
+    <!-- Felső fejlécek -->
+    <top>
+        <VBox spacing="8" BorderPane.alignment="CENTER">
+            <children>
+
+                <Label text="Felhasználókezelés – Admin felület">
+                    <font>
+                        <Font size="26"/>
+                    </font>
+                    <padding>
+                        <Insets top="10" right="10" bottom="5" left="10"/>
+                    </padding>
+                </Label>
+
+                <!-- Toolbar középméretben -->
+                <ToolBar>
+                    <items>
+                        <Button fx:id="refreshButton" text="Lista frissítése"/>
+                        <Button fx:id="addUserButton" text="Új felhasználó"/>
+                        <Button fx:id="editUserButton" text="Kijelölt szerkesztése"/>
+                        <Button fx:id="deleteUserButton" text="Kijelölt törlése"/>
+
+                        <Separator/>
+                        <Label text="Keresés:"/>
+                        <TextField fx:id="searchField" promptText="Név / felhasználónév / e-mail" prefWidth="250"/>
+                    </items>
+                </ToolBar>
+
+            </children>
+        </VBox>
+    </top>
+
+    <!-- Középső tartalom: tökéletes méretű táblázat -->
+    <center>
+        <TableView fx:id="usersTable" BorderPane.alignment="CENTER">
+            <columns>
+
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
+
+                <TableColumn fx:id="nameColumn" text="Név" prefWidth="230"/>
+
+                <TableColumn fx:id="usernameColumn" text="Felhasználónév" prefWidth="200"/>
+
+                <TableColumn fx:id="emailColumn" text="E-mail" prefWidth="300"/>
+
+                <TableColumn fx:id="phoneColumn" text="Telefon" prefWidth="180"/>
+
+                <TableColumn fx:id="adminColumn" text="Admin" prefWidth="90"/>
+
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- Alsó státusz sáv -->
+    <bottom>
+        <HBox BorderPane.alignment="CENTER_LEFT">
+            <children>
+                <Label fx:id="statusLabel" text="Készen áll.">
+                    <padding>
+                        <Insets top="5" right="10" bottom="8" left="10"/>
+                    </padding>
+                </Label>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

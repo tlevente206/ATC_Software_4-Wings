@@ -17,3 +17,4 @@ com/FourWings/atcSystem/model/terminal/Terminal$TerminalBuilder.class
 com/FourWings/atcSystem/model/gate/GateStatusConverter.class
 com/FourWings/atcSystem/model/terminal/TerminalRepository.class
 com/FourWings/atcSystem/model/terminal/TerminalStatusConverter.class
+com/FourWings/atcSystem/frontend/UserAdminPageController.class
