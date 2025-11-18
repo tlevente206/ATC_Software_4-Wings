@@ -93,7 +93,7 @@ public class RegistrationPageController {
                         .admin(false)
                         .build();
 
-                userService.register(u);
+                userService.registerSelf(u);
                 return null;
             }
         };

@@ -28,8 +28,12 @@
                 <ToolBar>
                     <items>
                         <Button fx:id="refreshButton" text="Lista frissítése"/>
-                        <Button fx:id="addUserButton" text="Új felhasználó"/>
-                        <Button fx:id="editUserButton" text="Kijelölt szerkesztése"/>
+                        <Button fx:id="addUserButton"
+                                text="Új felhasználó"
+                                onAction="#onAddNewUser"/>
+                        <Button fx:id="editUserButton"
+                                text="Kijelölt szerkesztése"
+                                onAction="#onEditSelectedUser"/>
                         <Button fx:id="deleteUserButton" text="Kijelölt törlése"/>
 
                         <Separator/>

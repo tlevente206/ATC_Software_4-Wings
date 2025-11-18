@@ -1,6 +1,7 @@
 com/FourWings/atcSystem/model/flight/Flight$FlightBuilder.class
 com/FourWings/atcSystem/model/gate/Gate.class
 com/FourWings/atcSystem/model/flight/FlightRepository.class
+com/FourWings/atcSystem/frontend/UserEditDialogController.class
 com/FourWings/atcSystem/model/terminal/TerminalStatus.class
 com/FourWings/atcSystem/model/flight/Flight.class
 com/FourWings/atcSystem/model/terminal/TerminalService.class
