@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserEditDialogController {
@@ -123,4 +124,6 @@ public class UserEditDialogController {
         Stage stage = (Stage) idField.getScene().getWindow();
         stage.close();
     }
+
+
 }

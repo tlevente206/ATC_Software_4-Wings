@@ -9,10 +9,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
@@ -26,8 +25,9 @@ public class UserAdminPageController {
         this.userService = userService;
     }
 
+    // --- FXML elemek ----
     @FXML
-    private TableView<User> usersTable;   // <-- FXML-ben fx:id="usersTable"
+    private TableView<User> usersTable;
 
     @FXML
     private TableColumn<User, Long> idColumn;
@@ -47,11 +47,21 @@ public class UserAdminPageController {
     @FXML
     private TableColumn<User, Boolean> adminColumn;
 
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private Label statusLabel;
+
     private final ObservableList<User> users = FXCollections.observableArrayList();
+
+    // ---------------------------------------------------------
+    // INIT
+    // ---------------------------------------------------------
 
     @FXML
     public void initialize() {
-        // Oszlop bindingok
+        // oszlopok bindelése
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -59,16 +69,21 @@ public class UserAdminPageController {
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         adminColumn.setCellValueFactory(new PropertyValueFactory<>("admin"));
 
-        // Adatok betöltése
-        users.setAll(userService.getAllUsers());
-        usersTable.setItems(users);
+        // adatok betöltése
+        reloadUsers();
 
-        System.out.println("Betöltött userek száma: " + users.size());
+        if (statusLabel != null) {
+            statusLabel.setText("Felhasználók betöltve: " + users.size());
+        }
 
+        // dupla kattintás sorra → szerkesztő
         usersTable.setRowFactory(tv -> {
             TableRow<User> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                if (!row.isEmpty()
+                        && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2) {
+
                     User selected = row.getItem();
                     openUserEditDialog(selected);
                 }
@@ -76,6 +91,84 @@ public class UserAdminPageController {
             return row;
         });
     }
+
+    // ---------------------------------------------------------
+    // SEGÉDMETÓDUS: lista újratöltése
+    // ---------------------------------------------------------
+
+    private void reloadUsers() {
+        users.setAll(userService.getAllUsers());
+        usersTable.setItems(users);
+
+        if (statusLabel != null) {
+            statusLabel.setText("Betöltött felhasználók: " + users.size());
+        }
+    }
+
+    // ---------------------------------------------------------
+    // GOMBOK
+    // ---------------------------------------------------------
+
+    // Toolbar: "Kijelölt szerkesztése" gomb
+    @FXML
+    private void onEditSelectedUser() {
+        User selected = usersTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            if (statusLabel != null) {
+                statusLabel.setText("Nincs kijelölt felhasználó.");
+            }
+            return;
+        }
+        openUserEditDialog(selected);
+    }
+
+    // Toolbar: "Új felhasználó" gomb
+    @FXML
+    private void onAddNewUser() {
+        // üres User példány – újként kezeljük
+        User newUser = new User();
+        // fontos: admin alapból false
+        newUser.setAdmin(false);
+
+        openUserEditDialog(newUser);
+    }
+
+    // Toolbar: "Kijelölt törlése" gomb
+    @FXML
+    private void onDeleteUser() {
+        User selected = usersTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            if (statusLabel != null) {
+                statusLabel.setText("Nincs kijelölt felhasználó törléshez.");
+            }
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Törlés megerősítése");
+        confirm.setHeaderText("Biztosan törlöd a felhasználót?");
+        confirm.setContentText("Felhasználó: " + selected.getUsername());
+
+        confirm.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == ButtonType.OK) {
+                userService.deleteUserById(selected.getId()); // kell egy ilyen metódus a service-ben
+                reloadUsers();
+                if (statusLabel != null) {
+                    statusLabel.setText("Felhasználó törölve: " + selected.getUsername());
+                }
+            }
+        });
+    }
+
+    // Toolbar: "Lista frissítése" gomb (ha akarod használni)
+    @FXML
+    private void onRefresh() {
+        reloadUsers();
+    }
+
+    // ---------------------------------------------------------
+    // Szerkesztő dialógus
+    // ---------------------------------------------------------
 
     private void openUserEditDialog(User user) {
         try {
@@ -93,30 +186,15 @@ public class UserAdminPageController {
             dialogStage.setScene(new Scene(root));
             dialogStage.showAndWait();
 
-            // mentés után frissítjük a táblát
-            users.setAll(userService.getAllUsers());
+            // ha a dialog mentett, ott meghívod a reloadUsers()-t,
+            // de biztosra mehetünk itt is:
+            reloadUsers();
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            if (statusLabel != null) {
+                statusLabel.setText("Hiba a szerkesztő megnyitásakor: " + ex.getMessage());
+            }
         }
-    }
-
-    @FXML
-    private void onEditSelectedUser() {
-        User selected = usersTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            // opcionálisan statusLabel.setText("Nincs kijelölve felhasználó!");
-            return;
-        }
-        openUserEditDialog(selected);
-    }
-
-    @FXML
-    private void onAddNewUser() {
-        User newUser = new User();
-        newUser.setAdmin(false);
-        newUser.setPassword(null); // a default jelszó majd admin mentésnél kerül hozzá
-
-        openUserEditDialog(newUser);
     }
 }

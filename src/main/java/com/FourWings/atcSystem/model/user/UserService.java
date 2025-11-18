@@ -54,4 +54,9 @@ public class UserService {
         }
         return sb.toString();
     }
+
+    @Transactional
+    public void deleteUserById(long id) {
+        userRepository.deleteById(id);
+    }
 }

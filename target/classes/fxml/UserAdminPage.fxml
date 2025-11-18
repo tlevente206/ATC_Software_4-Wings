@@ -34,7 +34,7 @@
                         <Button fx:id="editUserButton"
                                 text="Kijelölt szerkesztése"
                                 onAction="#onEditSelectedUser"/>
-                        <Button fx:id="deleteUserButton" text="Kijelölt törlése"/>
+                        <Button fx:id="deleteUserButton" text="Kijelölt törlése" onAction="#onDeleteUser"/>
 
                         <Separator/>
                         <Label text="Keresés:"/>
