@@ -22,4 +22,6 @@ public class User {
     String phone;
     @Column(name = "is_admin")
     boolean admin;
+
+
 }
