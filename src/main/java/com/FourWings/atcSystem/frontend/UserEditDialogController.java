@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public class UserEditDialogController {
     @FXML private PasswordField passwordField;
 
     private User user;
+
+    @Getter
+    private boolean edited = false;
 
     public void setUser(User user) {
         this.user = user;
@@ -112,11 +116,13 @@ public class UserEditDialogController {
             alert.showAndWait();
         }
 
+        edited = true;
         closeWindow();
     }
 
     @FXML
     private void onCancel(ActionEvent event) {
+        edited = false;
         closeWindow();
     }
 

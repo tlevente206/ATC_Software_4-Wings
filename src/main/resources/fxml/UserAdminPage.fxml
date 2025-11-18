@@ -27,7 +27,9 @@
                 <!-- Toolbar középméretben -->
                 <ToolBar>
                     <items>
-                        <Button fx:id="refreshButton" text="Lista frissítése"/>
+                        <Button fx:id="refreshButton"
+                                text="Lista frissítése"
+                                onAction="#onRefresh"/>
                         <Button fx:id="addUserButton"
                                 text="Új felhasználó"
                                 onAction="#onAddNewUser"/>

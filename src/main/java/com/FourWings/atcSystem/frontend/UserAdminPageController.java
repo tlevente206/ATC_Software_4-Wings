@@ -90,6 +90,24 @@ public class UserAdminPageController {
             });
             return row;
         });
+
+        // --- ÚJ: egyszeri kattintás → státusz frissítés ---
+        usersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null && statusLabel != null) {
+                statusLabel.setText("Kijelölt felhasználó: " + newSel.getUsername());
+            }
+        });
+
+        usersTable.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER -> {
+                    User selected = usersTable.getSelectionModel().getSelectedItem();
+                    if (selected != null) {
+                        openUserEditDialog(selected);
+                    }
+                }
+            }
+        });
     }
 
     // ---------------------------------------------------------
@@ -125,10 +143,8 @@ public class UserAdminPageController {
     // Toolbar: "Új felhasználó" gomb
     @FXML
     private void onAddNewUser() {
-        // üres User példány – újként kezeljük
         User newUser = new User();
-        // fontos: admin alapból false
-        newUser.setAdmin(false);
+        newUser.setAdmin(false);  // alapértelmezetten ne legyen admin
 
         openUserEditDialog(newUser);
     }
@@ -151,7 +167,7 @@ public class UserAdminPageController {
 
         confirm.showAndWait().ifPresent(buttonType -> {
             if (buttonType == ButtonType.OK) {
-                userService.deleteUserById(selected.getId()); // kell egy ilyen metódus a service-ben
+                userService.deleteUserById(selected.getId());
                 reloadUsers();
                 if (statusLabel != null) {
                     statusLabel.setText("Felhasználó törölve: " + selected.getUsername());
@@ -160,10 +176,13 @@ public class UserAdminPageController {
         });
     }
 
-    // Toolbar: "Lista frissítése" gomb (ha akarod használni)
+    // Toolbar: "Lista frissítése" gomb
     @FXML
     private void onRefresh() {
         reloadUsers();
+        if (statusLabel != null) {
+            statusLabel.setText("Lista frissítve. Jelenlegi felhasználók: " + users.size());
+        }
     }
 
     // ---------------------------------------------------------
@@ -184,11 +203,22 @@ public class UserAdminPageController {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.setTitle("Felhasználó szerkesztése");
             dialogStage.setScene(new Scene(root));
+
             dialogStage.showAndWait();
 
-            // ha a dialog mentett, ott meghívod a reloadUsers()-t,
-            // de biztosra mehetünk itt is:
+            // Frissítsd a táblát
             reloadUsers();
+
+            // --- Itt jön az okosság ---
+            if (ctrl.isEdited()) {
+                if (statusLabel != null) {
+                    statusLabel.setText("Felhasználó frissítve: " + user.getUsername());
+                }
+            } else {
+                if (statusLabel != null) {
+                    statusLabel.setText("Nem történt módosítás.");
+                }
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
