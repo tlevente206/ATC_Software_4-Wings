@@ -20,5 +20,6 @@ public class User {
     String password;
     String email;
     String phone;
-    boolean IsAdmin;
+    @Column(name = "is_admin")
+    boolean admin;
 }

@@ -1,40 +1,41 @@
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/AtcSystemApplication.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/config/SecurityConfig.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/config/SpringContext.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/frontend/HomePageController.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/frontend/JavaFXApplication.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/frontend/MainPageController.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/frontend/RegistrationPageController.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/frontend/UserDataPageController.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/aircraft/Aircraft.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftStatus.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftStatusConverter.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airline/Airline.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airline/AirlineRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airline/AirlineService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airline/BusinessMode.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airline/BusinessModeConverter.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airport/Airports.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airport/AirportsRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/airport/AirportsService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/flight/Flight.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/flight/FlightRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/flight/FlightService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/flight/FlightStatus.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/flight/FlightStatusConverter.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/gate/Gate.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/gate/GateRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/gate/GateService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/gate/GateStatus.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/gate/GateStatusConverter.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/terminal/Terminal.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalStatus.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalStatusConverter.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/user/User.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/user/UserRepository.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/model/user/UserService.java
-/Users/tothleventelaszlo/Desktop/Ujra/src/main/java/com/FourWings/atcSystem/service/AuthService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/AtcSystemApplication.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SecurityConfig.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SpringContext.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/AdminPageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/HomePageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/JavaFXApplication.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/MainPageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/RegistrationPageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserDataPageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/Aircraft.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftStatus.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftStatusConverter.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/Airline.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/AirlineRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/AirlineService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/BusinessMode.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/BusinessModeConverter.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airport/Airports.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airport/AirportsRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airport/AirportsService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/Flight.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightStatus.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightStatusConverter.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/Gate.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateStatus.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateStatusConverter.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/Terminal.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalStatus.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalStatusConverter.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/User.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/UserRepository.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/UserService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/AuthService.java

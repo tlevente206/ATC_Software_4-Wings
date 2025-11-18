@@ -90,7 +90,7 @@ public class RegistrationPageController {
                         .email(emailInput.getText().trim())
                         .password(password)
                         .phone(phoneInput.getText().trim())
-                        .IsAdmin(false)
+                        .admin(false)
                         .build();
 
                 userService.register(u);
