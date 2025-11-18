@@ -45,6 +45,7 @@ public class MainPageController {
         stage.setScene(new Scene(root, 600, 400));
         stage.setTitle("ATC – Dashboard");
         stage.show();
+        stage.centerOnScreen();
     }
 
     private void openAdminPage(Stage stage, User user) throws Exception {
@@ -58,6 +59,7 @@ public class MainPageController {
         stage.setScene(new Scene(root, 600, 400));
         stage.setTitle("ATC – Admin Dashboard");
         stage.show();
+        stage.centerOnScreen();
     }
 
     // ---------------------- LOGIN ----------------------
@@ -117,5 +119,6 @@ public class MainPageController {
         stage.setScene(new Scene(root, 600, 400));
         stage.setTitle("Regisztráció");
         stage.show();
+        stage.centerOnScreen();
     }
 }

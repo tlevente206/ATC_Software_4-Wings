@@ -49,6 +49,7 @@ public class HomePageController {
             stage.setScene(new Scene(root, 800, 400));
             stage.setTitle("ATC – Bejelentkezés");
             stage.show();
+            stage.centerOnScreen();
         }
         catch (Exception ex) {
             System.out.println("Logout error: " + ex.getMessage());

@@ -30,6 +30,7 @@ public class JavaFXApplication extends Application {
             stage.centerOnScreen();
             stage.getIcons().add(new Image(getClass().getResource("/images/1.png").toExternalForm()));
             stage.show();
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
             Platform.exit();

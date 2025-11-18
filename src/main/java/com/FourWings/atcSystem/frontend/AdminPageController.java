@@ -45,6 +45,7 @@ public class AdminPageController {
         stage.setScene(new Scene(root));
         stage.setTitle("Bejelentkezés");
         stage.show();
+        stage.centerOnScreen();
     }
 
     @FXML
@@ -60,6 +61,7 @@ public class AdminPageController {
             stage.setScene(new Scene(root, 800, 400));
             stage.setTitle("ATC – Bejelentkezés");
             stage.show();
+            stage.centerOnScreen();
         }
         catch (Exception ex) {
             System.out.println("Logout error: " + ex.getMessage());

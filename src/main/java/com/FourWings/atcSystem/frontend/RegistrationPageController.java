@@ -56,6 +56,7 @@ public class RegistrationPageController {
         stage.setScene(new Scene(root, 800, 400));
         stage.setTitle("Bejelentkezés");
         stage.show();
+        stage.centerOnScreen();
     }
 
     public void register(ActionEvent event) {

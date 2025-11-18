@@ -97,10 +97,11 @@ public class UserAdminPageController {
                     String name = user.getName() != null ? user.getName().toLowerCase() : "";
                     String username = user.getUsername() != null ? user.getUsername().toLowerCase() : "";
                     String email = user.getEmail() != null ? user.getEmail().toLowerCase() : "";
+                    String phone = user.getPhone() != null ? user.getPhone().toLowerCase() : "";
 
                     return name.contains(filter)
                             || username.contains(filter)
-                            || email.contains(filter);
+                            || email.contains(filter) || phone.contains(filter);
                 });
 
                 if (statusLabel != null) {
@@ -251,6 +252,7 @@ public class UserAdminPageController {
             dialogStage.setTitle("Felhasználó szerkesztése");
             dialogStage.setScene(new Scene(root));
             dialogStage.showAndWait();
+            dialogStage.centerOnScreen();
 
             // ha történt mentés, bent van az edited flag-ben
             if (ctrl.isEdited()) {
@@ -278,6 +280,7 @@ public class UserAdminPageController {
             stage.setScene(new Scene(root, 600, 400));
             stage.setTitle("ATC – Admin Dashboard");
             stage.show();
+            stage.centerOnScreen();
         } catch (Exception ex) {
             ex.printStackTrace();
             if (statusLabel != null) {
