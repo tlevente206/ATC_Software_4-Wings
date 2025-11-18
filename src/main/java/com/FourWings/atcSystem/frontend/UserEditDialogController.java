@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserEditDialogController {
@@ -26,11 +25,12 @@ public class UserEditDialogController {
     @FXML private TextField phoneField;
     @FXML private CheckBox adminCheckBox;
     @FXML private Label errorLabel;
-
-    // ÚJ: jelszó mező (hozzá kell adnod az FXML-hez is!)
     @FXML private PasswordField passwordField;
 
     private User user;
+
+    // Eredeti username – hogy tudjuk, változott-e
+    private String originalUsername;
 
     @Getter
     private boolean edited = false;
@@ -47,8 +47,9 @@ public class UserEditDialogController {
             phoneField.setText(user.getPhone());
             adminCheckBox.setSelected(user.isAdmin());
 
-            // meglévő usernél jelszó mezőt üresen hagyjuk
             passwordField.clear();
+
+            originalUsername = user.getUsername();
         } else {
             // új user → üres mezők
             idField.clear();
@@ -58,6 +59,8 @@ public class UserEditDialogController {
             phoneField.clear();
             adminCheckBox.setSelected(false);
             passwordField.clear();
+
+            originalUsername = null;
         }
     }
 
@@ -76,6 +79,26 @@ public class UserEditDialogController {
             return;
         }
 
+        // --- FELHASZNÁLÓNÉV ÜTKÖZÉS ELLENŐRZÉSE ---
+        boolean isNewUser = (user.getId() == 0);
+        boolean usernameChanged =
+                isNewUser ||
+                        (originalUsername != null && !originalUsername.equalsIgnoreCase(username));
+
+        if (usernameChanged && !userService.isUsernameAvailable(username)) {
+            String msg = "Már létezik ilyen felhasználónév: " + username;
+            errorLabel.setText(msg);
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Felhasználónév foglalt");
+            alert.setHeaderText("A megadott felhasználónév már létezik.");
+            alert.setContentText(msg);
+            alert.showAndWait();
+
+            return;
+        }
+
+        // --- ADATOK VISSZAÍRÁSA ---
         user.setName(name);
         user.setUsername(username);
         user.setEmail(emailField.getText().trim());
@@ -88,22 +111,31 @@ public class UserEditDialogController {
         // ÚJ USER
         if (user.getId() == 0) {
             if (rawPassword == null || rawPassword.isBlank()) {
-                // NINCS megadott jelszó → generálunk ideigleneset
                 tempPasswordForInfo = userService.generateTempPassword();
                 rawPassword = tempPasswordForInfo;
             }
         } else {
             // MEGLÉVŐ USER
             if (rawPassword == null || rawPassword.isBlank()) {
-                // üresen hagytad → jelszó marad a régi, nem nyúlunk hozzá
-                rawPassword = null;
+                rawPassword = null; // nem változtatjuk a jelszót
             }
         }
 
-        // mentés (admin-flow)
-        userService.saveFromAdmin(user, rawPassword);
+        try {
+            userService.saveFromAdmin(user, rawPassword);
+        } catch (Exception ex) {
+            // ha mégis valami DB-hiba, azt is popupban jelezzük
+            errorLabel.setText("Mentési hiba: " + ex.getMessage());
 
-        // ha ideiglenes jelszót generáltunk, mutassuk meg az adminnak
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Mentési hiba");
+            alert.setHeaderText("Nem sikerült menteni a felhasználót.");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+            return;
+        }
+
+        // Ideiglenes jelszó infó
         if (tempPasswordForInfo != null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Ideiglenes jelszó");
@@ -130,6 +162,4 @@ public class UserEditDialogController {
         Stage stage = (Stage) idField.getScene().getWindow();
         stage.close();
     }
-
-
 }

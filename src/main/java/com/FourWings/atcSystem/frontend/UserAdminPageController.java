@@ -5,8 +5,10 @@ import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.model.user.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -224,6 +226,33 @@ public class UserAdminPageController {
             ex.printStackTrace();
             if (statusLabel != null) {
                 statusLabel.setText("Hiba a szerkesztő megnyitásakor: " + ex.getMessage());
+            }
+        }
+    }
+
+    // ---------------------------------------------------------
+    // Vissza az admin főoldalra
+    // ---------------------------------------------------------
+    @FXML
+    private void onBackToAdmin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPage.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 600, 400)); // vagy 1400x900, ha úgy használod
+            stage.setTitle("ATC – Admin Dashboard");
+            stage.show();
+
+            if (statusLabel != null) {
+                statusLabel.setText("Visszaléptél az admin főoldalra.");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (statusLabel != null) {
+                statusLabel.setText("Nem sikerült visszalépni az admin felületre: " + ex.getMessage());
             }
         }
     }

@@ -34,9 +34,25 @@ public class UserService {
     //   - konkrét jelszó: ezt titkosítjuk és mentjük
     @Transactional
     public User saveFromAdmin(User u, String rawPasswordOrNull) {
+        // username ütközés ellenőrzés
+        boolean usernameTaken;
+
+        if (u.getId() == 0) {
+            // új user
+            usernameTaken = userRepository.existsByUsername(u.getUsername());
+        } else {
+            // meglévő user
+            usernameTaken = userRepository.existsByUsernameAndIdNot(u.getUsername(), u.getId());
+        }
+
+        if (usernameTaken) {
+            throw new IllegalStateException("A felhasználónév már foglalt: " + u.getUsername());
+        }
+
         if (rawPasswordOrNull != null && !rawPasswordOrNull.isBlank()) {
             u.setPassword(passwordEncoder.encode(rawPasswordOrNull));
         }
+
         return userRepository.save(u);
     }
 
