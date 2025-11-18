@@ -5,6 +5,7 @@ import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.model.user.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,7 +56,10 @@ public class UserAdminPageController {
     @FXML
     private Label statusLabel;
 
+    // az összes user, amit a DB-ből hozunk
     private final ObservableList<User> users = FXCollections.observableArrayList();
+    // erre szűrünk kereséskor
+    private FilteredList<User> filteredUsers;
 
     // ---------------------------------------------------------
     // INIT
@@ -71,11 +75,38 @@ public class UserAdminPageController {
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         adminColumn.setCellValueFactory(new PropertyValueFactory<>("admin"));
 
-        // adatok betöltése
-        reloadUsers();
+        // adatok betöltése + FilteredList létrehozása
+        users.setAll(userService.getAllUsers());
+        filteredUsers = new FilteredList<>(users, u -> true);   // kezdetben mindent mutat
+        usersTable.setItems(filteredUsers);
 
         if (statusLabel != null) {
             statusLabel.setText("Felhasználók betöltve: " + users.size());
+        }
+
+        // KERESÉS: ahogy gépelsz, úgy szűr
+        if (searchField != null) {
+            searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+                String filter = (newVal == null) ? "" : newVal.trim().toLowerCase();
+
+                filteredUsers.setPredicate(user -> {
+                    if (filter.isEmpty()) {
+                        // üres kereső → minden elem látszik
+                        return true;
+                    }
+                    String name = user.getName() != null ? user.getName().toLowerCase() : "";
+                    String username = user.getUsername() != null ? user.getUsername().toLowerCase() : "";
+                    String email = user.getEmail() != null ? user.getEmail().toLowerCase() : "";
+
+                    return name.contains(filter)
+                            || username.contains(filter)
+                            || email.contains(filter);
+                });
+
+                if (statusLabel != null) {
+                    statusLabel.setText("Találatok: " + filteredUsers.size() + " / Összes: " + users.size());
+                }
+            });
         }
 
         // dupla kattintás sorra → szerkesztő
@@ -93,13 +124,7 @@ public class UserAdminPageController {
             return row;
         });
 
-        // --- ÚJ: egyszeri kattintás → státusz frissítés ---
-        usersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null && statusLabel != null) {
-                statusLabel.setText("Kijelölt felhasználó: " + newSel.getUsername());
-            }
-        });
-
+        // ENTER-rel is megnyitjuk a szerkesztőt
         usersTable.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER -> {
@@ -107,7 +132,15 @@ public class UserAdminPageController {
                     if (selected != null) {
                         openUserEditDialog(selected);
                     }
+                    event.consume();
                 }
+            }
+        });
+
+        // kijelölt user nevét kiírjuk a státusz sorba
+        usersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null && statusLabel != null) {
+                statusLabel.setText("Kiválasztott felhasználó: " + newSel.getUsername());
             }
         });
     }
@@ -118,10 +151,30 @@ public class UserAdminPageController {
 
     private void reloadUsers() {
         users.setAll(userService.getAllUsers());
-        usersTable.setItems(users);
+
+        // ha már van filter, tartsuk meg a mostani keresőt
+        if (filteredUsers == null) {
+            filteredUsers = new FilteredList<>(users, u -> true);
+            usersTable.setItems(filteredUsers);
+        } else {
+            String currentFilter = (searchField != null && searchField.getText() != null)
+                    ? searchField.getText().trim().toLowerCase()
+                    : "";
+
+            filteredUsers.setPredicate(user -> {
+                if (currentFilter.isEmpty()) return true;
+                String name = user.getName() != null ? user.getName().toLowerCase() : "";
+                String username = user.getUsername() != null ? user.getUsername().toLowerCase() : "";
+                String email = user.getEmail() != null ? user.getEmail().toLowerCase() : "";
+                return name.contains(currentFilter)
+                        || username.contains(currentFilter)
+                        || email.contains(currentFilter);
+            });
+        }
 
         if (statusLabel != null) {
-            statusLabel.setText("Betöltött felhasználók: " + users.size());
+            statusLabel.setText("Lista frissítve. Találatok: "
+                    + filteredUsers.size() + " / Összes: " + users.size());
         }
     }
 
@@ -129,7 +182,6 @@ public class UserAdminPageController {
     // GOMBOK
     // ---------------------------------------------------------
 
-    // Toolbar: "Kijelölt szerkesztése" gomb
     @FXML
     private void onEditSelectedUser() {
         User selected = usersTable.getSelectionModel().getSelectedItem();
@@ -142,16 +194,13 @@ public class UserAdminPageController {
         openUserEditDialog(selected);
     }
 
-    // Toolbar: "Új felhasználó" gomb
     @FXML
     private void onAddNewUser() {
         User newUser = new User();
-        newUser.setAdmin(false);  // alapértelmezetten ne legyen admin
-
+        newUser.setAdmin(false);
         openUserEditDialog(newUser);
     }
 
-    // Toolbar: "Kijelölt törlése" gomb
     @FXML
     private void onDeleteUser() {
         User selected = usersTable.getSelectionModel().getSelectedItem();
@@ -178,13 +227,9 @@ public class UserAdminPageController {
         });
     }
 
-    // Toolbar: "Lista frissítése" gomb
     @FXML
     private void onRefresh() {
         reloadUsers();
-        if (statusLabel != null) {
-            statusLabel.setText("Lista frissítve. Jelenlegi felhasználók: " + users.size());
-        }
     }
 
     // ---------------------------------------------------------
@@ -205,20 +250,13 @@ public class UserAdminPageController {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.setTitle("Felhasználó szerkesztése");
             dialogStage.setScene(new Scene(root));
-
             dialogStage.showAndWait();
 
-            // Frissítsd a táblát
-            reloadUsers();
-
-            // --- Itt jön az okosság ---
+            // ha történt mentés, bent van az edited flag-ben
             if (ctrl.isEdited()) {
+                reloadUsers();
                 if (statusLabel != null) {
                     statusLabel.setText("Felhasználó frissítve: " + user.getUsername());
-                }
-            } else {
-                if (statusLabel != null) {
-                    statusLabel.setText("Nem történt módosítás.");
                 }
             }
 
@@ -229,10 +267,6 @@ public class UserAdminPageController {
             }
         }
     }
-
-    // ---------------------------------------------------------
-    // Vissza az admin főoldalra
-    // ---------------------------------------------------------
     @FXML
     private void onBackToAdmin(ActionEvent event) {
         try {
@@ -241,14 +275,9 @@ public class UserAdminPageController {
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400)); // vagy 1400x900, ha úgy használod
+            stage.setScene(new Scene(root, 600, 400));
             stage.setTitle("ATC – Admin Dashboard");
             stage.show();
-
-            if (statusLabel != null) {
-                statusLabel.setText("Visszaléptél az admin főoldalra.");
-            }
-
         } catch (Exception ex) {
             ex.printStackTrace();
             if (statusLabel != null) {
