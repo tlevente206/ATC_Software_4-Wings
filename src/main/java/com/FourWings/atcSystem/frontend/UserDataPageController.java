@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.aircraft.Aircraft;
 import com.FourWings.atcSystem.model.airline.Airline;
 import com.FourWings.atcSystem.model.airport.Airports;
@@ -12,7 +13,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
@@ -76,6 +82,22 @@ public class UserDataPageController {
         System.out.println("Terminal id=" + terminal.getId());
     }
 
-    public void toHome(ActionEvent actionEvent) {
+    public void toHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            // Stage megszerzése az eseményt kiváltó gombból
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root, 600, 400));
+            stage.setTitle("ATC – Dashboard");
+            stage.show();
+            stage.centerOnScreen();
+        } catch (Exception ex) {
+            System.out.println("To Home error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }

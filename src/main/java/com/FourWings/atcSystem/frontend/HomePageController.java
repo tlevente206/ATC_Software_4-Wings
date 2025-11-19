@@ -1,10 +1,14 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.user.User;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -15,6 +19,9 @@ public class HomePageController {
 
     @FXML
     private ComboBox<String> menuComboBox;
+    
+    @FXML
+    private Button dataButton;
 
 
     private User loggedUser;
@@ -56,4 +63,25 @@ public class HomePageController {
             ex.printStackTrace();
         }
     }
+
+    public void onGoToPersonalData(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserDataPage.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            // Stage megszerzése az eseményt kiváltó gombból
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root, 600, 400));
+            stage.setTitle("ATC – Sajat adatok");
+            stage.show();
+            stage.centerOnScreen();
+        }
+        catch (Exception ex) {
+            System.out.println("User Data Page Error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
 }
