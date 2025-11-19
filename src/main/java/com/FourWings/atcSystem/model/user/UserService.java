@@ -75,4 +75,40 @@ public class UserService {
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
     }
+
+    // UserService.java
+
+    @Transactional
+    public void changePassword(long userId, String oldRawPassword, String newRawPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Felhasználó nem található."));
+
+        if (!passwordEncoder.matches(oldRawPassword, user.getPassword())) {
+            throw new IllegalArgumentException("A régi jelszó nem helyes.");
+        }
+
+        if (newRawPassword == null || newRawPassword.length() < 8) {
+            throw new IllegalArgumentException("Az új jelszó túl rövid (min. 8 karakter).");
+        }
+
+        String encoded = passwordEncoder.encode(newRawPassword);
+        user.setPassword(encoded);
+        userRepository.save(user);
+
+        System.out.println("Jelszó módosítva userId=" + userId);  // debug
+    }
+
+    @Transactional
+    public boolean changeOwnPassword(long userId, String oldRawPassword, String newRawPassword) {
+        User dbUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Felhasználó nem található id=" + userId));
+
+        if (!passwordEncoder.matches(oldRawPassword, dbUser.getPassword())) {
+            return false;
+        }
+
+        dbUser.setPassword(passwordEncoder.encode(newRawPassword));
+        userRepository.save(dbUser);
+        return true;
+    }
 }

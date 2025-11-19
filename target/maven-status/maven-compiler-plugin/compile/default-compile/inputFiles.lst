@@ -2,6 +2,7 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SecurityConfig.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SpringContext.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/AdminPageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/ChangePasswordDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/HomePageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/JavaFXApplication.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/MainPageController.java
@@ -9,6 +10,7 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserAdminPageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserDataPageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserEditDialogController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserSelfEditDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/Aircraft.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftRepository.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftService.java

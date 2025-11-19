@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import lombok.ToString;
@@ -47,9 +48,13 @@ public class UserDataPageController {
     public void initWithUser(User user) {
         this.loggedUser = user;
 
-        nameLabel.setText(loggedUser.getName());
-        phoneLabel.setText(loggedUser.getPhone());
-        emailLabel.setText(loggedUser.getEmail());
+        if (user != null) {
+            nameLabel.setText(user.getName());
+            phoneLabel.setText(user.getPhone());
+            emailLabel.setText(user.getEmail());
+        } else {
+            System.out.println("initWithUser() null user-rel hívva");
+        }
     }
 
     public void setLastAirport(Airports airports) {
@@ -80,6 +85,44 @@ public class UserDataPageController {
     public void setLastTerminal(Terminal terminal) {
         this.terminal = terminal;
         System.out.println("Terminal id=" + terminal.getId());
+    }
+
+    @FXML
+    public void openProfileEditor(ActionEvent event) {
+        if (loggedUser == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Hiba");
+            alert.setHeaderText("Nincs betöltve felhasználó");
+            alert.setContentText("A profil szerkesztéséhez előbb be kell jelentkezni.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/UserSelfEditDialog.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            UserSelfEditDialogController ctrl = loader.getController();
+            ctrl.setUser(loggedUser);
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(nameLabel.getScene().getWindow());
+            dialogStage.setTitle("Profil szerkesztése");
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
+
+            // visszatérés után frissítjük a label-eket
+            if (loggedUser != null) {
+                nameLabel.setText( loggedUser.getName() );
+                phoneLabel.setText( loggedUser.getPhone() );
+                emailLabel.setText( loggedUser.getEmail() );
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void toHome(ActionEvent event) {

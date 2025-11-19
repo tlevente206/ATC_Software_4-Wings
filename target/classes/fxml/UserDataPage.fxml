@@ -8,32 +8,50 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #55aaff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.UserDataPageController">
-   <children>
-      <Label layoutX="224.0" layoutY="34.0" text="Saját adatok">
-         <font>
-            <Font size="28.0" />
-         </font>
-      </Label>
-      <GridPane layoutX="200.0" layoutY="120.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Név:" />
-            <Label fx:id="nameLabel" GridPane.columnIndex="1" />
-            <Label text="E-mail:" GridPane.rowIndex="1" />
-            <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Telefon:" GridPane.rowIndex="2" />
-            <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         </children>
-      </GridPane>
-      <Button layoutX="250.0" layoutY="274.0" mnemonicParsing="false" onAction="#toHome" text="Vissza a főoldalra" textAlignment="CENTER" />
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #55aaff;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.UserDataPageController">
+
+    <children>
+
+        <Label layoutX="224.0" layoutY="34.0" text="Saját adatok">
+            <font><Font size="28.0" /></font>
+        </Label>
+
+        <GridPane layoutX="200.0" layoutY="120.0">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="100.0" />
+                <ColumnConstraints prefWidth="200.0" />
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints prefHeight="30.0" />
+                <RowConstraints prefHeight="30.0" />
+                <RowConstraints prefHeight="30.0" />
+            </rowConstraints>
+
+            <children>
+                <Label text="Név:" />
+                <Label fx:id="nameLabel" GridPane.columnIndex="1" />
+
+                <Label text="E-mail:" GridPane.rowIndex="1"/>
+                <Label fx:id="emailLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                <Label text="Telefon:" GridPane.rowIndex="2"/>
+                <Label fx:id="phoneLabel" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+            </children>
+        </GridPane>
+
+        <!-- Vissza -->
+        <Button layoutX="250.0" layoutY="274.0"
+                text="Vissza a főoldalra"
+                onAction="#toHome"/>
+
+        <!-- ÚJ: Profil szerkesztése -->
+        <Button layoutX="410.0" layoutY="274.0"
+                text="Profil szerkesztése"
+                onAction="#openProfileEditor"/>
+
+    </children>
 </AnchorPane>

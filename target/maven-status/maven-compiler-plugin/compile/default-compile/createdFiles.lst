@@ -1,12 +1,14 @@
 com/FourWings/atcSystem/model/flight/Flight$FlightBuilder.class
 com/FourWings/atcSystem/model/gate/Gate.class
 com/FourWings/atcSystem/model/flight/FlightRepository.class
+com/FourWings/atcSystem/frontend/ChangePasswordDialogController.class
 com/FourWings/atcSystem/frontend/UserEditDialogController.class
 com/FourWings/atcSystem/model/terminal/TerminalStatus.class
 com/FourWings/atcSystem/model/flight/Flight.class
 com/FourWings/atcSystem/frontend/UserAdminPageController$1.class
 com/FourWings/atcSystem/model/terminal/TerminalService.class
 com/FourWings/atcSystem/model/flight/FlightStatusConverter.class
+com/FourWings/atcSystem/frontend/UserSelfEditDialogController.class
 com/FourWings/atcSystem/frontend/AdminPageController.class
 com/FourWings/atcSystem/model/gate/GateService.class
 com/FourWings/atcSystem/model/terminal/Terminal.class

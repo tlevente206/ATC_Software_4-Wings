@@ -70,11 +70,12 @@ public class HomePageController {
             loader.setControllerFactory(SpringContext::getBean);
             Parent root = loader.load();
 
-            // Stage megszerzése az eseményt kiváltó gombból
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            UserDataPageController ctrl = loader.getController();
+            ctrl.initWithUser(loggedUser);   // <-- EZ A FONTOS SOR
 
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 600, 400));
-            stage.setTitle("ATC – Sajat adatok");
+            stage.setTitle("ATC – Saját adatok");
             stage.show();
             stage.centerOnScreen();
         }
