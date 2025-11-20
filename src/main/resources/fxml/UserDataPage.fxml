@@ -2,23 +2,41 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #55aaff;"
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #55aaff;"
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.UserDataPageController">
 
     <children>
 
+        <!-- Címsor -->
         <Label layoutX="224.0" layoutY="34.0" text="Saját adatok">
-            <font><Font size="28.0" /></font>
+            <font>
+                <Font size="28.0" />
+            </font>
         </Label>
 
+        <!-- Profilkép bal oldalt -->
+        <ImageView fx:id="profileImageView"
+                   layoutX="40.0" layoutY="120.0"
+                   fitWidth="120" fitHeight="120"
+                   preserveRatio="true"
+                   style="-fx-border-color: white; -fx-border-width: 2;" />
+
+        <!-- Profilkép módosítása gomb -->
+        <Button layoutX="40.0" layoutY="250.0"
+                text="Profilkép módosítása"
+                onAction="#onChangeProfilePicture" />
+
+        <!-- Adatok táblázatosan -->
         <GridPane layoutX="200.0" layoutY="120.0">
             <columnConstraints>
                 <ColumnConstraints prefWidth="100.0" />
@@ -36,22 +54,25 @@
                 <Label fx:id="nameLabel" GridPane.columnIndex="1" />
 
                 <Label text="E-mail:" GridPane.rowIndex="1"/>
-                <Label fx:id="emailLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <Label fx:id="emailLabel"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="1" />
 
                 <Label text="Telefon:" GridPane.rowIndex="2"/>
-                <Label fx:id="phoneLabel" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                <Label fx:id="phoneLabel"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="1" />
             </children>
         </GridPane>
 
         <!-- Vissza -->
-        <Button layoutX="250.0" layoutY="274.0"
+        <Button layoutX="250.0" layoutY="320.0"
                 text="Vissza a főoldalra"
                 onAction="#toHome"/>
 
-        <!-- ÚJ: Profil szerkesztése -->
-        <Button layoutX="410.0" layoutY="274.0"
+        <!-- Profil szerkesztése -->
+        <Button layoutX="410.0" layoutY="320.0"
                 text="Profil szerkesztése"
                 onAction="#openProfileEditor"/>
-
     </children>
 </AnchorPane>

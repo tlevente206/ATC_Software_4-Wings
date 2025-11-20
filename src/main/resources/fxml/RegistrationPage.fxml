@@ -4,29 +4,69 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.RegistrationPageController">
-   <children>
-      <TextField fx:id="nevInput" layoutX="98.0" layoutY="109.0" />
-      <TextField fx:id="userInput" layoutX="98.0" layoutY="144.0" />
-      <PasswordField fx:id="passInput" layoutX="98.0" layoutY="206.0" />
-      <TextField fx:id="emailInput" layoutX="98.0" layoutY="175.0" />
-      <TextField fx:id="phoneInput" layoutX="98.0" layoutY="239.0" />
-      <Label layoutX="119.0" layoutY="84.0" text="Add meg az adataidat" />
-      <Label layoutX="38.0" layoutY="113.0" text="Nev" />
-      <Label layoutX="25.0" layoutY="148.0" text="Felh. nev" />
-      <Label layoutX="32.0" layoutY="179.0" text="E-mail" />
-      <Label layoutX="32.0" layoutY="210.0" text="Jelszo" />
-      <Label layoutX="29.0" layoutY="243.0" text="Telefon" />
-      <Button fx:id="registerButton" layoutX="174.0" layoutY="286.0" mnemonicParsing="false" onAction="#register" text="Regisztracio" />
-      <Label fx:id="registerLabel" layoutX="104.0" layoutY="338.0" />
-      <Button fx:id="backToMainPageButton" layoutX="273.0" layoutY="286.0" mnemonicParsing="false" onAction="#backToMainPage" text="Bejelentkezés" />
-      <Label layoutX="215.0" layoutY="28.0" text="Regisztráció">
-         <font>
-            <Font size="33.0" />
-         </font>
-      </Label>
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.RegistrationPageController">
+
+    <children>
+        <Label layoutX="215.0" layoutY="28.0" text="Regisztráció">
+            <font>
+                <Font size="33.0" />
+            </font>
+        </Label>
+
+        <Label layoutX="119.0" layoutY="84.0" text="Add meg az adataidat" />
+
+        <Label layoutX="38.0" layoutY="113.0" text="Név" />
+        <TextField fx:id="nevInput" layoutX="98.0" layoutY="109.0" />
+
+        <Label layoutX="25.0" layoutY="148.0" text="Felh. név" />
+        <TextField fx:id="userInput" layoutX="98.0" layoutY="144.0" />
+
+        <Label layoutX="32.0" layoutY="179.0" text="E-mail" />
+        <TextField fx:id="emailInput" layoutX="98.0" layoutY="175.0" />
+
+        <Label layoutX="32.0" layoutY="210.0" text="Jelszó" />
+        <PasswordField fx:id="passInput" layoutX="98.0" layoutY="206.0" />
+
+        <Label layoutX="29.0" layoutY="243.0" text="Telefon" />
+        <TextField fx:id="phoneInput" layoutX="98.0" layoutY="239.0" />
+
+        <!-- Profilkép blokk jobb oldalon -->
+        <HBox layoutX="350.0" layoutY="120.0" spacing="10">
+            <children>
+                <ImageView fx:id="profileImageView"
+                           fitWidth="100" fitHeight="100"
+                           preserveRatio="true"
+                           style="-fx-border-color: gray; -fx-border-width: 1;" />
+                <Button text="Profilkép választása"
+                        onAction="#onSelectProfileImage" />
+            </children>
+        </HBox>
+
+        <Label fx:id="imageErrorLabel"
+               layoutX="350.0" layoutY="230.0"
+               textFill="red" />
+
+        <Button fx:id="registerButton"
+                layoutX="174.0" layoutY="286.0"
+                mnemonicParsing="false"
+                onAction="#register"
+                text="Regisztráció" />
+
+        <Button fx:id="backToMainPageButton"
+                layoutX="273.0" layoutY="286.0"
+                mnemonicParsing="false"
+                onAction="#backToMainPage"
+                text="Bejelentkezés" />
+
+        <Label fx:id="registerLabel"
+               layoutX="104.0" layoutY="338.0" />
+    </children>
 </AnchorPane>

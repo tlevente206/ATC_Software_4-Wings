@@ -15,14 +15,20 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
     String name;
+
     @Column(unique = true, nullable = false)
     String username;
+
     String password;
     String email;
     String phone;
+
     @Column(name = "is_admin")
     boolean admin;
 
-
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] profileImage;
 }

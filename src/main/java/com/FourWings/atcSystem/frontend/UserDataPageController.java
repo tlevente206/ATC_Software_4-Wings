@@ -9,23 +9,37 @@ import com.FourWings.atcSystem.model.flight.Flight;
 import com.FourWings.atcSystem.model.gate.Gate;
 import com.FourWings.atcSystem.model.terminal.Terminal;
 import com.FourWings.atcSystem.model.user.User;
+import com.FourWings.atcSystem.model.user.UserService;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.file.Files;
+
 @Component
 public class UserDataPageController {
+
+    private final UserService userService;
+
+    public UserDataPageController(UserService userService) {
+        this.userService = userService;
+    }
+
     @FXML
     private Label emailLabel;
 
@@ -35,14 +49,19 @@ public class UserDataPageController {
     @FXML
     private Label phoneLabel;
 
+    @FXML
+    private ImageView profileImageView;
+
     private User loggedUser;
     private Airports airports;
     private Aircraft aircraft;
     private Airline airline;
+
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "terminal_id", referencedColumnName = "terminal_id")
     private Terminal terminal;
+
     private Gate gate;
     private Flight flight;
 
@@ -53,8 +72,23 @@ public class UserDataPageController {
             nameLabel.setText(user.getName());
             phoneLabel.setText(user.getPhone());
             emailLabel.setText(user.getEmail());
+            refreshProfileImage();
         } else {
             System.out.println("initWithUser() null user-rel hívva");
+        }
+    }
+
+    private void refreshProfileImage() {
+        if (profileImageView == null) return;
+        if (loggedUser == null) return;
+
+        if (loggedUser.getProfileImage() != null) {
+            var img = new javafx.scene.image.Image(
+                    new ByteArrayInputStream(loggedUser.getProfileImage())
+            );
+            profileImageView.setImage(img);
+        } else {
+            profileImageView.setImage(null); // vagy default kép
         }
     }
 
@@ -89,6 +123,51 @@ public class UserDataPageController {
     }
 
     @FXML
+    private void onChangeProfilePicture(ActionEvent event) {
+        if (loggedUser == null) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Hiba");
+            a.setHeaderText("Nincs bejelentkezett felhasználó");
+            a.setContentText("Profilkép módosításához be kell jelentkezni.");
+            a.showAndWait();
+            return;
+        }
+
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Új profilkép választása");
+        fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Képfájlok", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        Stage stage = (Stage) nameLabel.getScene().getWindow();
+        File file = fc.showOpenDialog(stage);
+
+        if (file != null) {
+            try {
+                byte[] bytes = Files.readAllBytes(file.toPath());
+                loggedUser.setProfileImage(bytes);
+                userService.saveFromAdmin(loggedUser, null); // jelszó nem változik
+
+                refreshProfileImage();
+
+                Alert ok = new Alert(Alert.AlertType.INFORMATION);
+                ok.setTitle("Profilkép frissítve");
+                ok.setHeaderText(null);
+                ok.setContentText("A profilképed sikeresen frissült.");
+                ok.showAndWait();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert err = new Alert(Alert.AlertType.ERROR);
+                err.setTitle("Hiba");
+                err.setHeaderText("Nem sikerült elmenteni a profilképet.");
+                err.setContentText(ex.getMessage());
+                err.showAndWait();
+            }
+        }
+    }
+
+    @FXML
     public void openProfileEditor(ActionEvent event) {
         if (loggedUser == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -116,9 +195,9 @@ public class UserDataPageController {
 
             // visszatérés után frissítjük a label-eket
             if (loggedUser != null) {
-                nameLabel.setText( loggedUser.getName() );
-                phoneLabel.setText( loggedUser.getPhone() );
-                emailLabel.setText( loggedUser.getEmail() );
+                nameLabel.setText(loggedUser.getName());
+                phoneLabel.setText(loggedUser.getPhone());
+                emailLabel.setText(loggedUser.getEmail());
             }
 
         } catch (Exception ex) {
@@ -126,6 +205,7 @@ public class UserDataPageController {
         }
     }
 
+    @FXML
     public void toHome(ActionEvent event) {
         SceneManager.switchTo("HomePage.fxml", "ATC – Dashboard", 600, 400);
     }
