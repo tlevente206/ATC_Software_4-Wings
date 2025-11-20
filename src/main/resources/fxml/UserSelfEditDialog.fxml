@@ -67,7 +67,7 @@
             <children>
                 <!-- Bal oldalt: jelszómódosító gomb -->
                 <Button text="Jelszó módosítása"
-                        onAction="#onOpenChangePasswordDialog"/>
+                        onAction="#onChangePassword" />
 
                 <Pane HBox.hgrow="ALWAYS"/>
 

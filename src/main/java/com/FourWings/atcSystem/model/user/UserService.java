@@ -28,39 +28,69 @@ public class UserService {
         return userRepository.save(u);
     }
 
-    // 2) admin által létrehozott / módosított felhasználó
-    // rawPassword lehet:
-    //   - null / üres: meglévő usernél nem változik a jelszó
-    //   - konkrét jelszó: ezt titkosítjuk és mentjük
+    /**
+     * Admin által létrehozott / módosított felhasználó.
+     *
+     * rawPasswordOrNull:
+     *  - ha NEM null/üres: új jelszó -> encode + mentés
+     *  - ha null/üres: jelszó VÁLTOZATLAN marad a DB-ben
+     *
+     * FONTOS: meglévő usernél mindig a DB-s entitást töltjük be,
+     * és CSAK a nem-jelszó mezőket írjuk felül a paraméterből.
+     */
     @Transactional
     public User saveFromAdmin(User u, String rawPasswordOrNull) {
-        // username ütközés ellenőrzés
-        boolean usernameTaken;
 
         if (u.getId() == 0) {
-            // új user
-            usernameTaken = userRepository.existsByUsername(u.getUsername());
-        } else {
-            // meglévő user
-            usernameTaken = userRepository.existsByUsernameAndIdNot(u.getUsername(), u.getId());
+            // --- ÚJ USER ---
+            // felhasználónév ütközés ellenőrzés
+            if (userRepository.existsByUsername(u.getUsername())) {
+                throw new IllegalStateException("A felhasználónév már foglalt: " + u.getUsername());
+            }
+
+            // ha van nyers jelszó paraméterben, azt encode-oljuk
+            if (rawPasswordOrNull != null && !rawPasswordOrNull.isBlank()) {
+                u.setPassword(passwordEncoder.encode(rawPasswordOrNull));
+            } else if (u.getPassword() != null && !u.getPassword().isBlank()) {
+                // opcionálisan: ha maga az entity tartalmaz raw jelszót (pl. registerSelf előtt),
+                // akkor itt is encode-olhatnánk – de nálad új usernél eddig is mindig adtunk rawPasswordOrNull-t.
+            }
+
+            return userRepository.save(u);
         }
 
+        // --- MEGLÉVŐ USER ---
+        // username ütközés ellenőrzés (másik usernél van-e ugyanaz)
+        boolean usernameTaken =
+                userRepository.existsByUsernameAndIdNot(u.getUsername(), u.getId());
         if (usernameTaken) {
             throw new IllegalStateException("A felhasználónév már foglalt: " + u.getUsername());
         }
 
-        if (rawPasswordOrNull != null && !rawPasswordOrNull.isBlank()) {
-            u.setPassword(passwordEncoder.encode(rawPasswordOrNull));
-        }
+        // DB-ből frissen betöltött entitás (MANAGED)
+        User dbUser = userRepository.findById(u.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Felhasználó nem található id=" + u.getId()));
 
-        return userRepository.save(u);
+        // CSAK az alábbi mezőket írjuk felül:
+        dbUser.setName(u.getName());
+        dbUser.setUsername(u.getUsername());
+        dbUser.setEmail(u.getEmail());
+        dbUser.setPhone(u.getPhone());
+        dbUser.setAdmin(u.isAdmin());
+
+        // A jelszó CSAK AKKOR változik, ha kaptunk nyers jelszót:
+        if (rawPasswordOrNull != null && !rawPasswordOrNull.isBlank()) {
+            dbUser.setPassword(passwordEncoder.encode(rawPasswordOrNull));
+        }
+        // Ha null/üres: érintetlenül hagyjuk dbUser.getPassword()-öt
+
+        return userRepository.save(dbUser);
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // 3) ideiglenes jelszó generálása – ezt a controller fogja hívni
     public String generateTempPassword() {
         String chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*";
         SecureRandom rnd = new SecureRandom();
@@ -75,8 +105,6 @@ public class UserService {
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
     }
-
-    // UserService.java
 
     @Transactional
     public void changePassword(long userId, String oldRawPassword, String newRawPassword) {
@@ -95,7 +123,7 @@ public class UserService {
         user.setPassword(encoded);
         userRepository.save(user);
 
-        System.out.println("Jelszó módosítva userId=" + userId);  // debug
+        System.out.println("Jelszó módosítva userId=" + userId);
     }
 
     @Transactional
