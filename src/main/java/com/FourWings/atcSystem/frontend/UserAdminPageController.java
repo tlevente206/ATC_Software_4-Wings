@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.model.user.UserService;
@@ -9,7 +10,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -271,21 +271,6 @@ public class UserAdminPageController {
     }
     @FXML
     private void onBackToAdmin(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPage.fxml"));
-            loader.setControllerFactory(SpringContext::getBean);
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
-            stage.setTitle("ATC – Admin Dashboard");
-            stage.show();
-            stage.centerOnScreen();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            if (statusLabel != null) {
-                statusLabel.setText("Nem sikerült visszalépni az admin felületre: " + ex.getMessage());
-            }
-        }
+        SceneManager.switchTo("AdminPage.fxml", "ATC – Admin Dashboard", 600, 400);
     }
 }

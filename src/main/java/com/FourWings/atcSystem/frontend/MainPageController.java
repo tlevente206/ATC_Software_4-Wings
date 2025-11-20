@@ -1,15 +1,12 @@
 package com.FourWings.atcSystem.frontend;
 
-import com.FourWings.atcSystem.config.SpringContext;
+import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -35,31 +32,27 @@ public class MainPageController {
     // ---------------------- NAVIGÁCIÓ ----------------------
 
     private void openHomePage(Stage stage, User user) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
-        loader.setControllerFactory(SpringContext::getBean);
-        Parent root = loader.load();
+        // SceneManager betölti az FXML-t és visszaadja a controller-t
+        HomePageController ctrl = SceneManager.switchTo(
+                "HomePage.fxml",
+                "ATC – Dashboard",
+                600, 400
+        );
 
-        HomePageController ctrl = loader.getController();
-        ctrl.initWithUser(user);   // átadjuk a bejelentkezett usert
-
-        stage.setScene(new Scene(root, 600, 400));
-        stage.setTitle("ATC – Dashboard");
-        stage.show();
-        stage.centerOnScreen();
+        // Felhasználó átadása
+        ctrl.initWithUser(user);
     }
 
     private void openAdminPage(Stage stage, User user) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPage.fxml"));
-        loader.setControllerFactory(SpringContext::getBean);
-        Parent root = loader.load();
 
-        AdminPageController ctrl = loader.getController();
-        ctrl.initWithUser(user);   // itt is átadjuk
+        AdminPageController ctrl = SceneManager.switchTo(
+                "AdminPage.fxml",
+                "ATC – Admin Dashboard",
+                600, 400
+        );
 
-        stage.setScene(new Scene(root, 600, 400));
-        stage.setTitle("ATC – Admin Dashboard");
-        stage.show();
-        stage.centerOnScreen();
+        // Felhasználó átadása
+        ctrl.initWithUser(user);
     }
 
     // ---------------------- LOGIN ----------------------
@@ -111,14 +104,6 @@ public class MainPageController {
 
     @FXML
     private void goToRegister(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RegistrationPage.fxml"));
-        loader.setControllerFactory(SpringContext::getBean);
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
-        stage.setTitle("Regisztráció");
-        stage.show();
-        stage.centerOnScreen();
+        SceneManager.switchTo("RegistrationPage.fxml", "ATC – Regisztráció", 600, 400);
     }
 }

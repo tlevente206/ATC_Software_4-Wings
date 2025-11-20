@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.model.user.UserService;
@@ -48,15 +49,7 @@ public class RegistrationPageController {
 
     @FXML
     private void backToMainPage(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainPage.fxml"));
-        loader.setControllerFactory(SpringContext::getBean);
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 800, 400));
-        stage.setTitle("Bejelentkezés");
-        stage.show();
-        stage.centerOnScreen();
+        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 
     public void register(ActionEvent event) {

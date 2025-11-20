@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.aircraft.Aircraft;
 import com.FourWings.atcSystem.model.airline.Airline;
@@ -126,21 +127,6 @@ public class UserDataPageController {
     }
 
     public void toHome(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HomePage.fxml"));
-            loader.setControllerFactory(SpringContext::getBean);
-            Parent root = loader.load();
-
-            // Stage megszerzése az eseményt kiváltó gombból
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            stage.setScene(new Scene(root, 600, 400));
-            stage.setTitle("ATC – Dashboard");
-            stage.show();
-            stage.centerOnScreen();
-        } catch (Exception ex) {
-            System.out.println("To Home error: " + ex.getMessage());
-            ex.printStackTrace();
-        }
+        SceneManager.switchTo("HomePage.fxml", "ATC – Dashboard", 600, 400);
     }
 }

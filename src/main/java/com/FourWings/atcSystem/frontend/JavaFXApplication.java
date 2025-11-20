@@ -1,36 +1,37 @@
 package com.FourWings.atcSystem.frontend;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import com.FourWings.atcSystem.AtcSystemApplication;
+import com.FourWings.atcSystem.config.SceneManager;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-
 public class JavaFXApplication extends Application {
+
     private ConfigurableApplicationContext ctx;
 
     @Override
     public void start(Stage stage) {
         try {
+            // 1) Spring Boot indítása
             ctx = SpringApplication.run(AtcSystemApplication.class);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainPage.fxml"));
-            loader.setControllerFactory(ctx::getBean);
-            Parent root = loader.load();
+            // 2) SceneManager inicializálása *A KAPOTT* stage-dzsel
+            SceneManager.init(stage);
 
-            stage.setTitle("ATC System");
-            stage.setScene(new Scene(root, 800, 400));
-            stage.centerOnScreen();
-            stage.getIcons().add(new Image(getClass().getResource("/images/1.png").toExternalForm()));
-            stage.show();
-            stage.centerOnScreen();
+            // 3) Első oldal betöltése (amit szeretnél: MainPage vagy HomePage)
+            SceneManager.switchTo("MainPage.fxml", "ATC System", 800, 400);
+
+            // 4) Ikon beállítása (ha kell)
+            stage.getIcons().add(
+                    new Image(getClass()
+                            .getResource("/images/1.png")
+                            .toExternalForm())
+            );
+
         } catch (Exception e) {
             e.printStackTrace();
             Platform.exit();
@@ -39,7 +40,9 @@ public class JavaFXApplication extends Application {
 
     @Override
     public void stop() {
-        if (ctx != null) ctx.close();
+        if (ctx != null) {
+            ctx.close();
+        }
         Platform.exit();
     }
 }
