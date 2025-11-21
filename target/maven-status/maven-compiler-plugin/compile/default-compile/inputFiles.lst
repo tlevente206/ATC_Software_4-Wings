@@ -5,6 +5,7 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/AdminPageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/AvatarPickerDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/ChangePasswordDialogController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/FlightWeatherAssistantDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/HomePageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/JavaFXApplication.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/MainPageController.java
@@ -45,3 +46,7 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/UserRepository.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/UserService.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/AuthService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvice.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvisorService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/WeatherService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/WeatherSnapshot.java

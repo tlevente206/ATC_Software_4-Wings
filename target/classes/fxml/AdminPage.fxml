@@ -14,5 +14,8 @@
                onAction="#onLogout"
                layoutX="500"
                layoutY="10"/>
+       <Button text="Időjárás asszisztens"
+               onAction="#onOpenWeatherAssistant"
+               layoutX="20.0" layoutY="200.0" />
    </children>
 </AnchorPane>

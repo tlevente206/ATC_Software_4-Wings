@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.FlightWeatherAssistantDialogController"
+            prefWidth="600" prefHeight="420">
+
+    <children>
+
+        <Label text="Időjárás asszisztens"
+               layoutX="20" layoutY="20">
+            <font>
+                <Font size="22"/>
+            </font>
+        </Label>
+
+        <Label text="Repülőtér:" layoutX="20" layoutY="70"/>
+
+        <ComboBox fx:id="airportCombo"
+                  layoutX="90" layoutY="65"
+                  prefWidth="260"/>
+
+        <Button text="Elemzés"
+                layoutX="370" layoutY="65"
+                onAction="#onAnalyzeWeather"/>
+
+        <Label fx:id="statusLabel"
+               layoutX="20" layoutY="110"
+               text="Státusz: -"/>
+
+        <TextArea fx:id="resultArea"
+                  layoutX="20" layoutY="140"
+                  prefWidth="560" prefHeight="220"
+                  wrapText="true"/>
+
+        <Label fx:id="errorLabel"
+               layoutX="20" layoutY="370"
+               textFill="red"/>
+
+        <Button text="Bezárás"
+                layoutX="500" layoutY="365"
+                onAction="#onClose"/>
+    </children>
+</AnchorPane>

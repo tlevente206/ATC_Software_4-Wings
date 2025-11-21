@@ -97,4 +97,15 @@ public class Airports {
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
+    @Transient
+    public String getCode() {
+        if (iataCode != null && !iataCode.isBlank()) {
+            return iataCode;
+        }
+        if (icaoCode != null && !icaoCode.isBlank()) {
+            return icaoCode;
+        }
+        return name != null ? name : "N/A";
+    }
 }
