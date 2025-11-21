@@ -1,18 +1,26 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.model.user.UserService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.util.regex.Pattern;
 
 @Component
@@ -33,39 +41,49 @@ public class RegistrationPageController {
     @FXML private Label registerLabel;
     @FXML private Button backToMainPageButton;
 
+    private static final Pattern USERNAME_PATTERN =
+            Pattern.compile("^[A-Za-z0-9._-]{3,20}$");
+
     @FXML private ImageView profileImageView;
     @FXML private Label imageErrorLabel;
 
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._-]{3,20}$");
-
-    // itt tároljuk a kiválasztott kép byte-jait
+    // itt tároljuk a kiválasztott kép byte-jait (avatár vagy saját kép)
     private byte[] selectedProfileImage;
 
     @FXML
     private void onSelectProfileImage(ActionEvent event) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Profilkép kiválasztása");
-        fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Képfájlok", "*.png", "*.jpg", "*.jpeg")
-        );
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/AvatarPickerDialog.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
 
-        File file = fc.showOpenDialog(profileImageView.getScene().getWindow());
-        if (file != null) {
-            try {
-                selectedProfileImage = java.nio.file.Files.readAllBytes(file.toPath());
+            AvatarPickerDialogController ctrl = loader.getController();
 
-                // előnézet
-                Image img = new Image(file.toURI().toString());
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(profileImageView.getScene().getWindow());
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.setTitle("Profilkép választása");
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
+
+            byte[] chosen = ctrl.getSelectedImageBytes();
+            if (chosen != null) {
+                selectedProfileImage = chosen;
+
+                // előnézet beállítása
+                Image img = new Image(new ByteArrayInputStream(chosen));
                 profileImageView.setImage(img);
 
                 if (imageErrorLabel != null) {
                     imageErrorLabel.setText("");
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                if (imageErrorLabel != null) {
-                    imageErrorLabel.setText("Nem sikerült beolvasni a képet.");
-                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (imageErrorLabel != null) {
+                imageErrorLabel.setText("Nem sikerült megnyitni az avatar választót: " + ex.getMessage());
             }
         }
     }
@@ -76,32 +94,24 @@ public class RegistrationPageController {
         emailInput.clear();
         passInput.clear();
         phoneInput.clear();
-        profileImageView.setImage(null);
         selectedProfileImage = null;
-        if (imageErrorLabel != null) imageErrorLabel.setText("");
+        if (profileImageView != null) {
+            profileImageView.setImage(null);
+        }
     }
 
     @FXML
-    private void backToMainPage(ActionEvent event) {
+    private void backToMainPage(ActionEvent event) throws Exception {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 
     @FXML
     public void register(ActionEvent event) {
-        registerLabel.setText("");
-        if (imageErrorLabel != null) {
-            imageErrorLabel.setText("");
-        }
-
         String username = userInput.getText().trim();
         String password = passInput.getText();
-        String name = nevInput.getText().trim();
-        String email = emailInput.getText().trim();
-        String phone = phoneInput.getText().trim();
 
-        // --- FRONTEND VALIDÁCIÓ ---
-        if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            registerLabel.setText("Minden mező kitöltése kötelező.");
+        if (username.isEmpty() || password.isEmpty()) {
+            registerLabel.setText("Kitöltés kötelező: felhasználónév és jelszó.");
             return;
         }
         if (!USERNAME_PATTERN.matcher(username).matches()) {
@@ -112,6 +122,7 @@ public class RegistrationPageController {
             registerLabel.setText("Jelszó túl rövid (min. 8 karakter).");
             return;
         }
+        // Profilkép kötelező
         if (selectedProfileImage == null) {
             if (imageErrorLabel != null) {
                 imageErrorLabel.setText("Profilkép megadása kötelező.");
@@ -119,27 +130,20 @@ public class RegistrationPageController {
             return;
         }
 
-        // --- UI: gomb tiltása, státusz ---
-        registerButton.setDisable(true);
-        backToMainPageButton.setDisable(true);
-        registerLabel.setText("Regisztráció folyamatban...");
-
-        // --- HÁTTÉRSZÁL (NE FAGYJON AZ UI) ---
-        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+        Task<Void> task = new Task<>() {
             @Override
-            protected Void call() {
-                // Itt vagyunk háttérszálon
+            protected Void call() throws Exception {
                 boolean available = userService.isUsernameAvailable(username);
                 if (!available) {
                     throw new IllegalStateException("A felhasználónév már foglalt.");
                 }
 
                 User u = User.builder()
-                        .name(name)
+                        .name(nevInput.getText().trim())
                         .username(username)
-                        .email(email)
+                        .email(emailInput.getText().trim())
                         .password(password)
-                        .phone(phone)
+                        .phone(phoneInput.getText().trim())
                         .admin(false)
                         .profileImage(selectedProfileImage)
                         .build();
@@ -150,22 +154,15 @@ public class RegistrationPageController {
         };
 
         task.setOnSucceeded(e -> {
-            // vissza UI szálra
             registerLabel.setText("Sikeres regisztráció.");
-            registerButton.setDisable(false);
-            backToMainPageButton.setDisable(false);
             clearForm();
         });
 
         task.setOnFailed(e -> {
             Throwable ex = task.getException();
-            String msg = (ex != null && ex.getMessage() != null) ? ex.getMessage() : "ismeretlen hiba";
-
-            registerLabel.setText("Hiba: " + msg);
-            registerButton.setDisable(false);
-            backToMainPageButton.setDisable(false);
+            registerLabel.setText("Hiba: " + (ex != null ? ex.getMessage() : "ismeretlen"));
         });
 
-        new Thread(task, "register-user-task").start();
+        new Thread(task, "check-and-save-user").start();
     }
 }

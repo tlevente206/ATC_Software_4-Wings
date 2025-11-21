@@ -19,17 +19,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.Label;
-import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.nio.file.Files;
 
 @Component
 public class UserDataPageController {
@@ -83,12 +81,12 @@ public class UserDataPageController {
         if (loggedUser == null) return;
 
         if (loggedUser.getProfileImage() != null) {
-            var img = new javafx.scene.image.Image(
+            Image img = new Image(
                     new ByteArrayInputStream(loggedUser.getProfileImage())
             );
             profileImageView.setImage(img);
         } else {
-            profileImageView.setImage(null); // vagy default kép
+            profileImageView.setImage(null); // vagy default kép, ha később akarsz
         }
     }
 
@@ -122,6 +120,7 @@ public class UserDataPageController {
         System.out.println("Terminal id=" + terminal.getId());
     }
 
+    // ======= PROFILKÉP MÓDOSÍTÁSA – UGYANAZ A POPUP, MINT REGISZTRÁCIÓNÁL =======
     @FXML
     private void onChangeProfilePicture(ActionEvent event) {
         if (loggedUser == null) {
@@ -133,21 +132,28 @@ public class UserDataPageController {
             return;
         }
 
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Új profilkép választása");
-        fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Képfájlok", "*.png", "*.jpg", "*.jpeg")
-        );
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/AvatarPickerDialog.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
 
-        Stage stage = (Stage) nameLabel.getScene().getWindow();
-        File file = fc.showOpenDialog(stage);
+            AvatarPickerDialogController ctrl = loader.getController();
 
-        if (file != null) {
-            try {
-                byte[] bytes = Files.readAllBytes(file.toPath());
-                loggedUser.setProfileImage(bytes);
-                userService.saveFromAdmin(loggedUser, null); // jelszó nem változik
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(nameLabel.getScene().getWindow());
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.setTitle("Profilkép módosítása");
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
 
+            byte[] chosen = ctrl.getSelectedImageBytes();
+            if (chosen != null) {
+                // új kép beállítása, mentés DB-be
+                loggedUser.setProfileImage(chosen);
+                userService.saveFromAdmin(loggedUser, null); // jelszó változatlan
+
+                // előnézet frissítése
                 refreshProfileImage();
 
                 Alert ok = new Alert(Alert.AlertType.INFORMATION);
@@ -155,15 +161,15 @@ public class UserDataPageController {
                 ok.setHeaderText(null);
                 ok.setContentText("A profilképed sikeresen frissült.");
                 ok.showAndWait();
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Alert err = new Alert(Alert.AlertType.ERROR);
-                err.setTitle("Hiba");
-                err.setHeaderText("Nem sikerült elmenteni a profilképet.");
-                err.setContentText(ex.getMessage());
-                err.showAndWait();
             }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert err = new Alert(Alert.AlertType.ERROR);
+            err.setTitle("Hiba");
+            err.setHeaderText("Nem sikerült megnyitni az avatar választót.");
+            err.setContentText(ex.getMessage());
+            err.showAndWait();
         }
     }
 
@@ -198,6 +204,7 @@ public class UserDataPageController {
                 nameLabel.setText(loggedUser.getName());
                 phoneLabel.setText(loggedUser.getPhone());
                 emailLabel.setText(loggedUser.getEmail());
+                refreshProfileImage();
             }
 
         } catch (Exception ex) {
