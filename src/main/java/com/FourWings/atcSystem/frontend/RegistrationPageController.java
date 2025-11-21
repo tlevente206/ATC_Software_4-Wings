@@ -88,11 +88,20 @@ public class RegistrationPageController {
 
     @FXML
     public void register(ActionEvent event) {
+        registerLabel.setText("");
+        if (imageErrorLabel != null) {
+            imageErrorLabel.setText("");
+        }
+
         String username = userInput.getText().trim();
         String password = passInput.getText();
+        String name = nevInput.getText().trim();
+        String email = emailInput.getText().trim();
+        String phone = phoneInput.getText().trim();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            registerLabel.setText("Kitöltés kötelező: felhasználónév és jelszó.");
+        // --- FRONTEND VALIDÁCIÓ ---
+        if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            registerLabel.setText("Minden mező kitöltése kötelező.");
             return;
         }
         if (!USERNAME_PATTERN.matcher(username).matches()) {
@@ -110,20 +119,27 @@ public class RegistrationPageController {
             return;
         }
 
-        Task<Void> task = new Task<>() {
+        // --- UI: gomb tiltása, státusz ---
+        registerButton.setDisable(true);
+        backToMainPageButton.setDisable(true);
+        registerLabel.setText("Regisztráció folyamatban...");
+
+        // --- HÁTTÉRSZÁL (NE FAGYJON AZ UI) ---
+        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
+                // Itt vagyunk háttérszálon
                 boolean available = userService.isUsernameAvailable(username);
                 if (!available) {
                     throw new IllegalStateException("A felhasználónév már foglalt.");
                 }
 
                 User u = User.builder()
-                        .name(nevInput.getText().trim())
+                        .name(name)
                         .username(username)
-                        .email(emailInput.getText().trim())
+                        .email(email)
                         .password(password)
-                        .phone(phoneInput.getText().trim())
+                        .phone(phone)
                         .admin(false)
                         .profileImage(selectedProfileImage)
                         .build();
@@ -134,15 +150,22 @@ public class RegistrationPageController {
         };
 
         task.setOnSucceeded(e -> {
+            // vissza UI szálra
             registerLabel.setText("Sikeres regisztráció.");
+            registerButton.setDisable(false);
+            backToMainPageButton.setDisable(false);
             clearForm();
         });
 
         task.setOnFailed(e -> {
             Throwable ex = task.getException();
-            registerLabel.setText("Hiba: " + (ex != null ? ex.getMessage() : "ismeretlen"));
+            String msg = (ex != null && ex.getMessage() != null) ? ex.getMessage() : "ismeretlen hiba";
+
+            registerLabel.setText("Hiba: " + msg);
+            registerButton.setDisable(false);
+            backToMainPageButton.setDisable(false);
         });
 
-        new Thread(task, "check-and-save-user").start();
+        new Thread(task, "register-user-task").start();
     }
 }
