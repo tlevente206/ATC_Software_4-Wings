@@ -31,6 +31,9 @@ public class HomePageController {
                 if (newVal != null) {
                     System.out.println("Kiválasztott menü: " + newVal);
                     switch (newVal) {
+                        case "Főoldal":
+                            SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", 800, 600);
+                            break;
                         case "Repülők":
                             SceneManager.switchTo("PlanesPage.fxml", "ATC – Repülők", 800, 600);
                             break;
