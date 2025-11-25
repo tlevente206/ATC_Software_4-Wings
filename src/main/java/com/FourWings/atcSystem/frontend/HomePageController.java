@@ -1,3 +1,4 @@
+
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SceneManager;
@@ -13,7 +14,7 @@ public class HomePageController {
 
     @FXML
     private ComboBox<String> menuComboBox;
-    
+
     @FXML
     private Button dataButton;
 
@@ -25,12 +26,29 @@ public class HomePageController {
 
     @FXML
     public void initialize() {
-        // Listener a kiválasztott elemre
         if (menuComboBox != null) {
             menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     System.out.println("Kiválasztott menü: " + newVal);
-                    // Itt lehet majd oldalváltás
+                    switch (newVal) {
+                        case "Repülők":
+                            SceneManager.switchTo("PlanesPage.fxml", "ATC – Repülők", 800, 600);
+                            break;
+                        case "Repterek":
+                            SceneManager.switchTo("AirportsPage.fxml", "ATC – Repterek", 800, 600);
+                            break;
+                        case "Repülőutak":
+                            SceneManager.switchTo("RoutesPage.fxml", "ATC – Repülőutak", 800, 600);
+                            break;
+                        case "Kapuk(Ez inkább a repterekhez menne)":
+                            SceneManager.switchTo("GatesPage.fxml", "ATC – Kapuk", 800, 600);
+                            break;
+                        case "Terminál(Ez is inkább reptér)":
+                            SceneManager.switchTo("TerminalPage.fxml", "ATC – Terminál", 800, 600);
+                            break;
+                        default:
+                            System.out.println("Nincs oldal ehhez: " + newVal);
+                    }
                 }
             });
         }
@@ -46,5 +64,4 @@ public class HomePageController {
                 SceneManager.switchTo("UserDataPage.fxml", "ATC – Saját adatok", 600, 400);
         ctrl.initWithUser(loggedUser);
     }
-
 }

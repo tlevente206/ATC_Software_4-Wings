@@ -46,9 +46,11 @@
                 <ComboBox fx:id="menuComboBox" layoutX="26.0" layoutY="80.0" prefWidth="148.0">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Opció 1"/>
-                            <String fx:value="Opció 2"/>
-                            <String fx:value="Saját adatok"/>
+                            <String fx:value="Repülők"/>
+                            <String fx:value="Repterek"/>
+                            <String fx:value="Repülőutak"/>
+                            <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
+                            <String fx:value="Terminál(Ez is inkább reptér)"/>
                         </FXCollections>
                     </items>
                 </ComboBox>
