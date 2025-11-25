@@ -6,7 +6,12 @@ C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\Ad
 C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\AvatarPickerDialogController.java
 C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\ChangePasswordDialogController.java
 C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\FlightWeatherAssistantDialogController.java
-C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePage\AirportsPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePage\GatesPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePage\HomePageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePage\PlanesPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePage\RoutesPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePage\TerminalPageController.java
 C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\JavaFXApplication.java
 C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\MainPageController.java
 C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\RegistrationPageController.java
