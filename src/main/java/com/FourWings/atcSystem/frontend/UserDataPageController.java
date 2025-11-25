@@ -134,7 +134,7 @@ public class UserDataPageController {
 
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/AvatarPickerDialog.fxml"));
+                    getClass().getResource("/fxml/LogIn/AvatarPickerDialog.fxml"));
             loader.setControllerFactory(SpringContext::getBean);
             Parent root = loader.load();
 

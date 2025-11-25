@@ -55,6 +55,7 @@ public class HomePageController {
                     }
                 }
             });
+            menuComboBox.getSelectionModel().select("Főoldal");
         }
     }
 

@@ -239,7 +239,7 @@ public class UserAdminPageController {
 
     private void openUserEditDialog(User user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserEditDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Admin/UserEditDialog.fxml"));
             loader.setControllerFactory(SpringContext::getBean);
             Parent root = loader.load();
 
