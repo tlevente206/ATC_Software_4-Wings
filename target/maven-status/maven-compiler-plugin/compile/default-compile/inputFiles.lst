@@ -1,52 +1,52 @@
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/AtcSystemApplication.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SceneManager.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SecurityConfig.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/config/SpringContext.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/AdminPageController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/AvatarPickerDialogController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/ChangePasswordDialogController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/FlightWeatherAssistantDialogController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/HomePageController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/JavaFXApplication.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/MainPageController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/RegistrationPageController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserAdminPageController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserDataPageController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserEditDialogController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/frontend/UserSelfEditDialogController.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/Aircraft.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftStatus.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftStatusConverter.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/Airline.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/AirlineRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/AirlineService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/BusinessMode.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airline/BusinessModeConverter.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airport/Airports.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airport/AirportsRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/airport/AirportsService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/Flight.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightStatus.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/flight/FlightStatusConverter.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/Gate.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateStatus.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/gate/GateStatusConverter.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/Terminal.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalStatus.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/terminal/TerminalStatusConverter.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/User.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/UserRepository.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/model/user/UserService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/AuthService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvice.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvisorService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/WeatherService.java
-/Users/tothleventelaszlo/Desktop/SFM projekt/Admin/src/main/java/com/FourWings/atcSystem/service/weather/WeatherSnapshot.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\AtcSystemApplication.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\config\SceneManager.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\config\SecurityConfig.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\config\SpringContext.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\AdminPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\AvatarPickerDialogController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\ChangePasswordDialogController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\FlightWeatherAssistantDialogController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\HomePageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\JavaFXApplication.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\MainPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\RegistrationPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\UserAdminPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\UserDataPageController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\UserEditDialogController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\frontend\UserSelfEditDialogController.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\aircraft\Aircraft.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\aircraft\AircraftRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\aircraft\AircraftService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\aircraft\AircraftStatus.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\aircraft\AircraftStatusConverter.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airline\Airline.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airline\AirlineRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airline\AirlineService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airline\BusinessMode.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airline\BusinessModeConverter.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airport\Airports.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airport\AirportsRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\airport\AirportsService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\flight\Flight.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\flight\FlightRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\flight\FlightService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\flight\FlightStatus.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\flight\FlightStatusConverter.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\gate\Gate.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\gate\GateRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\gate\GateService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\gate\GateStatus.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\gate\GateStatusConverter.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\terminal\Terminal.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\terminal\TerminalRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\terminal\TerminalService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\terminal\TerminalStatus.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\terminal\TerminalStatusConverter.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\user\User.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\user\UserRepository.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\model\user\UserService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\service\AuthService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\service\weather\FlightWeatherAdvice.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\service\weather\FlightWeatherAdvisorService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\service\weather\WeatherService.java
+C:\Users\KomPhone\IdeaProjects\src\main\java\com\FourWings\atcSystem\service\weather\WeatherSnapshot.java
