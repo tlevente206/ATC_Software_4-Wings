@@ -21,6 +21,7 @@ com\FourWings\atcSystem\config\SceneManager.class
 com\FourWings\atcSystem\model\flight\FlightStatusConverter.class
 com\FourWings\atcSystem\model\flight\FlightRepository.class
 com\FourWings\atcSystem\frontend\UserAdminPageController.class
+com\FourWings\atcSystem\test\UI_Threa_Stress_Test.class
 com\FourWings\atcSystem\model\gate\Gate.class
 com\FourWings\atcSystem\model\terminal\Terminal.class
 com\FourWings\atcSystem\service\weather\FlightWeatherAdvisorService.class

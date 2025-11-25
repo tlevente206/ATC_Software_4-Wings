@@ -32,9 +32,9 @@
                 </font>
             </Label>
             <Label layoutX="93.0" layoutY="113.0" text="Felhasználónév" />
-            <TextField id="UsernameField" fx:id="usernameField" layoutX="213.0" layoutY="109.0" text="username" />
+            <TextField id="UsernameField" fx:id="usernameField" layoutX="213.0" layoutY="109.0" />
             <Label layoutX="118.0" layoutY="149.0" prefHeight="17.0" prefWidth="40.0" text="Jelszó" />
-            <PasswordField id="PasswordField" fx:id="passwordField" layoutX="213.0" layoutY="145.0" text="password" />
+            <PasswordField id="PasswordField" fx:id="passwordField" layoutX="213.0" layoutY="145.0" />
             <Button id="Button" fx:id="loginButton" layoutX="183.0" layoutY="239.0" onAction="#onLogin" prefHeight="25.0" prefWidth="90.0" text="Bejelentkezés" />
         <!-- onLogin -->
             <Label layoutX="156.0" layoutY="321.0" text="Ha nincs fiókod, regisztrálj:" />

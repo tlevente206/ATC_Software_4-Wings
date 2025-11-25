@@ -41,13 +41,13 @@ public class UI_Threa_Stress_Test extends Application {
 
         // Szimuláljunk egy nagy számítást az UI thread-en (NE CSINÁLD ÉLESBEN!)
         // Ha ezt bekapcsolod, látni fogod, hogy az UI megakad.
-        /*
+
         Platform.runLater(() -> {
             for (int i = 0; i < 1_000_000_000; i++) {
                 Math.sqrt(i);
             }
         });
-        */
+
     }
 
     public static void main(String[] args) {
