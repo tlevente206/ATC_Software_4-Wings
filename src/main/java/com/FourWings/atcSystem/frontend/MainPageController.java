@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.frontend.HomePage.HomePageController;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;

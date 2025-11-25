@@ -1,7 +1,8 @@
 
-package com.FourWings.atcSystem.frontend;
+package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.frontend.UserDataPageController;
 import com.FourWings.atcSystem.model.user.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
