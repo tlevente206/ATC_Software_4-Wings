@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+
+
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.FourWings.atcSystem.frontend.HomePage.HomePageController"
+      prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffffff;">
+    <children>
+        <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0055ff;">
+            <children>
+                <Label alignment="CENTER" layoutX="26.0" layoutY="8.0"
+                       prefHeight="63.0" prefWidth="148.0" text="Főoldal" textFill="WHITE">
+                    <font>
+                        <Font size="36.0"/>
+                    </font>
+                    <effect>
+                        <DropShadow>
+                            <color>
+                                <Color red="0.0258" green="0.6613" blue="0.86"/>
+                            </color>
+                        </DropShadow>
+                    </effect>
+                </Label>
+
+                <Button fx:id="logoutButton"
+                        text="Kijelentkezés"
+                        onAction="#onLogout"
+                        layoutX="500"
+                        layoutY="10"/>
+
+                <Button fx:id="dataButton"
+                        text="Sajat adatok"
+                        onAction="#onGoToPersonalData"
+                        layoutX="500"
+                        layoutY="40"/>
+
+                <ComboBox fx:id="menuComboBox" layoutX="26.0" layoutY="80.0" prefWidth="148.0" promptText="Válassz!">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Repülők"/>
+                            <String fx:value="Repterek"/>
+                            <String fx:value="Repülőutak"/>
+                            <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
+                            <String fx:value="Terminál(Ez is inkább reptér)"/>
+                            <String fx:value="Főoldal"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </children>
+        </AnchorPane>
+    </children>
+</HBox>
