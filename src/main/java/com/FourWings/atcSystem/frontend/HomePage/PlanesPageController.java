@@ -1,9 +1,12 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.model.user.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PlanesPageController {
 
     @FXML
@@ -33,6 +36,8 @@ public class PlanesPageController {
                         case "Terminál(Ez is inkább reptér)":
                             SceneManager.switchTo("TerminalPage.fxml", "ATC – Terminál", 800, 600);
                             break;
+                        default:
+                            System.out.println("Sikertelen oldal átirányítás!");
                     }
                 }
             });

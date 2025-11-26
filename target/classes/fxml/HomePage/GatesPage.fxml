@@ -8,6 +8,7 @@
 
 <?import javafx.collections.FXCollections?>
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.HomePage.GatesPageController"
             prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f0ccff;">
     <children>
         <Label text="Kapuk oldal" layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;"/>

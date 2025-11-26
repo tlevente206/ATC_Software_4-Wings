@@ -3,7 +3,9 @@ package com.FourWings.atcSystem.frontend.HomePage;
 import com.FourWings.atcSystem.config.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TerminalPageController {
 
     @FXML

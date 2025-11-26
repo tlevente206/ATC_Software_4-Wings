@@ -7,6 +7,7 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.ComboBox?>
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="httpfx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.HomePage.AirportsPageController"
             prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffeecc;">
     <children>
         <Label text="Repterek oldal" layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;"/>
