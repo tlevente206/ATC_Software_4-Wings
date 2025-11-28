@@ -40,4 +40,9 @@ public class GatesPageController {
             menuComboBox.getSelectionModel().select("Kapuk(Ez inkább a repterekhez menne)");
         }
     }
+
+    @FXML
+    private void onLogout() {
+        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
+    }
 }

@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import org.springframework.stereotype.Component;
@@ -39,5 +40,10 @@ public class AirportsPageController {
             });
             menuComboBox.getSelectionModel().select("Repterek");
         }
+    }
+
+    @FXML
+    private void onLogout() {
+        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 }

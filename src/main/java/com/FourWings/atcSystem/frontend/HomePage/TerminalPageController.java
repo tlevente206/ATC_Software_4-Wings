@@ -40,4 +40,10 @@ public class TerminalPageController {
             menuComboBox.getSelectionModel().select("Terminál(Ez is inkább reptér)");
         }
     }
+
+    @FXML
+    private void onLogout() {
+        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
+    }
+
 }
