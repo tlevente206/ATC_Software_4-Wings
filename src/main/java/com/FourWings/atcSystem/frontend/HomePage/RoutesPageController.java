@@ -5,7 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import org.springframework.stereotype.Component;
 
-@Component class RoutesPageController {
+@Component
+public class RoutesPageController {
 
     @FXML
     private ComboBox<String> menuComboBox;
