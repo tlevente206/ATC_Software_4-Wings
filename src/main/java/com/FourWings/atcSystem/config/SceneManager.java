@@ -28,7 +28,7 @@ public class SceneManager {
             return loader.getController();
 
         } catch (Exception ex) {
-            throw new RuntimeException("Nem sikerült betölteni: " + fxml, ex);
+            throw new RuntimeException("Nem sikerült betölteni: " + fxml + "    " + "/fxml/" + fxml, ex);
         }
     }
 }

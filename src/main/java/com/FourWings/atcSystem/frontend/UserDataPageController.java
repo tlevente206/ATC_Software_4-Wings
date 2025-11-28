@@ -27,7 +27,8 @@ import javafx.stage.Stage;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Component
 public class UserDataPageController {
@@ -76,17 +77,31 @@ public class UserDataPageController {
         }
     }
 
+    /**
+     * A felhasználó profilképének frissítése.
+     * A User.profileImage mezőben most már csak egy relatív resource útvonal van,
+     * pl: "/images/avatars/avatar3.png"
+     */
     private void refreshProfileImage() {
         if (profileImageView == null) return;
         if (loggedUser == null) return;
 
-        if (loggedUser.getProfileImage() != null) {
-            Image img = new Image(
-                    new ByteArrayInputStream(loggedUser.getProfileImage())
-            );
-            profileImageView.setImage(img);
+        String path = loggedUser.getProfileImage();   // <-- String elérési út
+        if (path != null && !path.isBlank()) {
+            try (InputStream is = getClass().getResourceAsStream(path)) {
+                if (is != null) {
+                    Image img = new Image(is);
+                    profileImageView.setImage(img);
+                } else {
+                    System.out.println("Nem található profilkép resource: " + path);
+                    profileImageView.setImage(null);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                profileImageView.setImage(null);
+            }
         } else {
-            profileImageView.setImage(null); // vagy default kép, ha később akarsz
+            profileImageView.setImage(null); // vagy később default kép
         }
     }
 
@@ -120,7 +135,7 @@ public class UserDataPageController {
         System.out.println("Terminal id=" + terminal.getId());
     }
 
-    // ======= PROFILKÉP MÓDOSÍTÁSA – UGYANAZ A POPUP, MINT REGISZTRÁCIÓNÁL =======
+    // ======= PROFILKÉP MÓDOSÍTÁSA – UGYANAZ A POPUP, MINT REGISZTRÁCIÓ =======
     @FXML
     private void onChangeProfilePicture(ActionEvent event) {
         if (loggedUser == null) {
@@ -147,10 +162,11 @@ public class UserDataPageController {
             dialogStage.setScene(new Scene(root));
             dialogStage.showAndWait();
 
-            byte[] chosen = ctrl.getSelectedImageBytes();
-            if (chosen != null) {
-                // új kép beállítása, mentés DB-be
-                loggedUser.setProfileImage(chosen);
+            // az AvatarPickerDialogController most már String utat ad vissza
+            String chosenPath = ctrl.getSelectedImagePath();
+            if (chosenPath != null && !chosenPath.isBlank()) {
+                // új kép elérési útjának beállítása, mentés DB-be
+                loggedUser.setProfileImage(chosenPath);
                 userService.saveFromAdmin(loggedUser, null); // jelszó változatlan
 
                 // előnézet frissítése

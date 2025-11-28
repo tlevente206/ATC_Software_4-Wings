@@ -20,7 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 
 @Component
@@ -47,14 +47,15 @@ public class RegistrationPageController {
     @FXML private ImageView profileImageView;
     @FXML private Label imageErrorLabel;
 
-    // itt tároljuk a kiválasztott kép byte-jait (avatár vagy saját kép)
-    private byte[] selectedProfileImage;
+    // itt tároljuk a kiválasztott avatar elérési útját
+    // pl.: "/images/avatars/avatar3.png"
+    private String selectedProfileImagePath;
 
     @FXML
     private void onSelectProfileImage(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/LogIn/AvatarPickerDialog.fxml"));
+                    getClass().getResource("/fxml/AvatarPickerDialog.fxml"));
             loader.setControllerFactory(SpringContext::getBean);
             Parent root = loader.load();
 
@@ -67,13 +68,22 @@ public class RegistrationPageController {
             dialogStage.setScene(new Scene(root));
             dialogStage.showAndWait();
 
-            byte[] chosen = ctrl.getSelectedImageBytes();
-            if (chosen != null) {
-                selectedProfileImage = chosen;
+            String chosenPath = ctrl.getSelectedImagePath();
+            if (chosenPath != null) {
+                selectedProfileImagePath = chosenPath;
 
                 // előnézet beállítása
-                Image img = new Image(new ByteArrayInputStream(chosen));
-                profileImageView.setImage(img);
+                try (InputStream is = getClass().getResourceAsStream(chosenPath)) {
+                    if (is != null) {
+                        Image img = new Image(is);
+                        profileImageView.setImage(img);
+                    } else {
+                        profileImageView.setImage(null);
+                        if (imageErrorLabel != null) {
+                            imageErrorLabel.setText("Nem található a kiválasztott avatar képe.");
+                        }
+                    }
+                }
 
                 if (imageErrorLabel != null) {
                     imageErrorLabel.setText("");
@@ -94,7 +104,7 @@ public class RegistrationPageController {
         emailInput.clear();
         passInput.clear();
         phoneInput.clear();
-        selectedProfileImage = null;
+        selectedProfileImagePath = null;
         if (profileImageView != null) {
             profileImageView.setImage(null);
         }
@@ -122,8 +132,9 @@ public class RegistrationPageController {
             registerLabel.setText("Jelszó túl rövid (min. 8 karakter).");
             return;
         }
+
         // Profilkép kötelező
-        if (selectedProfileImage == null) {
+        if (selectedProfileImagePath == null) {
             if (imageErrorLabel != null) {
                 imageErrorLabel.setText("Profilkép megadása kötelező.");
             }
@@ -145,7 +156,7 @@ public class RegistrationPageController {
                         .password(password)
                         .phone(phoneInput.getText().trim())
                         .admin(false)
-                        .profileImage(selectedProfileImage)
+                        .profileImage(selectedProfileImagePath)  // ⬅ itt már String megy az adatbázisba
                         .build();
 
                 userService.registerSelf(u);

@@ -108,7 +108,7 @@ public class UserSelfEditDialogController {
 
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/LogIn/ChangePasswordDialog.fxml"));
+                    getClass().getResource("/fxml/ChangePasswordDialog.fxml"));
             loader.setControllerFactory(com.FourWings.atcSystem.config.SpringContext::getBean);
             Parent root = loader.load();
 

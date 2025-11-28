@@ -3,21 +3,16 @@ package com.FourWings.atcSystem.frontend;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 
 @Component
 public class AvatarPickerDialogController {
@@ -45,26 +40,20 @@ public class AvatarPickerDialogController {
     @FXML private ImageView avatar9View;
     @FXML private ImageView avatar10View;
 
-    // Saját képes csempe (Button)
-    @FXML private Button customImageButton;
-
     @FXML private Label errorLabel;
     @FXML private Label selectedNameLabel;
 
-    private Node selectedNode;          // lehet StackPane vagy a customImageButton
-    private byte[] selectedImageBytes;  // kiválasztott kép bájtjai
+    private StackPane selectedPane;      // melyik avatar csempe van kijelölve
+    private String selectedImagePath;    // pl. "/images/avatars/avatar3.png"
 
     private static final String TILE_BASE_STYLE =
             "-fx-background-radius: 10; -fx-padding: 4;";
 
-    private static final String CUSTOM_BUTTON_BASE_STYLE =
-            "-fx-font-size: 36; -fx-background-radius: 10; -fx-cursor: hand;";
-
     private static final String SELECTED_BORDER_STYLE =
             "-fx-border-color: #0078ff; -fx-border-width: 2; -fx-border-radius: 10;";
 
-    public byte[] getSelectedImageBytes() {
-        return selectedImageBytes;
+    public String getSelectedImagePath() {
+        return selectedImagePath;
     }
 
     @FXML
@@ -94,10 +83,6 @@ public class AvatarPickerDialogController {
         avatar9Pane.setStyle(TILE_BASE_STYLE);
         avatar10Pane.setStyle(TILE_BASE_STYLE);
 
-        if (customImageButton != null) {
-            customImageButton.setStyle(CUSTOM_BUTTON_BASE_STYLE);
-        }
-
         if (selectedNameLabel != null) {
             selectedNameLabel.setText("Nincs kiválasztva kép");
         }
@@ -119,7 +104,6 @@ public class AvatarPickerDialogController {
     // ===================== KIJELÖLÉS STÍLUS =======================
 
     private void clearSelectionStyle() {
-        // Összes csempe alap stílus
         StackPane[] panes = {
                 avatar1Pane, avatar2Pane, avatar3Pane, avatar4Pane, avatar5Pane,
                 avatar6Pane, avatar7Pane, avatar8Pane, avatar9Pane, avatar10Pane
@@ -129,58 +113,30 @@ public class AvatarPickerDialogController {
                 p.setStyle(TILE_BASE_STYLE);
             }
         }
-
-        // custom gomb is vissza alapra
-        if (customImageButton != null) {
-            customImageButton.setStyle(CUSTOM_BUTTON_BASE_STYLE);
-        }
     }
 
-    private void highlightNode(Node node) {
-        if (node == null) return;
-
-        if (node instanceof StackPane) {
-            ((StackPane) node).setStyle(TILE_BASE_STYLE + " " + SELECTED_BORDER_STYLE);
-        } else if (node == customImageButton) {
-            customImageButton.setStyle(CUSTOM_BUTTON_BASE_STYLE + " " + SELECTED_BORDER_STYLE);
-        }
+    private void highlightPane(StackPane pane) {
+        if (pane == null) return;
+        pane.setStyle(TILE_BASE_STYLE + " " + SELECTED_BORDER_STYLE);
     }
 
     // ===================== AVATÁR KIJELÖLÉS =======================
 
     private void selectPredefinedAvatar(StackPane pane, String resourcePath) {
         clearSelectionStyle();
-        selectedNode = pane;
-        highlightNode(pane);
+        selectedPane = pane;
+        highlightPane(pane);
 
-        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
-            if (is != null) {
-                selectedImageBytes = is.readAllBytes();
+        selectedImagePath = resourcePath;
 
-                if (selectedNameLabel != null) {
-                    String fileName = resourcePath.substring(resourcePath.lastIndexOf('/') + 1);
-                    selectedNameLabel.setText("Kiválasztott: " + fileName);
-                }
-                if (errorLabel != null) {
-                    errorLabel.setText("");
-                }
-
-            } else {
-                selectedImageBytes = null;
-                if (errorLabel != null) {
-                    errorLabel.setText("Nem található a kép: " + resourcePath);
-                }
-            }
-        } catch (IOException e) {
-            selectedImageBytes = null;
-            e.printStackTrace();
-            if (errorLabel != null) {
-                errorLabel.setText("Hiba a kép beolvasásakor.");
-            }
+        if (selectedNameLabel != null) {
+            String fileName = resourcePath.substring(resourcePath.lastIndexOf('/') + 1);
+            selectedNameLabel.setText("Kiválasztott: " + fileName);
+        }
+        if (errorLabel != null) {
+            errorLabel.setText("");
         }
     }
-
-    // --- 10 handler a kattintásokhoz ---
 
     @FXML private void onAvatar1Click(MouseEvent e) { selectPredefinedAvatar(avatar1Pane,  "/images/avatars/avatar1.png"); }
     @FXML private void onAvatar2Click(MouseEvent e) { selectPredefinedAvatar(avatar2Pane,  "/images/avatars/avatar2.png"); }
@@ -191,63 +147,13 @@ public class AvatarPickerDialogController {
     @FXML private void onAvatar7Click(MouseEvent e) { selectPredefinedAvatar(avatar7Pane,  "/images/avatars/avatar7.png"); }
     @FXML private void onAvatar8Click(MouseEvent e) { selectPredefinedAvatar(avatar8Pane,  "/images/avatars/avatar8.png"); }
     @FXML private void onAvatar9Click(MouseEvent e) { selectPredefinedAvatar(avatar9Pane,  "/images/avatars/avatar9.png"); }
-    @FXML private void onAvatar10Click(MouseEvent e) { selectPredefinedAvatar(avatar10Pane, "/images/avatars/avatar10.png"); }
-
-    // ===================== SAJÁT KÉP ( + GOMB ) ===================
-
-    @FXML
-    private void onCustomImage(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Saját profilkép választása");
-        fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Képfájlok", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        File file = fc.showOpenDialog(stage);
-        if (file != null) {
-            try {
-                byte[] bytes = Files.readAllBytes(file.toPath());
-                selectedImageBytes = bytes;
-
-                clearSelectionStyle();
-                selectedNode = customImageButton;
-                highlightNode(customImageButton);
-
-                // a + gombon jelenjen meg a kép, de a + jel marad
-                Image img = new Image(new ByteArrayInputStream(bytes));
-                ImageView iv = new ImageView(img);
-                iv.setFitWidth(80);
-                iv.setFitHeight(80);
-                iv.setPreserveRatio(true);
-
-                customImageButton.setGraphic(iv);
-                customImageButton.setText("+"); // a plusz jel is látszik
-
-                if (selectedNameLabel != null) {
-                    selectedNameLabel.setText("Kiválasztott: " + file.getName());
-                }
-                if (errorLabel != null) {
-                    errorLabel.setText("");
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                selectedImageBytes = null;
-                if (errorLabel != null) {
-                    errorLabel.setText("Nem sikerült beolvasni a képet.");
-                }
-            }
-        }
-    }
+    @FXML private void onAvatar10Click(MouseEvent e){ selectPredefinedAvatar(avatar10Pane, "/images/avatars/avatar10.png"); }
 
     // ===================== OK / MÉGSE =============================
 
     @FXML
     private void onOk(ActionEvent event) {
-        if (selectedImageBytes == null) {
+        if (selectedImagePath == null) {
             if (errorLabel != null) {
                 errorLabel.setText("Először válassz képet.");
             }
@@ -258,7 +164,7 @@ public class AvatarPickerDialogController {
 
     @FXML
     private void onCancel(ActionEvent event) {
-        selectedImageBytes = null; // semmit nem választ
+        selectedImagePath = null; // semmit nem választ
         closeWindow(event);
     }
 
