@@ -14,36 +14,27 @@ public class PlanesPageController {
     private ComboBox<String> menuComboBox;
 
     @FXML
-    private Button dataButton;
-
-    private User loggedUser;
-
-    public void initWithUser(User user) {
-        this.loggedUser = user;
-    }
-
-    @FXML
     public void initialize() {
         if (menuComboBox != null) {
             menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     switch (newVal) {
                         case "Főoldal":
-                            SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", 800, 600);
+                            SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", 600, 400);
                             break;
                         case "Repülők":
                             break;
                         case "Repterek":
-                            SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 800, 600);
+                            SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 600, 400);
                             break;
                         case "Repülőutak":
-                            SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 800, 600);
+                            SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 600, 400);
                             break;
                         case "Kapuk(Ez inkább a repterekhez menne)":
-                            SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 800, 600);
+                            SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 600, 400);
                             break;
                         case "Terminál(Ez is inkább reptér)":
-                            SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 800, 600);
+                            SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 600, 400);
                             break;
                         default:
                             System.out.println("Sikertelen oldal átirányítás!");
