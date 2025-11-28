@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.frontend.HomePage;
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.model.user.User;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,15 @@ public class PlanesPageController {
 
     @FXML
     private ComboBox<String> menuComboBox;
+
+    @FXML
+    private Button dataButton;
+
+    private User loggedUser;
+
+    public void initWithUser(User user) {
+        this.loggedUser = user;
+    }
 
     @FXML
     public void initialize() {
@@ -44,4 +54,10 @@ public class PlanesPageController {
             menuComboBox.getSelectionModel().select("Repülők");
         }
     }
+
+    @FXML
+    private void onLogout() {
+        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
+    }
+
 }
