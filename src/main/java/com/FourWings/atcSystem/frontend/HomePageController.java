@@ -38,23 +38,23 @@ public class HomePageController {
                         break;
 
                     case "Repülők":
-                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", 800, 600);
+                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", 600, 400);
                         break;
 
                     case "Repterek":
-                        SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 800, 600);
+                        SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 600, 400);
                         break;
 
                     case "Repülőutak":
-                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 800, 600);
+                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 600, 400);
                         break;
 
                     case "Kapuk(Ez inkább a repterekhez menne)":
-                        SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 800, 600);
+                        SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 600, 400);
                         break;
 
                     case "Terminál(Ez is inkább reptér)":
-                        SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 800, 600);
+                        SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 600, 400);
                         break;
 
                     default:
