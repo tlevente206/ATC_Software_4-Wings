@@ -24,7 +24,7 @@ public class RoutesPageController {
                             SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", 600, 400);
                             break;
                         case "Repterek":
-                            SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 600, 400);
+                            SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 800, 400);
                             break;
                         case "Repülőutak":
                             break;
