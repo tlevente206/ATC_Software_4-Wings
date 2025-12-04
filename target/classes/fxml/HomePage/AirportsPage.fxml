@@ -31,10 +31,10 @@
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="Főoldal"/>
+                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
                     <String fx:value="Repülők"/>
                     <String fx:value="Repterek"/>
                     <String fx:value="Repülőutak"/>
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
                     <String fx:value="Terminál(Ez is inkább reptér)"/>
                 </FXCollections>
             </items>
