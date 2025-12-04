@@ -9,36 +9,39 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="800.0" style="-fx-background-color: #ffeecc;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.HomePage.AirportsPageController">
+<AnchorPane prefHeight="400.0" prefWidth="800.0" style="-fx-background-color: #ffeecc;"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.HomePage.AirportsPageController"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://javafx.com/fxml/1 ">
     <children>
-        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;" text="Repterek oldal" />
+        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;" text="Repterek oldal"/>
 
-        <Button fx:id="logoutButton" layoutX="690.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés" />
+        <Button fx:id="logoutButton" layoutX="690.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés"/>
 
         <ComboBox fx:id="menuComboBox" layoutX="25.0" layoutY="80.0" prefWidth="148.0">
             <items>
                 <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="Repülők" />
-                    <String fx:value="Repterek" />
-                    <String fx:value="Repülőutak" />
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)" />
-                    <String fx:value="Terminál(Ez is inkább reptér)" />
-                    <String fx:value="Főoldal" />
+                    <String fx:value="Repülők"/>
+                    <String fx:value="Repterek"/>
+                    <String fx:value="Repülőutak"/>
+                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
+                    <String fx:value="Terminál(Ez is inkább reptér)"/>
+                    <String fx:value="Főoldal"/>
                 </FXCollections>
             </items>
         </ComboBox>
         <TableView layoutX="25.0" layoutY="120.0" prefHeight="270.0" prefWidth="750.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="Name" />
-                <TableColumn prefWidth="75.0" text="Country" />
-                <TableColumn prefWidth="75.0" text="City" />
-                <TableColumn prefWidth="75.0" text="Timezone" />
-                <TableColumn prefWidth="75.0" text="Latitude" />
-                <TableColumn prefWidth="75.0" text="Longitude" />
-                <TableColumn prefWidth="75.0" text="address" />
-                <TableColumn prefWidth="75.0" text="Website" />
-                <TableColumn prefWidth="75.0" text="Phone" />
-                <TableColumn prefWidth="75.0" text="Email" />
+                <TableColumn prefWidth="75.0" text="Name"/>
+                <TableColumn prefWidth="75.0" text="Country"/>
+                <TableColumn prefWidth="75.0" text="City"/>
+                <TableColumn prefWidth="75.0" text="Timezone"/>
+                <TableColumn prefWidth="75.0" text="Latitude"/>
+                <TableColumn prefWidth="75.0" text="Longitude"/>
+                <TableColumn prefWidth="75.0" text="address"/>
+                <TableColumn prefWidth="75.0" text="Website"/>
+                <TableColumn prefWidth="75.0" text="Phone"/>
+                <TableColumn prefWidth="75.0" text="Email"/>
             </columns>
         </TableView>
     </children>
