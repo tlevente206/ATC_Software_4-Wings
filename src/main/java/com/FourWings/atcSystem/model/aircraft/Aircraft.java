@@ -36,6 +36,9 @@ public class Aircraft {
     @Column(name = "status")
     private AircraftStatus status;
 
+    @Column(name = "msn")
+    private String msn;
+
     @Column(name = "max_seat_capacity")
     private Short maxSeatCapacity;
 
@@ -76,4 +79,5 @@ public class Aircraft {
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
 }
