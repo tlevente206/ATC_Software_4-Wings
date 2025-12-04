@@ -1,0 +1,260 @@
+/* ==============================
+   Alap téma – világos, modern
+   ============================== */
+
+/* Alap változók (JavaFX-ben változókat közvetetten használunk, ezért itt “gyűjtők”) */
+.root {
+    /* Színek */
+    -color-bg:              #ffeecc;   /* egységesítsük az AnchorPane háttérszínével */
+    -color-surface:         #ffffff;
+    -color-surface-2:       #faf7f2;
+    -color-primary:         #6b5cff;   /* modern, de visszafogott lila-kék */
+    -color-primary-pressed: #5a4fe0;
+    -color-accent:          #ff7a59;   /* akcentus narancs */
+    -color-text:            #1a1a1a;
+    -color-text-muted:      #666;
+    -color-border:          rgba(0,0,0,0.08);
+    -color-border-strong:   rgba(0,0,0,0.16);
+    -color-hover:           rgba(0,0,0,0.04);
+    -color-focus:           #6b5cff33;
+
+    /* Tipográfia */
+    -fx-font-family: "Segoe UI", "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+
+    /* Közös sarkok/árnyékok */
+    -radius-sm: 6px;
+    -radius-md: 10px;
+    -shadow-1: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.2, 0, 2);
+    -shadow-2: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0.25, 0, 6);
+
+    -fx-background-color: -color-bg; /* egységes háttér */
+}
+
+/* Címke – a nagy cím kicsit “hero” jelleggel */
+.label {
+    -fx-text-fill: -color-text;
+}
+
+.label > .text {
+    -fx-font-smoothing-type: lcd;
+}
+
+/* A felső cím (layoutX=20, layoutY=20) legyen karakteresebb; mivel FXML-t nem módosítunk,
+   globálisan kezeljük a nagyobb fontméretű labelt, de finoman. */
+.label {
+    /* semleges default, a konkrét cím amúgy is 24px-esre van állítva FXML-ben */
+}
+
+/* Gombok – modern, lekerekített, hover/focus állapotok */
+.button {
+    -fx-background-color: linear-gradient(to bottom, -color-primary, -color-primary-pressed);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-background-radius: -radius-sm;
+    -fx-padding: 8 14;
+    -fx-effect: -shadow-1;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, -color-primary-pressed, -color-primary);
+    -fx-translate-y: -0.5px;
+}
+
+.button:pressed {
+    -fx-translate-y: 0;
+    -fx-opacity: 0.95;
+}
+
+.button:focused {
+    -fx-effect: -shadow-2;
+    -fx-background-insets: 0;
+    -fx-border-color: -color-focus;
+    -fx-border-width: 2;
+    -fx-border-radius: calc(-radius-sm + 2);
+}
+
+/* Másodlagos gomb (ha később felveszel styleclass-t: .button.secondary) */
+.button.secondary {
+    -fx-background-color: -color-surface;
+    -fx-text-fill: -color-text;
+    -fx-border-color: -color-border;
+    -fx-background-radius: -radius-sm;
+}
+.button.secondary:hover {
+    -fx-background-color: -color-surface-2;
+}
+
+/* ComboBox – kártyaszerű, árnyékkal, finom szegéllyel */
+.combo-box {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: -radius-sm;
+    -fx-padding: 4 10;
+    -fx-border-color: -color-border;
+    -fx-border-radius: -radius-sm;
+    -fx-effect: -shadow-1;
+}
+
+.combo-box:hover {
+    -fx-background-color: -color-surface-2;
+}
+
+.combo-box:focused {
+    -fx-border-color: -color-primary;
+    -fx-effect: -shadow-2;
+}
+
+/* ComboBox felugró menü */
+.combo-box .list-view {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: -radius-sm;
+    -fx-padding: 4;
+    -fx-effect: -shadow-2;
+    -fx-border-color: -color-border;
+    -fx-border-radius: -radius-sm;
+}
+.combo-box .list-cell {
+    -fx-padding: 8 10;
+}
+.combo-box .list-cell:hover {
+    -fx-background-color: -color-hover;
+}
+.combo-box .list-cell:selected {
+    -fx-background-color: derive(-color-primary, 80%);
+    -fx-text-fill: -color-text;
+}
+
+/* TableView – modern fejléccel, váltakozó sorokkal, finom rácsokkal */
+.table-view {
+    -fx-background-color: transparent;           /* a konténerrel simuljon */
+    -fx-background-radius: -radius-md;
+    -fx-border-color: -color-border;
+    -fx-border-radius: -radius-md;
+    -fx-effect: -shadow-1;
+}
+
+.table-view:focused {
+    -fx-effect: -shadow-2;
+    -fx-border-color: -color-primary;
+}
+
+/* Táblázat fejléce */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f3f0ea);
+    -fx-background-radius: -radius-md -radius-md 0 0;
+    -fx-border-color: -color-border-strong;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-size: 38px;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -color-text;
+    -fx-font-weight: 600;
+    -fx-padding: 0 8;
+}
+
+/* Sorok */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-cell-size: 36px;
+    -fx-border-color: -color-border;
+    -fx-border-width: 0 0 1 0;
+}
+.table-row-cell:odd {
+    -fx-background-color: #fffdf9;
+}
+.table-row-cell:hover {
+    -fx-background-color: -color-hover;
+}
+.table-row-cell:selected {
+    -fx-background-color: derive(-color-primary, 75%);
+}
+
+/* Cellák */
+.table-cell {
+    -fx-text-fill: -color-text;
+    -fx-padding: 6 10;
+}
+
+/* Görgetősáv – diszkrét, modern */
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.25);
+    -fx-background-radius: 8px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0,0,0,0.35);
+}
+.scroll-bar .track {
+    -fx-background-color: rgba(0,0,0,0.05);
+    -fx-background-radius: 8px;
+}
+
+/* “Kártya” jelleg az AnchorPane gyermekekre
+   – mivel az AnchorPane maga kapott háttérszínt FXML-ből (#ffeecc),
+     a fő komponenseket emeljük ki finom kártyává, ha szeretnéd
+     (itt célzottan a ComboBox és TableView már kap árnyékot). */
+
+/* Felirat (cím) hangsúly finom árnyékkal – csak ha szeretnéd */
+.label[style*="-fx-font-size: 24px"] {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0.2, 0, 2);
+}
+
+/* Logout gombot akcentussal is ki lehet emelni, ha adsz neki styleclass-t: .button.danger */
+.button.danger {
+    -fx-background-color: linear-gradient(to bottom, -color-accent, derive(-color-accent, -10%));
+}
+
+/* Fókuszgyűrű egységesítés (billentyűzet-navigációhoz is) */
+:focused {
+    -fx-focus-color: -color-primary;
+    -fx-faint-focus-color: -color-focus;
+}
+
+/* ==============================
+   Opcionális: Dark mode
+   ============================== */
+/* Kapcsold be úgy, hogy a root nodenak adsz egy "dark" style class-t:
+   root.getStyleClass().add("dark");
+*/
+.root.dark {
+    -color-bg:            #141414;
+    -color-surface:       #1b1b1b;
+    -color-surface-2:     #202020;
+    -color-primary:       #8a7dff;
+    -color-primary-pressed:#786cef;
+    -color-accent:        #ff906e;
+    -color-text:          #f2f2f2;
+    -color-text-muted:    #b7b7b7;
+    -color-border:        rgba(255,255,255,0.08);
+    -color-border-strong: rgba(255,255,255,0.16);
+    -color-hover:         rgba(255,255,255,0.06);
+    -color-focus:         #8a7dff33;
+}
+
+.root.dark .table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #202020, #181818);
+}
+.root.dark .table-row-cell {
+    -fx-background-color: #1b1b1b;
+}
+.root.dark .table-row-cell:odd {
+    -fx-background-color: #181818;
+}
+.root.dark .scroll-bar .thumb {
+    -fx-background-color: rgba(255,255,255,0.35);
+}
+.root.dark .scroll-bar .track {
+    -fx-background-color: rgba(255,255,255,0.08);
+}
