@@ -18,24 +18,46 @@ public class AirportsPageController {
 
     private final AirportsService airportService;
 
+    // Menü
     @FXML
     private ComboBox<String> menuComboBox;
 
+    // Tábla + oszlopok
     @FXML
     private TableView<Airports> airportsTable;
 
     @FXML
     private TableColumn<Airports, String> icaoCodeColumn;
-
+    @FXML
+    private TableColumn<Airports, String> iataCodeColumn;
     @FXML
     private TableColumn<Airports, String> nameColumn;
-
     @FXML
     private TableColumn<Airports, String> cityColumn;
+    @FXML
+    private TableColumn<Airports, String> countryColumn;
+    @FXML
+    private TableColumn<Airports, String> timezoneColumn;
 
     @FXML
-    private TableColumn<Airports, Integer> elevationColumn; // Airports-ben Integer az elevation
+    private TableColumn<Airports, Number> latitudeColumn;
+    @FXML
+    private TableColumn<Airports, Number> longitudeColumn;
+    @FXML
+    private TableColumn<Airports, Integer> elevationColumn;
 
+    @FXML
+    private TableColumn<Airports, String> addressColumn;
+    @FXML
+    private TableColumn<Airports, String> postalCodeColumn;
+    @FXML
+    private TableColumn<Airports, String> websiteUrlColumn;
+    @FXML
+    private TableColumn<Airports, String> phoneMainColumn;
+    @FXML
+    private TableColumn<Airports, String> emailMainColumn;
+
+    // Keresés + státusz
     @FXML
     private TextField searchField;
 
@@ -60,42 +82,32 @@ public class AirportsPageController {
     // ----------------- Menü navigáció -----------------
 
     private void setupMenuNavigation() {
-        if (menuComboBox != null) {
+        if (menuComboBox == null) return;
 
-            // ha nem FXML-ben töltöd fel az opciókat, akkor:
-            // menuComboBox.getItems().setAll(
-            //         "Főoldal",
-            //         "Repülők",
-            //         "Repterek",
-            //         "Repülőutak",
-            //         "Kapuk(Ez inkább a repterekhez menne)",
-            //         "Terminál(Ez is inkább reptér)"
-            // );
+        // Ha nem FXML-ből töltenéd, itt is lehetne:
+        // menuComboBox.getItems().setAll("Főoldal", "Repülők", ... );
 
-            // 1) aktuális oldal kijelölése
-            menuComboBox.getSelectionModel().select("Repterek");
+        // aktuális oldal kijelölése
+        menuComboBox.getSelectionModel().select("Repterek");
 
-            // 2) utána listener
-            menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal == null) return;
+        menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) return;
 
-                switch (newVal) {
-                    case "Főoldal" ->
-                            SceneManager.switchTo("HomePage/HomePage.fxml", "ATC – Főoldal", 800, 600);
-                    case "Repülők" ->
-                            SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", 800, 600);
-                    case "Repterek" ->
-                    // már ezen az oldalon vagyunk → ne töltsük újra
-                    {}
-                    case "Repülőutak" ->
-                            SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 800, 600);
-                    case "Kapuk(Ez inkább a repterekhez menne)" ->
-                            SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 800, 600);
-                    case "Terminál(Ez is inkább reptér)" ->
-                            SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 800, 600);
-                }
-            });
-        }
+            switch (newVal) {
+                case "Főoldal" ->
+                        SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", 800, 600);
+                case "Repülők" ->
+                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", 800, 600);
+                case "Repterek" ->
+                { /* már ezen az oldalon vagyunk */ }
+                case "Repülőutak" ->
+                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 800, 600);
+                case "Kapuk(Ez inkább a repterekhez menne)" ->
+                        SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 800, 600);
+                case "Terminál(Ez is inkább reptér)" ->
+                        SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 800, 600);
+            }
+        });
     }
 
     // ----------------- Táblázat beállítása -----------------
@@ -103,13 +115,24 @@ public class AirportsPageController {
     private void setupAirportTable() {
         if (airportsTable == null) return;
 
+        // Itt a property neveknek a Airports entity mezőneveihez kell passzolniuk:
+        // private String icaoCode; private String iataCode; stb.
         icaoCodeColumn.setCellValueFactory(new PropertyValueFactory<>("icaoCode"));
+        iataCodeColumn.setCellValueFactory(new PropertyValueFactory<>("iataCode"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+        timezoneColumn.setCellValueFactory(new PropertyValueFactory<>("timezone"));
+
+        latitudeColumn.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+        longitudeColumn.setCellValueFactory(new PropertyValueFactory<>("longitude"));
         elevationColumn.setCellValueFactory(new PropertyValueFactory<>("elevation"));
 
-        // Ha nincs activeRunway mező az entity-ben, NE használd:
-        // activeRunwayColumn.setCellValueFactory(new PropertyValueFactory<>("activeRunway"));
+        addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        websiteUrlColumn.setCellValueFactory(new PropertyValueFactory<>("websiteUrl"));
+        phoneMainColumn.setCellValueFactory(new PropertyValueFactory<>("phoneMain"));
+        emailMainColumn.setCellValueFactory(new PropertyValueFactory<>("emailMain"));
     }
 
     // ----------------- Adatok betöltése -----------------
@@ -143,14 +166,12 @@ public class AirportsPageController {
         if (searchField == null) return;
 
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (filteredAirports == null) return; // ha valamiért nem töltődött be
+            if (filteredAirports == null) return;
 
             String filter = (newVal == null) ? "" : newVal.trim().toLowerCase();
 
             filteredAirports.setPredicate(airport -> {
-                if (filter.isEmpty()) {
-                    return true;
-                }
+                if (filter.isEmpty()) return true;
 
                 String icao = airport.getIcaoCode() != null ? airport.getIcaoCode().toLowerCase() : "";
                 String name = airport.getName() != null ? airport.getName().toLowerCase() : "";
@@ -162,7 +183,10 @@ public class AirportsPageController {
             });
 
             if (statusLabel != null) {
-                statusLabel.setText("Találatok: " + filteredAirports.size() + " / Összes: " + airports.size());
+                statusLabel.setText("Találatok: "
+                        + filteredAirports.size()
+                        + " / Összes: "
+                        + airports.size());
             }
         });
     }
