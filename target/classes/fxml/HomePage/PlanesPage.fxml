@@ -39,23 +39,23 @@
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
 
-                <TableColumn fx:id="registrationColumn" prefWidth="90.0" text="Lajstrom" />
+                <TableColumn fx:id="registrationColumn" prefWidth="100.0" text="Lajstrom" />
 
-                <TableColumn fx:id="typeIcaoColumn" prefWidth="70.0" text="Típus" />
+                <TableColumn fx:id="typeIcaoColumn" prefWidth="80.0" text="Típus" />
 
-                <TableColumn fx:id="msnColumn" prefWidth="80.0" text="MSN" />
+                <TableColumn fx:id="msnColumn" prefWidth="90.0" text="MSN" />
 
                 <TableColumn fx:id="airlineIdColumn" prefWidth="70.0" text="Airline ID" />
 
-                <TableColumn fx:id="statusColumn" prefWidth="90.0" text="Státusz" />
+                <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Státusz" />
 
-                <TableColumn fx:id="baseAirportIdColumn" prefWidth="90.0" text="Bázis ID" />
+                <TableColumn fx:id="seatCapacityColumn" prefWidth="80.0" text="Max Utas" />
 
-                <TableColumn fx:id="seatCapacityColumn" prefWidth="70.0" text="Ülések" />
+                <TableColumn fx:id="cargoCapacityColumn" prefWidth="90.0" text="Cargo (kg)" />
 
-                <TableColumn fx:id="cargoCapacityColumn" prefWidth="80.0" text="Cargo" />
+                <TableColumn fx:id="baseAirportIdColumn" prefWidth="80.0" text="Bázis ID" />
 
-                <TableColumn fx:id="manufactureYearColumn" prefWidth="80.0" text="Gyártás" />
+                <TableColumn fx:id="manufactureYearColumn" prefWidth="90.0" text="Gyártás" />
             </columns>
         </TableView>
 

@@ -28,17 +28,17 @@ class AircraftPageController {
     // --- TÁBLÁZAT ---
     @FXML private TableView<Aircraft> aircraftTable;
 
-    // --- OSZLOPOK (Mind a 10 kért mező) ---
-    @FXML private TableColumn<Aircraft, Long> idColumn;             // aircraft_id
-    @FXML private TableColumn<Aircraft, String> registrationColumn; // registration
-    @FXML private TableColumn<Aircraft, String> typeIcaoColumn;     // type_icao
-    @FXML private TableColumn<Aircraft, Long> airlineIdColumn;      // airline_id
-    @FXML private TableColumn<Aircraft, String> statusColumn;       // status (ENUM!)
-    @FXML private TableColumn<Aircraft, String> msnColumn;          // msn
-    @FXML private TableColumn<Aircraft, Integer> seatCapacityColumn;// seat_capacity
-    @FXML private TableColumn<Aircraft, Integer> cargoCapacityColumn;// cargo_capacity
-    @FXML private TableColumn<Aircraft, Long> baseAirportIdColumn;  // base_airport_id
-    @FXML private TableColumn<Aircraft, Integer> manufactureYearColumn; // manufacture_year
+    // Oszlopok definíciója (A típusokat igazítottam a Modelhez: Short, Integer, Long)
+    @FXML private TableColumn<Aircraft, Long> idColumn;
+    @FXML private TableColumn<Aircraft, String> registrationColumn;
+    @FXML private TableColumn<Aircraft, String> typeIcaoColumn;
+    @FXML private TableColumn<Aircraft, Long> airlineIdColumn;
+    @FXML private TableColumn<Aircraft, String> statusColumn; // Enum -> String konverzió
+    @FXML private TableColumn<Aircraft, String> msnColumn;
+    @FXML private TableColumn<Aircraft, Short> seatCapacityColumn; // Short a modelben
+    @FXML private TableColumn<Aircraft, Integer> cargoCapacityColumn; // Integer a modelben
+    @FXML private TableColumn<Aircraft, Long> baseAirportIdColumn;
+    @FXML private TableColumn<Aircraft, Short> manufactureYearColumn; // Short a modelben
 
     // Adatkezelés
     private final ObservableList<Aircraft> aircraftList = FXCollections.observableArrayList();
@@ -56,42 +56,41 @@ class AircraftPageController {
         setupSearch();
     }
 
-    // --- 1. TÁBLÁZAT OSZLOPOK BEÁLLÍTÁSA ---
+    // --- 1. TÁBLÁZAT OSZLOPOK BEÁLLÍTÁSA (JAVÍTVA A MEZŐNEVEK) ---
     private void setupTable() {
         if (aircraftTable == null) return;
 
-        // 1. aircraft_id -> feltételezem 'aircraftId' vagy 'id' a neve a Java osztályban
-        // Ha nálad simán 'id', akkor írd át "id"-ra!
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("aircraftId"));
+        // 1. ID: A modelben "id" a neve (nem aircraftId)
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        // 2. registration
+        // 2. Registration
         registrationColumn.setCellValueFactory(new PropertyValueFactory<>("registration"));
 
-        // 3. type_icao -> typeIcao
+        // 3. Type ICAO
         typeIcaoColumn.setCellValueFactory(new PropertyValueFactory<>("typeIcao"));
 
-        // 4. airline_id -> airlineId
+        // 4. Airline ID
         airlineIdColumn.setCellValueFactory(new PropertyValueFactory<>("airlineId"));
 
-        // 5. status (ENUM kezelése)
+        // 5. Status (ENUM kezelése)
         statusColumn.setCellValueFactory(cellData -> {
             var statusEnum = cellData.getValue().getStatus();
             return new SimpleStringProperty(statusEnum != null ? statusEnum.name() : "");
         });
 
-        // 6. msn
+        // 6. MSN
         msnColumn.setCellValueFactory(new PropertyValueFactory<>("msn"));
 
-        // 7. seat_capacity -> seatCapacity
-        seatCapacityColumn.setCellValueFactory(new PropertyValueFactory<>("seatCapacity"));
+        // 7. Seat Capacity: A modelben "maxSeatCapacity" a neve!
+        seatCapacityColumn.setCellValueFactory(new PropertyValueFactory<>("maxSeatCapacity"));
 
-        // 8. cargo_capacity -> cargoCapacity
-        cargoCapacityColumn.setCellValueFactory(new PropertyValueFactory<>("cargoCapacity"));
+        // 8. Cargo Capacity: A modelben "cargoCapacityBase" a neve!
+        cargoCapacityColumn.setCellValueFactory(new PropertyValueFactory<>("cargoCapacityBase"));
 
-        // 9. base_airport_id -> baseAirportId
+        // 9. Base Airport ID
         baseAirportIdColumn.setCellValueFactory(new PropertyValueFactory<>("baseAirportId"));
 
-        // 10. manufacture_year -> manufactureYear
+        // 10. Manufacture Year
         manufactureYearColumn.setCellValueFactory(new PropertyValueFactory<>("manufactureYear"));
     }
 
@@ -125,7 +124,6 @@ class AircraftPageController {
                     String reg = aircraft.getRegistration() != null ? aircraft.getRegistration().toLowerCase() : "";
                     String type = aircraft.getTypeIcao() != null ? aircraft.getTypeIcao().toLowerCase() : "";
                     String msn = aircraft.getMsn() != null ? aircraft.getMsn().toLowerCase() : "";
-                    // Enum kezelése a keresésben:
                     String status = aircraft.getStatus() != null ? aircraft.getStatus().name().toLowerCase() : "";
 
                     return reg.contains(filter) || type.contains(filter) || status.contains(filter) || msn.contains(filter);
