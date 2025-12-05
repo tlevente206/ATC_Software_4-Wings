@@ -10,4 +10,3 @@ com/FourWings/atcSystem/frontend/controller/ArrivalsDialogController.class
 com/FourWings/atcSystem/service/dto/AirportWeatherInfo.class
 com/FourWings/atcSystem/frontend/UserAdminPageController$2.class
 com/FourWings/atcSystem/service/WeatherService.class
-com\FourWings\atcSystem\frontend\HomePage\AircraftPageController.class
