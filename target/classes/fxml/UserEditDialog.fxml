@@ -8,7 +8,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.UserEditDialogController"
-            prefWidth="500.0" prefHeight="400.0">
+            prefWidth="500.0" prefHeight="450.0">
 
     <top>
         <Label text="Felhasználó szerkesztése" BorderPane.alignment="CENTER">
@@ -28,7 +28,7 @@
             </padding>
 
             <columnConstraints>
-                <ColumnConstraints prefWidth="130"/>
+                <ColumnConstraints prefWidth="150"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
 
@@ -51,6 +51,7 @@
 
                 <!-- Jelszó -->
                 <Label text="Jelszó (üres = nem változik / új usernél ideiglenes generálódik)"
+                       wrapText="true"
                        GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                 <PasswordField fx:id="passwordField"
                                promptText="Jelszó (opcionális)"
@@ -66,15 +67,25 @@
                 <TextField fx:id="phoneField"
                            GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-                <!-- Admin -->
-                <Label text="Admin:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                <CheckBox fx:id="adminCheckBox"
+                <!-- Szerepkör (USER / CONTROLLER / ADMIN) -->
+                <Label text="Szerepkör:"
+                       GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="roleComboBox"
+                          prefWidth="200"
                           GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <!-- Hozzárendelt repülőtér (csak CONTROLLER szerepkörnél látszik) -->
+                <Label fx:id="airportLabel"
+                       text="Hozzárendelt repülőtér:"
+                       GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="airportComboBox"
+                          prefWidth="250"
+                          GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
                 <!-- Hibaüzenet -->
                 <Label fx:id="errorLabel"
                        textFill="red"
-                       GridPane.rowIndex="7"
+                       GridPane.rowIndex="8"
                        GridPane.columnIndex="0"
                        GridPane.columnSpan="2"/>
             </children>

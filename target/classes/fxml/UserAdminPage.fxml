@@ -44,10 +44,8 @@
                                    promptText="Név / felhasználónév / e-mail"
                                    prefWidth="250"/>
 
-                        <!-- SPACER: kilöki jobbra a gombot -->
                         <Region HBox.hgrow="ALWAYS"/>
 
-                        <!-- Vissza az admin főoldalra gomb (jobb felső sarok) -->
                         <Button fx:id="backToAdminButton"
                                 text="Vissza az admin főoldalra"
                                 onAction="#onBackToAdmin"/>
@@ -66,7 +64,9 @@
                 <TableColumn fx:id="usernameColumn" text="Felhasználónév" prefWidth="200"/>
                 <TableColumn fx:id="emailColumn" text="E-mail" prefWidth="300"/>
                 <TableColumn fx:id="phoneColumn" text="Telefon" prefWidth="180"/>
-                <TableColumn fx:id="adminColumn" text="Admin" prefWidth="90"/>
+                <TableColumn fx:id="roleColumn" text="Szerepkör" prefWidth="120"/>
+                <!-- ÚJ: hozzárendelt repülőtér -->
+                <TableColumn fx:id="airportColumn" text="Irányító reptere" prefWidth="260"/>
             </columns>
         </TableView>
     </center>

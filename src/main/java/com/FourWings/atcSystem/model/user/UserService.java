@@ -12,7 +12,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository,  PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -24,6 +25,10 @@ public class UserService {
     // 1) sima, önregisztráció (amit a RegistrationPage használ)
     @Transactional
     public User registerSelf(User u) {
+        // ha nem adtunk meg szerepkört, legyen USER
+        if (u.getRole() == null) {
+            u.setRole(UserRole.USER);
+        }
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         return userRepository.save(u);
     }
@@ -34,32 +39,33 @@ public class UserService {
      * rawPasswordOrNull:
      *  - ha NEM null/üres: új jelszó -> encode + mentés
      *  - ha null/üres: jelszó VÁLTOZATLAN marad a DB-ben
-     *
-     * FONTOS: meglévő usernél mindig a DB-s entitást töltjük be,
-     * és CSAK a nem-jelszó mezőket írjuk felül a paraméterből.
      */
     @Transactional
     public User saveFromAdmin(User u, String rawPasswordOrNull) {
 
         if (u.getId() == 0) {
             // --- ÚJ USER ---
+
             // felhasználónév ütközés ellenőrzés
             if (userRepository.existsByUsername(u.getUsername())) {
                 throw new IllegalStateException("A felhasználónév már foglalt: " + u.getUsername());
             }
 
-            // ha van nyers jelszó paraméterben, azt encode-oljuk
+            // default szerepkör, ha nincs
+            if (u.getRole() == null) {
+                u.setRole(UserRole.USER);
+            }
+
+            // jelszó beállítása
             if (rawPasswordOrNull != null && !rawPasswordOrNull.isBlank()) {
                 u.setPassword(passwordEncoder.encode(rawPasswordOrNull));
-            } else if (u.getPassword() != null && !u.getPassword().isBlank()) {
-                // opcionálisan: ha maga az entity tartalmaz raw jelszót (pl. registerSelf előtt),
-                // akkor itt is encode-olhatnánk – de nálad új usernél eddig is mindig adtunk rawPasswordOrNull-t.
             }
 
             return userRepository.save(u);
         }
 
         // --- MEGLÉVŐ USER ---
+
         // username ütközés ellenőrzés (másik usernél van-e ugyanaz)
         boolean usernameTaken =
                 userRepository.existsByUsernameAndIdNot(u.getUsername(), u.getId());
@@ -69,20 +75,28 @@ public class UserService {
 
         // DB-ből frissen betöltött entitás (MANAGED)
         User dbUser = userRepository.findById(u.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Felhasználó nem található id=" + u.getId()));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Felhasználó nem található id=" + u.getId()));
 
-        // CSAK az alábbi mezőket írjuk felül:
+        // Alap adatok frissítése
         dbUser.setName(u.getName());
         dbUser.setUsername(u.getUsername());
         dbUser.setEmail(u.getEmail());
         dbUser.setPhone(u.getPhone());
-        dbUser.setAdmin(u.isAdmin());
+
+        // Szerepkör frissítése (ha nullt kapunk, hagyjuk a régit)
+        if (u.getRole() != null) {
+            dbUser.setRole(u.getRole());
+        }
+
+        // Assigned airport, profilkép elérési út – ha használod ezeket:
+        dbUser.setAssignedAirport(u.getAssignedAirport());
+        dbUser.setProfileImagePath(u.getProfileImagePath());
 
         // A jelszó CSAK AKKOR változik, ha kaptunk nyers jelszót:
         if (rawPasswordOrNull != null && !rawPasswordOrNull.isBlank()) {
             dbUser.setPassword(passwordEncoder.encode(rawPasswordOrNull));
         }
-        // Ha null/üres: érintetlenül hagyjuk dbUser.getPassword()-öt
 
         return userRepository.save(dbUser);
     }
@@ -122,8 +136,6 @@ public class UserService {
         String encoded = passwordEncoder.encode(newRawPassword);
         user.setPassword(encoded);
         userRepository.save(user);
-
-        System.out.println("Jelszó módosítva userId=" + userId);
     }
 
     @Transactional

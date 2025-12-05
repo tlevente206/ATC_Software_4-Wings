@@ -2,8 +2,11 @@ package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
+import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.user.User;
+import com.FourWings.atcSystem.model.user.UserRole;
 import com.FourWings.atcSystem.model.user.UserService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -48,7 +51,10 @@ public class UserAdminPageController {
     private TableColumn<User, String> phoneColumn;
 
     @FXML
-    private TableColumn<User, Boolean> adminColumn;
+    private TableColumn<User, UserRole> roleColumn;
+
+    @FXML
+    private TableColumn<User, String> airportColumn;
 
     @FXML
     private TextField searchField;
@@ -56,14 +62,8 @@ public class UserAdminPageController {
     @FXML
     private Label statusLabel;
 
-    // az összes user, amit a DB-ből hozunk
     private final ObservableList<User> users = FXCollections.observableArrayList();
-    // erre szűrünk kereséskor
     private FilteredList<User> filteredUsers;
-
-    // ---------------------------------------------------------
-    // INIT
-    // ---------------------------------------------------------
 
     @FXML
     public void initialize() {
@@ -73,35 +73,79 @@ public class UserAdminPageController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        adminColumn.setCellValueFactory(new PropertyValueFactory<>("admin"));
+        roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        // adatok betöltése + FilteredList létrehozása
+        // Szerepkör szép szöveggel
+        roleColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(UserRole role, boolean empty) {
+                super.updateItem(role, empty);
+                if (empty || role == null) {
+                    setText(null);
+                } else {
+                    switch (role) {
+                        case ADMIN -> setText("Admin");
+                        case CONTROLLER -> setText("Irányító");
+                        case USER -> setText("Felhasználó");
+                    }
+                }
+            }
+        });
+
+        // Hozzárendelt repülőtér oszlop (ICAO – Név)
+        airportColumn.setCellValueFactory(cellData -> {
+            User u = cellData.getValue();
+            Airports ap = u.getAssignedAirport();
+            if (ap == null) {
+                return new SimpleStringProperty("");
+            }
+            String icao = ap.getIcaoCode() != null ? ap.getIcaoCode() : "";
+            String name = ap.getName() != null ? ap.getName() : "";
+            String text;
+            if (!icao.isBlank() && !name.isBlank()) {
+                text = icao + " – " + name;
+            } else if (!icao.isBlank()) {
+                text = icao;
+            } else {
+                text = name;
+            }
+            return new SimpleStringProperty(text);
+        });
+
         users.setAll(userService.getAllUsers());
-        filteredUsers = new FilteredList<>(users, u -> true);   // kezdetben mindent mutat
+        filteredUsers = new FilteredList<>(users, u -> true);
         usersTable.setItems(filteredUsers);
 
         if (statusLabel != null) {
             statusLabel.setText("Felhasználók betöltve: " + users.size());
         }
 
-        // KERESÉS: ahogy gépelsz, úgy szűr
         if (searchField != null) {
             searchField.textProperty().addListener((obs, oldVal, newVal) -> {
                 String filter = (newVal == null) ? "" : newVal.trim().toLowerCase();
 
                 filteredUsers.setPredicate(user -> {
-                    if (filter.isEmpty()) {
-                        // üres kereső → minden elem látszik
-                        return true;
-                    }
+                    if (filter.isEmpty()) return true;
+
                     String name = user.getName() != null ? user.getName().toLowerCase() : "";
                     String username = user.getUsername() != null ? user.getUsername().toLowerCase() : "";
                     String email = user.getEmail() != null ? user.getEmail().toLowerCase() : "";
                     String phone = user.getPhone() != null ? user.getPhone().toLowerCase() : "";
+                    String roleText = (user.getRole() != null ? user.getRole().name() : "").toLowerCase();
+                    String apText = "";
+                    if (user.getAssignedAirport() != null) {
+                        Airports ap = user.getAssignedAirport();
+                        String icao = ap.getIcaoCode() != null ? ap.getIcaoCode().toLowerCase() : "";
+                        String aName = ap.getName() != null ? ap.getName().toLowerCase() : "";
+                        apText = icao + " " + aName;
+                    }
 
                     return name.contains(filter)
                             || username.contains(filter)
-                            || email.contains(filter) || phone.contains(filter);
+                            || email.contains(filter)
+                            || phone.contains(filter)
+                            || roleText.contains(filter)
+                            || apText.contains(filter);
                 });
 
                 if (statusLabel != null) {
@@ -110,7 +154,6 @@ public class UserAdminPageController {
             });
         }
 
-        // dupla kattintás sorra → szerkesztő
         usersTable.setRowFactory(tv -> {
             TableRow<User> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -125,7 +168,6 @@ public class UserAdminPageController {
             return row;
         });
 
-        // ENTER-rel is megnyitjuk a szerkesztőt
         usersTable.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER -> {
@@ -138,7 +180,6 @@ public class UserAdminPageController {
             }
         });
 
-        // kijelölt user nevét kiírjuk a státusz sorba
         usersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
             if (newSel != null && statusLabel != null) {
                 statusLabel.setText("Kiválasztott felhasználó: " + newSel.getUsername());
@@ -146,14 +187,9 @@ public class UserAdminPageController {
         });
     }
 
-    // ---------------------------------------------------------
-    // SEGÉDMETÓDUS: lista újratöltése
-    // ---------------------------------------------------------
-
     private void reloadUsers() {
         users.setAll(userService.getAllUsers());
 
-        // ha már van filter, tartsuk meg a mostani keresőt
         if (filteredUsers == null) {
             filteredUsers = new FilteredList<>(users, u -> true);
             usersTable.setItems(filteredUsers);
@@ -167,9 +203,20 @@ public class UserAdminPageController {
                 String name = user.getName() != null ? user.getName().toLowerCase() : "";
                 String username = user.getUsername() != null ? user.getUsername().toLowerCase() : "";
                 String email = user.getEmail() != null ? user.getEmail().toLowerCase() : "";
+                String roleText = (user.getRole() != null ? user.getRole().name() : "").toLowerCase();
+                String apText = "";
+                if (user.getAssignedAirport() != null) {
+                    Airports ap = user.getAssignedAirport();
+                    String icao = ap.getIcaoCode() != null ? ap.getIcaoCode().toLowerCase() : "";
+                    String aName = ap.getName() != null ? ap.getName().toLowerCase() : "";
+                    apText = icao + " " + aName;
+                }
+
                 return name.contains(currentFilter)
                         || username.contains(currentFilter)
-                        || email.contains(currentFilter);
+                        || email.contains(currentFilter)
+                        || roleText.contains(currentFilter)
+                        || apText.contains(currentFilter);
             });
         }
 
@@ -179,9 +226,7 @@ public class UserAdminPageController {
         }
     }
 
-    // ---------------------------------------------------------
-    // GOMBOK
-    // ---------------------------------------------------------
+    // ------- GOMBOK -------
 
     @FXML
     private void onEditSelectedUser() {
@@ -198,7 +243,7 @@ public class UserAdminPageController {
     @FXML
     private void onAddNewUser() {
         User newUser = new User();
-        newUser.setAdmin(false);
+        newUser.setRole(UserRole.USER);
         openUserEditDialog(newUser);
     }
 
@@ -233,10 +278,6 @@ public class UserAdminPageController {
         reloadUsers();
     }
 
-    // ---------------------------------------------------------
-    // Szerkesztő dialógus
-    // ---------------------------------------------------------
-
     private void openUserEditDialog(User user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserEditDialog.fxml"));
@@ -251,10 +292,9 @@ public class UserAdminPageController {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.setTitle("Felhasználó szerkesztése");
             dialogStage.setScene(new Scene(root));
-            dialogStage.showAndWait();
             dialogStage.centerOnScreen();
+            dialogStage.showAndWait();
 
-            // ha történt mentés, bent van az edited flag-ben
             if (ctrl.isEdited()) {
                 reloadUsers();
                 if (statusLabel != null) {
@@ -269,6 +309,7 @@ public class UserAdminPageController {
             }
         }
     }
+
     @FXML
     private void onBackToAdmin(ActionEvent event) {
         SceneManager.switchTo("AdminPage.fxml", "ATC – Admin Dashboard", 600, 400);

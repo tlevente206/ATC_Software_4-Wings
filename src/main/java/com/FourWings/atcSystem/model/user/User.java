@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.model.user;
 
+import com.FourWings.atcSystem.model.airport.Airports;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,23 +12,61 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
-    String name;
+    private String name;
 
     @Column(unique = true, nullable = false)
-    String username;
+    private String username;
 
-    String password;
-    String email;
-    String phone;
+    private String password;
+    private String email;
+    private String phone;
 
-    @Column(name = "is_admin")
-    boolean admin;
+    /**
+     * Szerepkör:
+     *  - USER       = sima felhasználó
+     *  - CONTROLLER = adott repülőtérhez rendelt irányító
+     *  - ADMIN      = teljes jogú admin
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 
-    @Column(name = "profile_image")
-    private String profileImage;
+    /**
+     * Ha a user CONTROLLER, ide kötjük az "otthoni" repteret.
+     * USER / ADMIN esetén lehet null.
+     *
+     * EAGER-re állítjuk, hogy JavaFX oldalon (comboBox, táblázat)
+     * gond nélkül tudjuk használni, még akkor is, ha a Hibernate session már lezárult.
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "assigned_airport_id")
+    private Airports assignedAirport;
+
+    /**
+     * Profilkép elérési útja (pl. "/images/avatars/avatar3.png"),
+     * vagy null, ha nincs.
+     */
+    @Column(name = "profile_image_path")
+    private String profileImagePath;
+
+    // KÉNYELMI METÓDUSOK
+
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
+    }
+
+    public boolean isController() {
+        return role == UserRole.CONTROLLER;
+    }
+
+    public boolean isUserOnly() {
+        return role == UserRole.USER;
+    }
 }

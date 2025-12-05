@@ -79,14 +79,14 @@ public class UserDataPageController {
 
     /**
      * A felhasználó profilképének frissítése.
-     * A User.profileImage mezőben most már csak egy relatív resource útvonal van,
+     * A User.profileImagePath mezőben most már csak egy relatív resource útvonal van,
      * pl: "/images/avatars/avatar3.png"
      */
     private void refreshProfileImage() {
         if (profileImageView == null) return;
         if (loggedUser == null) return;
 
-        String path = loggedUser.getProfileImage();   // <-- String elérési út
+        String path = loggedUser.getProfileImagePath();   // <-- elérési út a User-ből
         if (path != null && !path.isBlank()) {
             try (InputStream is = getClass().getResourceAsStream(path)) {
                 if (is != null) {
@@ -162,11 +162,11 @@ public class UserDataPageController {
             dialogStage.setScene(new Scene(root));
             dialogStage.showAndWait();
 
-            // az AvatarPickerDialogController most már String utat ad vissza
+            // az AvatarPickerDialogController most már String elérési utat ad vissza
             String chosenPath = ctrl.getSelectedImagePath();
             if (chosenPath != null && !chosenPath.isBlank()) {
                 // új kép elérési útjának beállítása, mentés DB-be
-                loggedUser.setProfileImage(chosenPath);
+                loggedUser.setProfileImagePath(chosenPath);
                 userService.saveFromAdmin(loggedUser, null); // jelszó változatlan
 
                 // előnézet frissítése

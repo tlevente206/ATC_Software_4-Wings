@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.frontend;
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.user.User;
+import com.FourWings.atcSystem.model.user.UserRole;
 import com.FourWings.atcSystem.model.user.UserService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -155,8 +156,9 @@ public class RegistrationPageController {
                         .email(emailInput.getText().trim())
                         .password(password)
                         .phone(phoneInput.getText().trim())
-                        .admin(false)
-                        .profileImage(selectedProfileImagePath)  // ⬅ itt már String megy az adatbázisba
+                        .role(UserRole.USER)              // 🔹 alapértelmezett
+                        .assignedAirport(null)            // sima usernek nincs
+                        .profileImagePath("/images/avatars/avatar1.png") // ha akarsz defaultot
                         .build();
 
                 userService.registerSelf(u);
