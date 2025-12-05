@@ -2,94 +2,80 @@
 
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0"
-            style="-fx-background-color: #ffeecc;"
-            xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.HomePage.RoutesPageController">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #ffeecc;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.HomePage.RoutesPageController">
 
     <children>
 
-        <Label layoutX="20.0" layoutY="20.0"
-               style="-fx-font-size: 24px; -fx-font-weight: bold;"
-               text="Repülőutak (Routes)"/>
+        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Repülőutak (Routes)" />
 
-        <Button layoutX="1080.0" layoutY="14.0"
-                onAction="#onLogout"
-                text="Kijelentkezés"/>
+        <Button layoutX="1080.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés" />
 
-        <ComboBox fx:id="menuComboBox"
-                  layoutX="25.0" layoutY="70.0"
-                  prefWidth="220.0">
+        <ComboBox fx:id="menuComboBox" layoutX="25.0" layoutY="70.0" prefWidth="220.0">
             <items>
                 <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="Főoldal"/>
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
-                    <String fx:value="Repülők"/>
-                    <String fx:value="Repterek"/>
-                    <String fx:value="Repülőutak"/>
-                    <String fx:value="Terminál(Ez is inkább reptér)"/>
+                    <String fx:value="Főoldal" />
+                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)" />
+                    <String fx:value="Repülők" />
+                    <String fx:value="Repterek" />
+                    <String fx:value="Repülőutak" />
+                    <String fx:value="Terminál(Ez is inkább reptér)" />
                 </FXCollections>
             </items>
         </ComboBox>
 
-        <Label layoutX="300.0" layoutY="74.0" text="Reptér kiválasztása:" style="-fx-font-weight: bold;"/>
-        <ComboBox fx:id="airportSelector"
-                  layoutX="420.0" layoutY="70.0"
-                  prefWidth="300.0"
-                  promptText="-- Válassz egy repteret --"/>
+        <Label layoutX="300.0" layoutY="74.0" style="-fx-font-weight: bold;" text="Reptér kiválasztása:" />
+        <ComboBox fx:id="airportSelector" layoutX="420.0" layoutY="70.0" prefWidth="300.0" promptText="-- Válassz egy repteret --" />
 
-        <Button layoutX="730.0" layoutY="70.0"
-                text="Frissítés"
-                onAction="#onRefresh"/>
+        <Button layoutX="730.0" layoutY="70.0" onAction="#onRefresh" text="Frissítés" />
 
-        <Label fx:id="statusLabel"
-               layoutX="25.0" layoutY="570.0"
-               text="Válassz repteret az útvonalak megtekintéséhez..."/>
+        <Label fx:id="statusLabel" layoutX="25.0" layoutY="570.0" text="Válassz repteret az útvonalak megtekintéséhez..." />
 
         <SplitPane dividerPositions="0.5" layoutX="25.0" layoutY="120.0" prefHeight="440.0" prefWidth="1150.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0">
                     <children>
-                        <Label text="INDULÓ JÁRATOK (Departures)"
-                               AnchorPane.topAnchor="5.0" AnchorPane.leftAnchor="10.0"
-                               style="-fx-font-weight: bold; -fx-text-fill: #b30000;"/>
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #b30000;" text="INDULÓ JÁRATOK (Departures)" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
 
-                        <TableView fx:id="departuresTable"
-                                   AnchorPane.topAnchor="30.0" AnchorPane.bottomAnchor="0.0"
-                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <TableView fx:id="departuresTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                             <columns>
-                                <TableColumn fx:id="depFlightNumCol" text="Járat" prefWidth="70"/>
-                                <TableColumn fx:id="depAirlineCol" text="Légitársaság" prefWidth="100"/>
-                                <TableColumn fx:id="depDestinationCol" text="Célállomás" prefWidth="80"/>
-                                <TableColumn fx:id="depTimeCol" text="Indulás" prefWidth="120"/>
-                                <TableColumn fx:id="depGateCol" text="Kapu" prefWidth="60"/>
-                                <TableColumn fx:id="depStatusCol" text="Státusz" prefWidth="100"/>
+                                <TableColumn fx:id="depFlightNumCol" prefWidth="70" text="Járat" />
+                                <TableColumn fx:id="depAirlineCol" prefWidth="100" text="Légitársaság" />
+                                <TableColumn fx:id="depDestinationCol" prefWidth="80" text="Célállomás" />
+                                <TableColumn fx:id="depTimeCol" prefWidth="120" text="Indulás" />
+                                <TableColumn fx:id="depGateCol" prefWidth="60" text="Kapu" />
+                                <TableColumn fx:id="depStatusCol" prefWidth="100" text="Státusz" />
                             </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
                     </children>
                 </AnchorPane>
 
                 <AnchorPane minHeight="0.0" minWidth="0.0">
                     <children>
-                        <Label text="ÉRKEZŐ JÁRATOK (Arrivals)"
-                               AnchorPane.topAnchor="5.0" AnchorPane.leftAnchor="10.0"
-                               style="-fx-font-weight: bold; -fx-text-fill: #006600;"/>
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #006600;" text="ÉRKEZŐ JÁRATOK (Arrivals)" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
 
-                        <TableView fx:id="arrivalsTable"
-                                   AnchorPane.topAnchor="30.0" AnchorPane.bottomAnchor="0.0"
-                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <TableView fx:id="arrivalsTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                             <columns>
-                                <TableColumn fx:id="arrFlightNumCol" text="Járat" prefWidth="70"/>
-                                <TableColumn fx:id="arrAirlineCol" text="Légitársaság" prefWidth="100"/>
-                                <TableColumn fx:id="arrOriginCol" text="Indulási Hely" prefWidth="80"/>
-                                <TableColumn fx:id="arrTimeCol" text="Érkezés" prefWidth="120"/>
-                                <TableColumn fx:id="arrGateCol" text="Kapu" prefWidth="60"/>
-                                <TableColumn fx:id="arrStatusCol" text="Státusz" prefWidth="100"/>
+                                <TableColumn fx:id="arrFlightNumCol" prefWidth="70" text="Járat" />
+                                <TableColumn fx:id="arrAirlineCol" prefWidth="100" text="Légitársaság" />
+                                <TableColumn fx:id="arrOriginCol" prefWidth="80" text="Indulási Hely" />
+                                <TableColumn fx:id="arrTimeCol" prefWidth="120" text="Érkezés" />
+                                <TableColumn fx:id="arrGateCol" prefWidth="60" text="Kapu" />
+                                <TableColumn fx:id="arrStatusCol" prefWidth="100" text="Státusz" />
                             </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
                     </children>
                 </AnchorPane>

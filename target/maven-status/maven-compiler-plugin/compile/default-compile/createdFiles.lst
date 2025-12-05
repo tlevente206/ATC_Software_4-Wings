@@ -8,6 +8,8 @@ com\FourWings\atcSystem\frontend\UserEditDialogController$1.class
 com\FourWings\atcSystem\frontend\controller\DeparturesDialogController$1.class
 com\FourWings\atcSystem\service\weather\OpenWeatherService.class
 com\FourWings\atcSystem\frontend\controller\ArrivalsDialogController.class
+com\FourWings\atcSystem\frontend\HomePage\RoutesPageController$3.class
 com\FourWings\atcSystem\service\dto\AirportWeatherInfo.class
 com\FourWings\atcSystem\model\user\UserRole.class
+com\FourWings\atcSystem\frontend\HomePage\RoutesPageController$2.class
 com\FourWings\atcSystem\frontend\controller\ControllerHomePageController.class

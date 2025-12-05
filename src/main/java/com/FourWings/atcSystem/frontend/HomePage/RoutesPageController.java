@@ -3,8 +3,8 @@ package com.FourWings.atcSystem.frontend.HomePage;
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
-import com.FourWings.atcSystem.model.flight.Flight; // Fontos: Egyes szám!
-import com.FourWings.atcSystem.model.flight.FlightService; // Fontos: Egyes szám!
+import com.FourWings.atcSystem.model.flight.Flight;
+import com.FourWings.atcSystem.model.flight.FlightService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ import java.util.List;
 public class RoutesPageController {
 
     private final AirportsService airportService;
-    private final FlightService flightService; // A te FlightService osztályod
+    private final FlightService flightService;
 
     // --- FXML Elemek ---
 
@@ -32,37 +32,37 @@ public class RoutesPageController {
     @FXML
     private Label statusLabel;
 
-    // -- Induló járatok (Departures) --
+    // -- Induló járatok --
     @FXML
     private TableView<Flight> departuresTable;
     @FXML
     private TableColumn<Flight, String> depFlightNumCol;
     @FXML
-    private TableColumn<Flight, String> depAirlineCol;     // airlineName
+    private TableColumn<Flight, String> depAirlineCol;
     @FXML
-    private TableColumn<Flight, String> depDestinationCol; // destinationName
+    private TableColumn<Flight, String> depDestinationCol;
     @FXML
-    private TableColumn<Flight, String> depTimeCol;        // scheduledDepartureText
+    private TableColumn<Flight, String> depTimeCol;
     @FXML
-    private TableColumn<Flight, String> depStatusCol;      // statusText
+    private TableColumn<Flight, String> depStatusCol;
     @FXML
-    private TableColumn<Flight, String> depGateCol;        // gateCode
+    private TableColumn<Flight, String> depGateCol;
 
-    // -- Érkező járatok (Arrivals) --
+    // -- Érkező járatok --
     @FXML
     private TableView<Flight> arrivalsTable;
     @FXML
     private TableColumn<Flight, String> arrFlightNumCol;
     @FXML
-    private TableColumn<Flight, String> arrAirlineCol;     // airlineName
+    private TableColumn<Flight, String> arrAirlineCol;
     @FXML
-    private TableColumn<Flight, String> arrOriginCol;      // originName
+    private TableColumn<Flight, String> arrOriginCol;
     @FXML
-    private TableColumn<Flight, String> arrTimeCol;        // scheduledArrivalText
+    private TableColumn<Flight, String> arrTimeCol;
     @FXML
-    private TableColumn<Flight, String> arrStatusCol;      // statusText
+    private TableColumn<Flight, String> arrStatusCol;
     @FXML
-    private TableColumn<Flight, String> arrGateCol;        // gateCode
+    private TableColumn<Flight, String> arrGateCol;
 
     // --- Adatlisták ---
     private final ObservableList<Airports> airportList = FXCollections.observableArrayList();
@@ -82,12 +82,9 @@ public class RoutesPageController {
         loadAirports();
     }
 
-    // ----------------- Táblák beállítása -----------------
+    // ----------------- Táblák beállítása & SZÍNEZÉS -----------------
     private void setupTables() {
-        // A PropertyValueFactory stringeknek pontosan meg kell egyezniük
-        // a Flight osztályodban lévő mezőnevekkel (amiket a prepareFlightForView tölt fel).
-
-        // --- INDULÓK ---
+        // --- 1. INDULÓK OSZLOPOK ---
         depFlightNumCol.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
         depAirlineCol.setCellValueFactory(new PropertyValueFactory<>("airlineName"));
         depDestinationCol.setCellValueFactory(new PropertyValueFactory<>("destinationName"));
@@ -98,7 +95,16 @@ public class RoutesPageController {
         departuresTable.setItems(departureList);
         departuresTable.setPlaceholder(new Label("Válassz repteret az induló járatokhoz!"));
 
-        // --- ÉRKEZŐK ---
+        // *** SZÍNEZÉS LOGIKA (Departures) ***
+        departuresTable.setRowFactory(tv -> new TableRow<Flight>() {
+            @Override
+            protected void updateItem(Flight item, boolean empty) {
+                super.updateItem(item, empty);
+                applyRowColor(this, item, empty);
+            }
+        });
+
+        // --- 2. ÉRKEZŐK OSZLOPOK ---
         arrFlightNumCol.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
         arrAirlineCol.setCellValueFactory(new PropertyValueFactory<>("airlineName"));
         arrOriginCol.setCellValueFactory(new PropertyValueFactory<>("originName"));
@@ -108,6 +114,73 @@ public class RoutesPageController {
 
         arrivalsTable.setItems(arrivalList);
         arrivalsTable.setPlaceholder(new Label("Válassz repteret az érkező járatokhoz!"));
+
+        // *** SZÍNEZÉS LOGIKA (Arrivals) ***
+        arrivalsTable.setRowFactory(tv -> new TableRow<Flight>() {
+            @Override
+            protected void updateItem(Flight item, boolean empty) {
+                super.updateItem(item, empty);
+                applyRowColor(this, item, empty);
+            }
+        });
+    }
+
+    private void applyRowColor(TableRow<Flight> row, Flight item, boolean empty) {
+        if (item == null || empty) {
+            row.setStyle("");
+        } else {
+            String status = "";
+            try {
+                // Ha van getStatusText metódusod, használd azt közvetlenül!
+                // status = item.getStatusText();
+
+                // Reflexió (biztonsági tartalék, ha nem tudom a metódusnevet):
+                java.lang.reflect.Method method = item.getClass().getMethod("getStatusText");
+                status = (String) method.invoke(item);
+
+            } catch (Exception e) {
+                status = "Unknown";
+            }
+
+            if (status == null) status = "";
+
+            // Kisbetűssé alakítjuk a könnyebb vizsgálathoz és contains-t használunk,
+            // hogy pl. a "Taxiing" és "Taxi" is működjön.
+            String s = status.toLowerCase();
+
+            // --- 1. ZÖLD: Landolt / Érkezett ---
+            if (s.contains("landed") || s.contains("arrived")) {
+                row.setStyle("-fx-background-color: #c8e6c9;");
+            }
+            // --- 2. KÉK: Levegőben (Airborne) ---
+            else if (s.contains("airborne") || s.contains("flying")) {
+                row.setStyle("-fx-background-color: #b3e5fc;");
+            }
+            // --- 3. NARANCS: Gurul (Taxi) ---
+            else if (s.contains("taxi")) {
+                row.setStyle("-fx-background-color: #ffe0b2;");
+            }
+            // --- 4. TÜRKIZ: Beszállás (Boarding) ---
+            else if (s.contains("boarding") || s.contains("go to gate")) {
+                row.setStyle("-fx-background-color: #b2dfdb;");
+            }
+            // --- 5. SÁRGA: Késik (Delayed) ---
+            else if (s.contains("delayed") || s.contains("late")) {
+                row.setStyle("-fx-background-color: #fff9c4;");
+            }
+            // --- 6. PIROS: Törölve (Cancelled) ---
+            else if (s.contains("canceled")) {
+                row.setStyle("-fx-background-color: #ffcdd2;");
+            }
+            // --- 7. SZÜRKE: Tervezett (Scheduled) ---
+            else if (s.contains("sched")) {
+                row.setStyle("-fx-background-color: #f5f5f5;");
+            }
+            // --- EGYÉB (Alapértelmezett) ---
+            else {
+                row.setStyle("");
+            }
+        }
     }
 
     // ----------------- Útvonalak betöltése -----------------
@@ -117,7 +190,6 @@ public class RoutesPageController {
         statusLabel.setText("Útvonalak betöltése: " + airport.getName());
 
         try {
-            // A te Service metódusaidat hívjuk, amik Airports objektumot várnak
             List<Flight> deps = flightService.getDeparturesForAirport(airport);
             List<Flight> arrs = flightService.getArrivalsForAirport(airport);
 
