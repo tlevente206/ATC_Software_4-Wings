@@ -1,35 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Button?>
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="httpfx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.HomePage.PlanesPageController"
-            prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #cceeff;">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0"
+            style="-fx-background-color: #ffeecc;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.HomePage.AircraftPageController">
+
     <children>
-        <Label text="Repülők" layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;"/>
+        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;" text="Repülőgépek adatbázisa"/>
 
-        <Button fx:id="logoutButton"
-                text="Kijelentkezés"
-                onAction="#onLogout"
-                layoutX="500"
-                layoutY="10"/>
+        <Button fx:id="logoutButton" layoutX="1080.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés"/>
 
-        <ComboBox fx:id="menuComboBox" layoutX="26.0" layoutY="80.0" prefWidth="148.0">
+        <ComboBox fx:id="menuComboBox" layoutX="25.0" layoutY="80.0" prefWidth="220.0">
             <items>
                 <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Főoldal"/>
+                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
                     <String fx:value="Repülők"/>
                     <String fx:value="Repterek"/>
                     <String fx:value="Repülőutak"/>
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
                     <String fx:value="Terminál(Ez is inkább reptér)"/>
-                    <String fx:value="Főoldal"/>
                 </FXCollections>
             </items>
         </ComboBox>
+
+        <Label layoutX="270.0" layoutY="84.0" text="Keresés:"/>
+        <TextField fx:id="searchField" layoutX="330.0" layoutY="80.0" prefWidth="260.0" promptText="Lajstrom / Típus / MSN / Státusz"/>
+
+        <Button layoutX="610.0" layoutY="80.0" text="Frissítés" onAction="#onRefresh"/>
+        <Label fx:id="statusLabel" layoutX="25.0" layoutY="560.0" text="Adatok betöltése..."/>
+
+        <TableView fx:id="aircraftTable" layoutX="25.0" layoutY="130.0" prefHeight="410.0" prefWidth="1150.0">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
+
+                <TableColumn fx:id="registrationColumn" prefWidth="100.0" text="Lajstrom" />
+
+                <TableColumn fx:id="typeIcaoColumn" prefWidth="80.0" text="Típus" />
+
+                <TableColumn fx:id="msnColumn" prefWidth="90.0" text="MSN" />
+
+                <TableColumn fx:id="airlineIdColumn" prefWidth="70.0" text="Airline ID" />
+
+                <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Státusz" />
+
+                <TableColumn fx:id="seatCapacityColumn" prefWidth="80.0" text="Max Utas" />
+
+                <TableColumn fx:id="cargoCapacityColumn" prefWidth="90.0" text="Cargo (kg)" />
+
+                <TableColumn fx:id="baseAirportIdColumn" prefWidth="80.0" text="Bázis ID" />
+
+                <TableColumn fx:id="manufactureYearColumn" prefWidth="90.0" text="Gyártás" />
+            </columns>
+        </TableView>
+
     </children>
 </AnchorPane>
