@@ -34,6 +34,8 @@ import java.io.InputStream;
 public class UserDataPageController {
 
     private final UserService userService;
+    public static final int WIDTH = 1200; //Window szélesség
+    public static final int HEIGHT = 600; //Window magasság
 
     public UserDataPageController(UserService userService) {
         this.userService = userService;
@@ -230,6 +232,6 @@ public class UserDataPageController {
 
     @FXML
     public void toHome(ActionEvent event) {
-        SceneManager.switchTo("HomePage.fxml", "ATC – Dashboard", 600, 400);
+        SceneManager.switchTo("HomePage.fxml", "ATC – Dashboard", WIDTH, HEIGHT);
     }
 }

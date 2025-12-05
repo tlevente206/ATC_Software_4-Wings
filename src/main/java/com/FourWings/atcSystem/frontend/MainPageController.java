@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 public class MainPageController {
 
     private final AuthService authService;
+    public static final int WIDTH = 1200; //Window szélesség
+    public static final int HEIGHT = 600; //Window magasság
 
     public MainPageController(AuthService authService) {
         this.authService = authService;
@@ -37,7 +39,7 @@ public class MainPageController {
         HomePageController ctrl = SceneManager.switchTo(
                 "HomePage.fxml",
                 "ATC – Dashboard",
-                600, 400
+                WIDTH, HEIGHT
         );
         ctrl.initWithUser(user);
     }

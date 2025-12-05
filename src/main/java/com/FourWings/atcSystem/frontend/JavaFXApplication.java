@@ -22,7 +22,7 @@ public class JavaFXApplication extends Application {
             // 2) SceneManager inicializálása *A KAPOTT* stage-dzsel
             SceneManager.init(stage);
 
-            // 3) Első oldal betöltése (amit szeretnél: MainPage vagy HomePage)
+            // 3) Első oldal betöltése
             SceneManager.switchTo("MainPage.fxml", "ATC System", 800, 400);
 
             // 4) Ikon beállítása (ha kell)

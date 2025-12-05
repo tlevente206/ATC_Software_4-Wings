@@ -26,6 +26,8 @@ import java.util.List;
 @Component
 public class HomePageController {
 
+    public static final int WIDTH = 1200; //Window szélesség
+    public static final int HEIGHT = 600; //Window magasság
     // --- SERVICE-EK (Adatbázis kapcsolat) ---
     private final AirportsService airportService;
     private final FlightService flightService;
@@ -60,7 +62,6 @@ public class HomePageController {
 
     @FXML
     public void initialize() {
-        // 1. A te eredeti navigációd
         setupMenuNavigation();
 
         setupAirportSelector();
@@ -82,19 +83,19 @@ public class HomePageController {
                     case "Főoldal":
                         break; // Már itt vagyunk
                     case "Repülők":
-                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", 800, 600);
+                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
                         break;
                     case "Repterek":
-                        SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", 800, 600);
+                        SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
                         break;
                     case "Repülőutak":
-                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", 1200, 600);
+                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", WIDTH, HEIGHT);
                         break;
                     case "Kapuk(Ez inkább a repterekhez menne)":
-                        SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", 800, 600);
+                        SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
                         break;
                     case "Terminál(Ez is inkább reptér)":
-                        SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", 800, 600);
+                        SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
                         break;
                     default:
                         System.out.println("Nincs oldal ehhez: " + newVal);
@@ -110,7 +111,7 @@ public class HomePageController {
 
     @FXML
     public void onGoToPersonalData(ActionEvent event) {
-        UserDataPageController ctrl = SceneManager.switchTo("UserDataPage.fxml", "ATC – Saját adatok", 600, 400);
+        UserDataPageController ctrl = SceneManager.switchTo("UserDataPage.fxml", "ATC – Saját adatok", WIDTH, HEIGHT);
         if (ctrl != null) {
             ctrl.initWithUser(loggedUser);
         }
