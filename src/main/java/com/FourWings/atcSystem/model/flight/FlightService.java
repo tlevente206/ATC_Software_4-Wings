@@ -13,9 +13,57 @@ public class FlightService {
 
     private final FlightRepository repo;
 
+    /**
+     * Minden olyan lazy kapcsolatot "megbökünk", amire a UI-ban szükség lesz,
+     * még a tranzakciós kontextuson BELÜL.
+     */
+    private void initializeForUi(Flight f) {
+        if (f == null) return;
+
+        // Induló reptér
+        try {
+            if (f.getDepartureAirport() != null) {
+                f.getDepartureAirport().getName();
+                f.getDepartureAirport().getIcaoCode();
+            }
+        } catch (Exception ignored) {}
+
+        // Érkező reptér
+        try {
+            if (f.getArrivalAirport() != null) {
+                f.getArrivalAirport().getName();
+                f.getArrivalAirport().getIcaoCode();
+            }
+        } catch (Exception ignored) {}
+
+        // Légitársaság
+        try {
+            if (f.getAirline() != null) {
+                f.getAirline().getName();
+            }
+        } catch (Exception ignored) {}
+
+        // Kapu
+        try {
+            if (f.getGate() != null) {
+                f.getGate().getCode();
+            }
+        } catch (Exception ignored) {}
+
+        // Ha valaha kell majd aircraft is a UI-ban,
+        // ide tudod betenni, pl.:
+        // try {
+        //     if (f.getAircraft() != null) {
+        //         f.getAircraft().getRegistration();
+        //     }
+        // } catch (Exception ignored) {}
+    }
+
     @Transactional(readOnly = true)
     public Flight getLastAdded() {
-        return repo.findTopByOrderByIdDesc();
+        Flight f = repo.findTopByOrderByIdDesc();
+        initializeForUi(f);
+        return f;
     }
 
     // ---------------------------------------------
@@ -28,7 +76,9 @@ public class FlightService {
     @Transactional(readOnly = true)
     public List<Flight> getDeparturesForAirport(Airports airport) {
         if (airport == null) return List.of();
-        return repo.findByDepartureAirport(airport);
+        List<Flight> flights = repo.findByDepartureAirport(airport);
+        flights.forEach(this::initializeForUi);
+        return flights;
     }
 
     /**
@@ -37,21 +87,27 @@ public class FlightService {
     @Transactional(readOnly = true)
     public List<Flight> getArrivalsForAirport(Airports airport) {
         if (airport == null) return List.of();
-        return repo.findByArrivalAirport(airport);
+        List<Flight> flights = repo.findByArrivalAirport(airport);
+        flights.forEach(this::initializeForUi);
+        return flights;
     }
 
     // ---------------------------------------------
-    // ADMIN / USER FUNKCIÓK (opcionális)
+    // ADMIN / USER FUNKCIÓK
     // ---------------------------------------------
 
     @Transactional(readOnly = true)
     public List<Flight> getAll() {
-        return repo.findAll();
+        List<Flight> flights = repo.findAll();
+        flights.forEach(this::initializeForUi);
+        return flights;
     }
 
     @Transactional
     public Flight save(Flight flight) {
-        return repo.save(flight);
+        Flight saved = repo.save(flight);
+        initializeForUi(saved);
+        return saved;
     }
 
     @Transactional
