@@ -10,7 +10,7 @@
             fx:controller="com.FourWings.atcSystem.frontend.controller.ArrivalsDialogController">
 
     <top>
-        <VBox spacing="4" BorderPane.alignment="CENTER_LEFT">
+        <VBox spacing="8" BorderPane.alignment="CENTER_LEFT">
             <padding>
                 <Insets top="10" left="16" right="16" bottom="8"/>
             </padding>
@@ -21,24 +21,89 @@
                     </font>
                 </Label>
                 <Label fx:id="subtitleLabel"
-                       text="A legközelebbi érkezések a kijelölt repülőtérre."
-                       styleClass="dialog-subtitle"/>
+                       text="A legközelebbi érkezések a kijelölt repülőtérre."/>
+                <HBox spacing="8">
+                    <children>
+                        <Label text="Keresés:"/>
+                        <TextField fx:id="searchField"
+                                   promptText="Járatszám, légitársaság, repülőtér..."/>
+                        <Label text="Státusz:"/>
+                        <ComboBox fx:id="statusFilterBox" prefWidth="140"/>
+                    </children>
+                </HBox>
             </children>
         </VBox>
     </top>
 
     <center>
-        <TableView fx:id="flightsTable" BorderPane.alignment="CENTER">
-            <columns>
-                <TableColumn fx:id="flightNumberColumn" text="Járatszám" prefWidth="120"/>
-                <TableColumn fx:id="airlineColumn" text="Légitársaság" prefWidth="180"/>
-                <TableColumn fx:id="originColumn" text="Kiindulási repülőtér" prefWidth="250"/>
-                <TableColumn fx:id="schedArrColumn" text="Menetrend szerinti érkezés" prefWidth="180"/>
-                <TableColumn fx:id="estArrColumn" text="Várható érkezés" prefWidth="160"/>
-                <TableColumn fx:id="gateColumn" text="Kapú" prefWidth="80"/>
-                <TableColumn fx:id="statusColumn" text="Státusz" prefWidth="150"/>
-            </columns>
-        </TableView>
+        <VBox spacing="8" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="4" left="16" right="16" bottom="4"/>
+            </padding>
+            <children>
+                <TableView fx:id="flightsTable">
+                    <columns>
+                        <TableColumn fx:id="flightNumberColumn" text="Járatszám" prefWidth="120"/>
+                        <TableColumn fx:id="airlineColumn" text="Légitársaság" prefWidth="180"/>
+                        <TableColumn fx:id="originColumn" text="Kiindulási repülőtér" prefWidth="250"/>
+                        <TableColumn fx:id="schedArrColumn" text="Menetrend szerinti érkezés" prefWidth="180"/>
+                        <TableColumn fx:id="estArrColumn" text="Várható érkezés" prefWidth="160"/>
+                        <TableColumn fx:id="gateColumn" text="Kapú" prefWidth="80"/>
+                        <TableColumn fx:id="statusColumn" text="Státusz" prefWidth="150"/>
+                    </columns>
+                </TableView>
+
+                <Separator/>
+
+                <!-- Kijelölt járat + repülőgép infók -->
+                <GridPane hgap="10" vgap="4">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="80" />
+                        <ColumnConstraints minWidth="180" />
+                        <ColumnConstraints minWidth="100" />
+                        <ColumnConstraints minWidth="150" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="24"/>
+                        <RowConstraints minHeight="24"/>
+                        <RowConstraints minHeight="24"/>
+                        <RowConstraints minHeight="24"/>
+                    </rowConstraints>
+
+                    <children>
+                        <!-- Kijelölt járat -->
+                        <Label text="Kijelölt járat:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="selectedFlightLabel" text="–"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1"
+                               GridPane.columnSpan="3"/>
+
+                        <!-- Lajstromjel + típus -->
+                        <Label text="Lajstromjel:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="aircraftRegLabel" text="–"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Típus (ICAO):" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                        <Label fx:id="aircraftTypeLabel" text="–"
+                               GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                        <!-- Férőhely + gyártási év -->
+                        <Label text="Férőhely:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <Label fx:id="aircraftSeatsLabel" text="–"
+                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Gyártási év:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                        <Label fx:id="aircraftYearLabel" text="–"
+                               GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+                        <!-- Gép státusza -->
+                        <Label text="Gép státusza:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <Label fx:id="aircraftStatusLabel" text="–"
+                               GridPane.rowIndex="3" GridPane.columnIndex="1"
+                               GridPane.columnSpan="3"/>
+                    </children>
+                </GridPane>
+            </children>
+        </VBox>
     </center>
 
     <bottom>
@@ -47,8 +112,7 @@
                 <Insets top="8" left="16" right="16" bottom="10"/>
             </padding>
             <children>
-                <Label fx:id="statusLabel"
-                       text="Járatok betöltve."/>
+                <Label fx:id="statusLabel" text="Járatok betöltve."/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="Bezárás" onAction="#onClose"/>
             </children>

@@ -11,13 +11,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "flights")
-@ToString(exclude = {"departureAirport", "arrivalAirport", "airline", "aircraft", "gate"})
 public class Flight {
 
     @Id
@@ -26,25 +26,23 @@ public class Flight {
     private Long id;
 
     // --- Kapcsolatok ---
-
-    // INNEN: LAZY -> EAGER, hogy a dialog táblája gond nélkül ki tudja olvasni a nevet
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departure_airport_id", referencedColumnName = "airport_id")
     private Airports departureAirport;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "arrival_airport_id", referencedColumnName = "airport_id")
     private Airports arrivalAirport;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_id", referencedColumnName = "airline_id")
     private Airline airline;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aircraft_id", referencedColumnName = "aircraft_id")
     private Aircraft aircraft;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gate_id", referencedColumnName = "gate_id")
     private Gate gate;
 
@@ -88,26 +86,77 @@ public class Flight {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // --- UI-hoz használt, nem perzisztált mezők (transient) ---
+
+    @Transient
+    private String airlineName;             // légitársaság neve
+
+    @Transient
+    private String originName;              // induló reptér neve
+
+    @Transient
+    private String destinationName;         // érkező reptér neve
+
+    @Transient
+    private String scheduledDepartureText;  // menetrend szerinti indulás (formázott)
+
+    @Transient
+    private String estimatedDepartureText;  // várható indulás (formázott)
+
+    @Transient
+    private String scheduledArrivalText;    // menetrend szerinti érkezés (formázott)
+
+    @Transient
+    private String estimatedArrivalText;    // várható érkezés (formázott)
+
+    @Transient
+    private String gateCode;                // kapukód
+
+    @Transient
+    private String statusText;              // státusz szöveg (UI-hoz)
+
+    // --- Aircraft (repülőgép) adatok a UI számára ---
+
+    @Transient
+    private String aircraftRegistration;
+
+    @Transient
+    private String aircraftTypeIcao;
+
+    @Transient
+    private Short aircraftMaxSeatCapacity;
+
+    @Transient
+    private Short aircraftManufactureYear;
+
+    @Transient
+    private String aircraftStatusText;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flight flight = (Flight) o;
+        // ha az id még nincs elmentve (null), akkor objektum azonosság szerint hasonlítunk
+        if (id == null || flight.id == null) return false;
+        return id.equals(flight.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
     @Override
     public String toString() {
         return "Flight{" +
                 "id=" + id +
-                ", departureAirport=" + departureAirport +
-                ", arrivalAirport=" + arrivalAirport +
-                ", airline=" + airline +
-                ", aircraft=" + aircraft +
-                ", gate=" + gate +
                 ", flightNumber='" + flightNumber + '\'' +
                 ", status=" + status +
                 ", scheduledDeparture=" + scheduledDeparture +
                 ", scheduledArrival=" + scheduledArrival +
                 ", estimatedDeparture=" + estimatedDeparture +
-                ", actualDeparture=" + actualDeparture +
                 ", estimatedArrival=" + estimatedArrival +
-                ", actualArrival=" + actualArrival +
-                ", note='" + note + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
