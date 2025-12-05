@@ -171,12 +171,12 @@ public class RoutesPageController {
                 row.setStyle("-fx-background-color: #fff9c4;");
             }
             // --- 6. PIROS: Törölve (Cancelled) ---
-            else if (s.contains("canceled")) {
-                row.setStyle("-fx-background-color: #ffcdd2;");
+            else if (s.contains("cancelled")) {
+                row.setStyle("-fx-background-color: #b00b1e;");
             }
             // --- 7. SZÜRKE: Tervezett (Scheduled) ---
             else if (s.contains("sched")) {
-                row.setStyle("-fx-background-color: #f5f5f5;");
+                row.setStyle("-fx-background-color: #1eeafc;");
             }
             // --- EGYÉB (Alapértelmezett) ---
             else {
