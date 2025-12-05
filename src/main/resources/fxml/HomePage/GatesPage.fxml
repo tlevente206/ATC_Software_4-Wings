@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.HomePage.GatesPageController"
-            prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f0ccff;">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #ffeecc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.HomePage.GatesPageController">
+
     <children>
-        <Label text="Kapuk oldal" layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;"/>
+        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Kapuk Kezelése (Gate Management)" />
 
-        <Button fx:id="logoutButton"
-                text="Kijelentkezés"
-                onAction="#onLogout"
-                layoutX="500"
-                layoutY="10"/>
+        <Button layoutX="1080.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés" />
 
-        <ComboBox fx:id="menuComboBox" layoutX="26.0" layoutY="80.0" prefWidth="148.0">
+        <ComboBox fx:id="menuComboBox" layoutX="25.0" layoutY="70.0" prefWidth="220.0">
             <items>
                 <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="Főoldal"/>
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
-                    <String fx:value="Repülők"/>
-                    <String fx:value="Repterek"/>
-                    <String fx:value="Repülőutak"/>
-                    <String fx:value="Terminál(Ez is inkább reptér)"/>
+                    <String fx:value="Főoldal" />
+                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)" />
+                    <String fx:value="Repülők" />
+                    <String fx:value="Repterek" />
+                    <String fx:value="Repülőutak" />
+                    <String fx:value="Terminál(Ez is inkább reptér)" />
                 </FXCollections>
             </items>
         </ComboBox>
+
+        <Label layoutX="300.0" layoutY="74.0" style="-fx-font-weight: bold;" text="Reptér kiválasztása:" />
+        <ComboBox fx:id="airportSelector" layoutX="420.0" layoutY="70.0" prefWidth="300.0" promptText="-- Válassz egy repteret --" />
+
+        <Button layoutX="730.0" layoutY="70.0" onAction="#onRefresh" text="Frissítés" />
+
+        <HBox layoutX="900.0" layoutY="70.0" spacing="15.0">
+            <Label style="-fx-background-color: #a5d6a7; -fx-padding: 5px; -fx-background-radius: 5px;" text="SZABAD" />
+            <Label style="-fx-background-color: #ef9a9a; -fx-padding: 5px; -fx-background-radius: 5px;" text="FOGLALT" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" layoutX="25.0" layoutY="120.0" prefHeight="450.0" prefWidth="1150.0" style="-fx-background-color: transparent;">
+            <content>
+                <FlowPane fx:id="gatesContainer" hgap="20.0" prefWrapLength="1100.0" vgap="20.0" style="-fx-padding: 10px;" />
+            </content>
+        </ScrollPane>
+
+        <Label fx:id="statusLabel" layoutX="25.0" layoutY="575.0" text="Válassz repteret..." />
+
     </children>
 </AnchorPane>
