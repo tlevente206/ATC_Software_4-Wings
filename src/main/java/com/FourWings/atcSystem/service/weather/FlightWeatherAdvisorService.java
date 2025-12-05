@@ -1,4 +1,3 @@
-// src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvisorService.java
 package com.FourWings.atcSystem.service.weather;
 
 import com.FourWings.atcSystem.model.airport.Airports;
@@ -7,18 +6,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class FlightWeatherAdvisorService {
 
-    private final WeatherService weatherService;
+    private final OpenWeatherService weatherService;
 
-    public FlightWeatherAdvisorService(WeatherService weatherService) {
+    public FlightWeatherAdvisorService(OpenWeatherService weatherService) {
         this.weatherService = weatherService;
     }
 
     public FlightWeatherAdvice analyzeForAirport(Airports airport) {
-        WeatherSnapshot w = weatherService.getCurrentWeatherForAirport(airport);
-
-        // --- Itt tudnád valójában OpenAI-hoz küldeni a promptot ---
-        // pl. openAiClient.askWeatherAdvisor(w);
-        // Én most egy egyszerű szabályrendszert használok:
+        WeatherSnapshot w = weatherService.getSnapshotForAirport(airport);
 
         String status;
         String explanation;

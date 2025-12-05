@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.ArrivalsDialogController">
+
+    <top>
+        <VBox spacing="4" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" left="16" right="16" bottom="8"/>
+            </padding>
+            <children>
+                <Label fx:id="titleLabel" text="Érkező járatok">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
+                <Label fx:id="subtitleLabel"
+                       text="A legközelebbi érkezések a kijelölt repülőtérre."
+                       styleClass="dialog-subtitle"/>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="flightsTable" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="flightNumberColumn" text="Járatszám" prefWidth="120"/>
+                <TableColumn fx:id="airlineColumn" text="Légitársaság" prefWidth="180"/>
+                <TableColumn fx:id="originColumn" text="Kiindulási repülőtér" prefWidth="250"/>
+                <TableColumn fx:id="schedArrColumn" text="Menetrend szerinti érkezés" prefWidth="180"/>
+                <TableColumn fx:id="estArrColumn" text="Várható érkezés" prefWidth="160"/>
+                <TableColumn fx:id="gateColumn" text="Kapú" prefWidth="80"/>
+                <TableColumn fx:id="statusColumn" text="Státusz" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" BorderPane.alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="8" left="16" right="16" bottom="10"/>
+            </padding>
+            <children>
+                <Label fx:id="statusLabel"
+                       text="Járatok betöltve."/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Bezárás" onAction="#onClose"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

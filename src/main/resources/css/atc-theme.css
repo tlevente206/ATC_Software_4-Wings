@@ -1,0 +1,337 @@
+/************************************************************
+ * ATC – Globális, modern, világos téma
+ ************************************************************/
+
+/* Alap root beállítások */
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #ffeecc; /* illeszkedik az AnchorPane-ekhez */
+}
+
+/* Általános label */
+.label {
+    -fx-text-fill: #1a1a1a;
+    -fx-font-smoothing-type: lcd;
+}
+
+/************************************************************
+ * GOMBOK – modern, lekerekített
+ ************************************************************/
+
+.button {
+    -fx-background-color: linear-gradient(to bottom, #6b5cff, #5a4fe0);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8;
+    -fx-padding: 7 14;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5a4fe0, #4a40d5);
+}
+
+.button:pressed {
+    -fx-opacity: 0.92;
+}
+
+.button:focused {
+    -fx-border-color: #6b5cff;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+}
+
+/* Elsődleges akció (pl. controller oldal „Időjárás asszisztens” gomb) */
+.primary-action {
+    -fx-background-color: linear-gradient(to bottom, #6b5cff, #5a4fe0);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+}
+
+/* Másodlagos akció – fehér kártyaszerű gomb */
+.secondary-action {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-font-weight: 500;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(0,0,0,0.12);
+    -fx-border-radius: 10;
+}
+
+.secondary-action:hover {
+    -fx-background-color: #f5f3ee;
+}
+
+/* Veszély / kilépés jellegű (piros) gomb */
+.danger-action {
+    -fx-background-color: linear-gradient(to bottom, #ff7a59, #e4613f);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+}
+
+.danger-action:hover {
+    -fx-background-color: linear-gradient(to bottom, #e4613f, #c84b30);
+}
+
+/************************************************************
+ * TextField, PasswordField, ComboBox – űrlap elemek
+ ************************************************************/
+
+.text-field,
+.password-field,
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(0,0,0,0.18);
+    -fx-border-radius: 6;
+    -fx-padding: 5 8;
+}
+
+.text-field:focused,
+.password-field:focused,
+.combo-box:focused {
+    -fx-border-color: #6b5cff;
+    -fx-border-width: 2;
+}
+
+/* ComboBox felugró lista */
+.combo-box .list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(0,0,0,0.18);
+    -fx-border-radius: 6;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 6 8;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #f0ede7;
+}
+
+/************************************************************
+ * TableView – általános táblázat stílus
+ ************************************************************/
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.table-view:focused {
+    -fx-border-color: #6b5cff;
+}
+
+/* Fejléc háttér */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f4f0ea);
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Fejléc cellák */
+.table-view .column-header,
+.table-view .filler {
+    -fx-size: 36px;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #333333;
+    -fx-font-weight: 600;
+    -fx-padding: 0 8 0 8;
+}
+
+/* Sorok */
+.table-row-cell {
+    -fx-cell-size: 30px;
+    -fx-background-color: #ffffff;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fffaf2;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #eee4d4;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d7d1ff;
+}
+
+/* Cellák */
+.table-cell {
+    -fx-padding: 4 8;
+    -fx-text-fill: #222222;
+}
+
+/************************************************************
+ * ScrollBar – diszkrét megjelenés
+ ************************************************************/
+
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.25);
+    -fx-background-radius: 8;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0,0,0,0.35);
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(0,0,0,0.06);
+    -fx-background-radius: 8;
+}
+
+/************************************************************
+ * ToolBar, Status bar, Admin oldalak
+ ************************************************************/
+
+.tool-bar {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f7f3ec);
+    -fx-padding: 6 10 6 10;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 0 0 1 0;
+}
+
+.tool-bar .label {
+    -fx-text-fill: #333333;
+}
+
+.status-bar,
+.controller-statusbar {
+    -fx-background-color: rgba(0,0,0,0.03);
+}
+
+/* Admin „felhasználókezelés” cím */
+.label {
+    /* a fő címeket úgyis FXML-ben nagy mérettel állítod */
+}
+
+/************************************************************
+ * CONTROLLER HOME PAGE – speciális styleclass-ek
+ ************************************************************/
+
+/* Felső hero rész – finom gradientes sáv */
+.controller-hero {
+    -fx-background-color: linear-gradient(to right,
+    rgba(255,255,255,0.9),
+    rgba(255,255,255,0.6)
+    );
+}
+
+.controller-greeting {
+    -fx-text-fill: #1a1a1a;
+    -fx-font-weight: 700;
+}
+
+.controller-airport-title {
+    -fx-text-fill: #444444;
+    -fx-font-weight: 600;
+}
+
+.controller-subtitle {
+    -fx-text-fill: #777777;
+}
+
+/* Üvegkártya jelleg az időjárás panelhez */
+.glass-card {
+    -fx-background-color: rgba(255,255,255,0.8);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.9);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0.25, 0, 6);
+}
+
+/* Időjárás speciális text-ek */
+.weather-emoji {
+    -fx-font-size: 52px;
+}
+
+.weather-temp-big {
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1a1a1a;
+}
+
+.weather-condition {
+    -fx-text-fill: #555555;
+    -fx-font-size: 14px;
+}
+
+.weather-label-strong {
+    -fx-text-fill: #444444;
+    -fx-font-weight: 600;
+}
+
+.weather-label {
+    -fx-text-fill: #555555;
+}
+
+.weather-metar {
+    -fx-text-fill: #333333;
+    -fx-font-family: "Consolas", "JetBrains Mono", monospace;
+    -fx-font-size: 11px;
+}
+
+/* Akció cím a jobb oldalon */
+.actions-title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+}
+
+/* Alsó státuszsor a controller oldalon */
+.controller-statusbar {
+    -fx-background-color: rgba(0,0,0,0.03);
+}
+
+/************************************************************
+ * DIALOG STÍLUS – induló / érkező járatok
+ ************************************************************/
+
+.dialog-subtitle {
+    -fx-text-fill: #666666;
+    -fx-font-size: 12px;
+}
+
+/************************************************************
+ * Checkbox, RadioButton – apró finomítás
+ ************************************************************/
+
+.check-box,
+.radio-button {
+    -fx-text-fill: #222222;
+}
+
+.check-box .box,
+.radio-button .radio {
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(0,0,0,0.3);
+}
+
+.check-box:selected .box,
+.radio-button:selected .radio {
+    -fx-background-color: #6b5cff;
+    -fx-border-color: #6b5cff;
+}
+
+/************************************************************
+ * HBox / VBox alap spacingekhez nincs feltétlen stílus,
+ * de ha kell, itt lehetne még tovább finomítani.
+ ************************************************************/

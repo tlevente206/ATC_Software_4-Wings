@@ -1,4 +1,3 @@
-// src/main/java/com/FourWings/atcSystem/service/weather/WeatherSnapshot.java
 package com.FourWings.atcSystem.service.weather;
 
 public record WeatherSnapshot(

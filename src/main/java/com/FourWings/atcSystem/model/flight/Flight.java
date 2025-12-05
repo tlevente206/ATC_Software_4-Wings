@@ -26,23 +26,25 @@ public class Flight {
     private Long id;
 
     // --- Kapcsolatok ---
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    // INNEN: LAZY -> EAGER, hogy a dialog táblája gond nélkül ki tudja olvasni a nevet
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "departure_airport_id", referencedColumnName = "airport_id")
     private Airports departureAirport;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "arrival_airport_id", referencedColumnName = "airport_id")
     private Airports arrivalAirport;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "airline_id", referencedColumnName = "airline_id")
     private Airline airline;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "aircraft_id", referencedColumnName = "aircraft_id")
     private Aircraft aircraft;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gate_id", referencedColumnName = "gate_id")
     private Gate gate;
 

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.ControllerHomePageController"
+            prefWidth="1300.0" prefHeight="800.0"
+            stylesheets="@../css/atc-theme.css">
+
+    <!-- Felső hero rész: üdvözlés + reptér basic info -->
+    <top>
+        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT"
+              styleClass="controller-hero">
+            <padding>
+                <Insets top="18" left="28" right="20" bottom="14"/>
+            </padding>
+            <children>
+                <Label fx:id="greetingLabel"
+                       text="Szia, Irányító!"
+                       styleClass="controller-greeting">
+                    <font>
+                        <Font size="28"/>
+                    </font>
+                </Label>
+
+                <Label fx:id="airportTitleLabel"
+                       text="Otthoni repülőtér: ICAO – Név"
+                       styleClass="controller-airport-title">
+                    <font>
+                        <Font size="18"/>
+                    </font>
+                </Label>
+
+                <Label fx:id="subtitleLabel"
+                       text="Valós idejű időjárás, induló és érkező járatok áttekintése."
+                       styleClass="controller-subtitle"/>
+            </children>
+        </VBox>
+    </top>
+
+    <!-- Középső rész: bal oldalt „üveg” időjárás kártya, jobb oldalt akció gombok -->
+    <center>
+        <HBox spacing="18" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10" left="28" right="28" bottom="10"/>
+            </padding>
+            <children>
+
+                <!-- Időjárás kártya -->
+                <StackPane HBox.hgrow="ALWAYS"
+                           styleClass="glass-card">
+                    <padding>
+                        <Insets top="18" left="20" right="20" bottom="18"/>
+                    </padding>
+                    <children>
+                        <VBox spacing="14">
+                            <children>
+
+                                <!-- Felső sor: ikon + hőmérséklet + állapot -->
+                                <HBox spacing="14">
+                                    <children>
+                                        <Label fx:id="weatherEmojiLabel"
+                                               text="☀️"
+                                               styleClass="weather-emoji"/>
+                                        <VBox spacing="4">
+                                            <children>
+                                                <Label fx:id="temperatureLabel"
+                                                       text="+21°C"
+                                                       styleClass="weather-temp-big"/>
+                                                <Label fx:id="conditionLabel"
+                                                       text="Derült égbolt"
+                                                       styleClass="weather-condition"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Reptér basic: ICAO / Név / Város -->
+                                <HBox spacing="10">
+                                    <children>
+                                        <Label text="Reptér:"
+                                               styleClass="weather-label-strong"/>
+                                        <Label fx:id="airportBasicLabel"
+                                               text="LHBP – Budapest Ferenc Liszt (Budapest)"
+                                               styleClass="weather-label"/>
+                                    </children>
+                                </HBox>
+
+                                <!-- Gridben a részletek -->
+                                <GridPane hgap="20" vgap="6">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="50"/>
+                                        <ColumnConstraints percentWidth="50"/>
+                                    </columnConstraints>
+
+                                    <children>
+                                        <Label text="Szél:"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                               styleClass="weather-label-strong"/>
+                                        <Label fx:id="windLabel"
+                                               text="230° / 14 kt"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                               styleClass="weather-label"/>
+
+                                        <Label text="Látástáv:"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                               styleClass="weather-label-strong"/>
+                                        <Label fx:id="visibilityLabel"
+                                               text="9999 m"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                               styleClass="weather-label"/>
+
+                                        <Label text="QNH:"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                               styleClass="weather-label-strong"/>
+                                        <Label fx:id="pressureLabel"
+                                               text="1015 hPa"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                               styleClass="weather-label"/>
+
+                                        <Label text="Hőérzet / harmatpont:"
+                                               GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                               styleClass="weather-label-strong"/>
+                                        <Label fx:id="feelsLikeLabel"
+                                               text="+19°C / +13°C"
+                                               GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                               styleClass="weather-label"/>
+
+                                        <Label text="Frissítve:"
+                                               GridPane.rowIndex="4" GridPane.columnIndex="0"
+                                               styleClass="weather-label-strong"/>
+                                        <Label fx:id="updatedAtLabel"
+                                               text="2025-12-05 11:42 UTC"
+                                               GridPane.rowIndex="4" GridPane.columnIndex="1"
+                                               styleClass="weather-label"/>
+                                    </children>
+                                </GridPane>
+
+                                <!-- METAR / megjegyzés -->
+                                <Label fx:id="metarLabel"
+                                       text="METAR LHBP 051120Z 23014KT CAVOK 21/13 Q1015 NOSIG"
+                                       wrapText="true"
+                                       styleClass="weather-metar"/>
+
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+
+                <!-- Jobb oldal: akciók „csempe” jelleggel -->
+                <VBox spacing="14" prefWidth="260">
+                    <children>
+
+                        <Label text="Akciók"
+                               styleClass="actions-title"/>
+
+                        <Button fx:id="weatherAssistantButton"
+                                text="Időjárás asszisztens megnyitása"
+                                onAction="#onOpenWeatherAssistant"
+                                maxWidth="Infinity"
+                                styleClass="primary-action"/>
+
+                        <Button fx:id="departuresButton"
+                                text="Induló járatok"
+                                onAction="#onShowDepartures"
+                                maxWidth="Infinity"
+                                styleClass="secondary-action"/>
+
+                        <Button fx:id="arrivalsButton"
+                                text="Érkező járatok"
+                                onAction="#onShowArrivals"
+                                maxWidth="Infinity"
+                                styleClass="secondary-action"/>
+
+                        <Separator/>
+
+                        <Button fx:id="logoutButton"
+                                text="Kijelentkezés"
+                                onAction="#onLogout"
+                                maxWidth="Infinity"
+                                styleClass="danger-action"/>
+                    </children>
+                </VBox>
+
+            </children>
+        </HBox>
+    </center>
+
+    <!-- Alsó státuszsor -->
+    <bottom>
+        <HBox BorderPane.alignment="CENTER_LEFT"
+              styleClass="controller-statusbar">
+            <padding>
+                <Insets top="6" bottom="8" left="20" right="20"/>
+            </padding>
+            <children>
+                <Label fx:id="statusLabel"
+                       text="Készen áll."/>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

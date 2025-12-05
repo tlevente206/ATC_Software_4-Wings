@@ -19,6 +19,9 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/frontend/UserDataPageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/frontend/UserEditDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/frontend/UserSelfEditDialogController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/frontend/controller/ArrivalsDialogController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/frontend/controller/ControllerHomePageController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/frontend/controller/DeparturesDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/model/aircraft/Aircraft.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftRepository.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftService.java
@@ -52,8 +55,11 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/model/user/UserRole.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/model/user/UserService.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/AuthService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/WeatherService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/dto/AirportWeatherInfo.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvice.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/weather/FlightWeatherAdvisorService.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/weather/OpenWeatherService.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/weather/WeatherService.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/service/weather/WeatherSnapshot.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AdminPaeFejlesztesTeljesen/src/main/java/com/FourWings/atcSystem/test/UI_Threa_Stress_Test.java

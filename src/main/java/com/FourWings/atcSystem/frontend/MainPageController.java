@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.frontend.controller.ControllerHomePageController;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
 import javafx.concurrent.Task;
@@ -29,29 +30,35 @@ public class MainPageController {
     @FXML private Button loginButton;
     @FXML private Button registerButton;
 
-    // ---------------------- NAVIGÁCIÓ ----------------------
+    // ---------------------- NAVIGÁCIÓK ----------------------
 
-    private void openHomePage(Stage stage, User user) throws Exception {
-        // SceneManager betölti az FXML-t és visszaadja a controller-t
+    /** Sima USER főoldal */
+    private void openUserHomePage(Stage stage, User user) throws Exception {
         HomePageController ctrl = SceneManager.switchTo(
                 "HomePage.fxml",
                 "ATC – Dashboard",
                 600, 400
         );
-
-        // Felhasználó átadása
         ctrl.initWithUser(user);
     }
 
+    /** ADMIN dashboard */
     private void openAdminPage(Stage stage, User user) throws Exception {
-
         AdminPageController ctrl = SceneManager.switchTo(
                 "AdminPage.fxml",
                 "ATC – Admin Dashboard",
                 600, 400
         );
+        ctrl.initWithUser(user);
+    }
 
-        // Felhasználó átadása
+    /** CONTROLLER főoldal (irányító munkaállomás) */
+    private void openControllerHomePage(Stage stage, User user) throws Exception {
+        ControllerHomePageController ctrl = SceneManager.switchTo(
+                "ControllerHomePage.fxml",          // <- FXML neve
+                "ATC – Irányító munkaállomás",      // ablak címe
+                1100, 700                           // nagyobb, „dashboard” méret
+        );
         ctrl.initWithUser(user);
     }
 
@@ -63,6 +70,16 @@ public class MainPageController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
+        if (username.isEmpty() || password.isEmpty()) {
+            statusLabel.setText("Add meg a felhasználónevet és jelszót.");
+            return;
+        }
+
+        // opcionális: gombok tiltása amíg fut a login
+        loginButton.setDisable(true);
+        registerButton.setDisable(true);
+        statusLabel.setText("Bejelentkezés folyamatban...");
+
         Task<User> task = new Task<>() {
             @Override
             protected User call() {
@@ -71,6 +88,9 @@ public class MainPageController {
         };
 
         task.setOnSucceeded(e -> {
+            loginButton.setDisable(false);
+            registerButton.setDisable(false);
+
             User user = task.getValue();
 
             if (user == null) {
@@ -79,14 +99,24 @@ public class MainPageController {
             }
 
             statusLabel.setText("Sikeres bejelentkezés!");
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             try {
-                if (user.isAdmin()) {      // <--- EZ A LÉNYEG
+                // --- SZEREPKÖR SZERINTI ÁGAK ---
+                if (user.isAdmin()) {
+                    // Teljes jogú admin
                     openAdminPage(stage, user);
+
+                } else if (user.isController()) {
+                    // Irányító – saját controller dashboard
+                    openControllerHomePage(stage, user);
+
                 } else {
-                    openHomePage(stage, user);
+                    // Alap USER
+                    openUserHomePage(stage, user);
                 }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 statusLabel.setText("Navigációs hiba: " + ex.getMessage());
@@ -94,6 +124,9 @@ public class MainPageController {
         });
 
         task.setOnFailed(e -> {
+            loginButton.setDisable(false);
+            registerButton.setDisable(false);
+
             Throwable ex = task.getException();
             ex.printStackTrace();
             statusLabel.setText("Hiba: " + ex.getMessage());
