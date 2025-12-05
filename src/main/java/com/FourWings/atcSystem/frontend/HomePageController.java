@@ -22,6 +22,8 @@ import javafx.util.StringConverter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class HomePageController {
@@ -140,10 +142,24 @@ public class HomePageController {
                 .count();
         delayedFlightsLabel.setText(String.valueOf(delayedCount));
 
+        Set<Long> occupiedGateIds = allFlights.stream()
+                // Szűrjük azokat a járatokat, amelyekhez van rendelve kapu
+                .filter(f -> f.getGate() != null)
+                // Map-eljük a járatokat a hozzájuk rendelt kapu ID-ra
+                .map(f -> f.getGate().getId())
+                .collect(Collectors.toSet());
+
         long freeGates = gates.stream()
+                // a) Státusz szerint csak az operációs kapukat hagyjuk bent (OPEN, FREE, ACTIVE)
                 .filter(g -> g.getStatus() != null &&
-                        (g.getStatus().name().equals("OPEN") || g.getStatus().name().equals("FREE")))
+                        (g.getStatus().name().equals("OPEN") ||
+                                g.getStatus().name().equals("FREE") ||
+                                g.getStatus().name().equals("ACTIVE")))
+                // b) Kizárjuk azokat a kapukat, amelyek ID-je szerepel a foglalt ID-k listájában
+                .filter(g -> !occupiedGateIds.contains(g.getId()))
                 .count();
+
+        freeGatesLabel.setText(String.valueOf(freeGates));
         freeGatesLabel.setText(String.valueOf(freeGates));
 
         // --- KÖRDIAGRAM ---
