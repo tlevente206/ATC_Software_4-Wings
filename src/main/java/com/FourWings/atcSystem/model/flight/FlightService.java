@@ -27,33 +27,42 @@ public class FlightService {
     }
 
     // ---------------------------------------------
-    // CONTROLLER HOME PAGE FUNKCIÓK
+    // CONTROLLER HOME PAGE FUNKCIÓK (OPTIMALIZÁLVA)
     // ---------------------------------------------
 
     /**
      * Induló járatok lekérése egy adott repülőtérről.
+     * MÓDOSÍTÁS: Az optimalizált 'findDeparturesByAirportWithDetails' metódust hívja,
+     * így egyetlen lekérdezéssel tölti be a légitársaságot, kaput és repülőt.
      */
     @Transactional(readOnly = true)
     public List<Flight> getDeparturesForAirport(Airports airport) {
         if (airport == null) return List.of();
-        List<Flight> flights = repo.findByDepartureAirport(airport);
+
+        // Itt hívjuk az új repository metódust a régi findByDepartureAirport helyett
+        List<Flight> flights = repo.findDeparturesByAirportWithDetails(airport);
+
         flights.forEach(this::prepareFlightForView);
         return flights;
     }
 
     /**
      * Érkező járatok lekérése egy adott repülőtérre.
+     * MÓDOSÍTÁS: Az optimalizált 'findArrivalsByAirportWithDetails' metódust hívja.
      */
     @Transactional(readOnly = true)
     public List<Flight> getArrivalsForAirport(Airports airport) {
         if (airport == null) return List.of();
-        List<Flight> flights = repo.findByArrivalAirport(airport);
+
+        // Itt hívjuk az új repository metódust a régi findByArrivalAirport helyett
+        List<Flight> flights = repo.findArrivalsByAirportWithDetails(airport);
+
         flights.forEach(this::prepareFlightForView);
         return flights;
     }
 
     // ---------------------------------------------
-    // ADMIN / USER FUNKCIÓK (opcionális)
+    // ADMIN / USER FUNKCIÓK
     // ---------------------------------------------
 
     @Transactional(readOnly = true)
@@ -76,7 +85,7 @@ public class FlightService {
     }
 
     // ---------------------------------------------
-    // Segédfüggvény: lazy kapcsolatok inicializálása
+    // Segédfüggvény: lazy kapcsolatok (már betöltött) inicializálása
     // és UI-hoz szükséges mezők beállítása
     // ---------------------------------------------
 
@@ -130,7 +139,6 @@ public class FlightService {
 
         // --- Státusz szöveg ---
         if (f.getStatus() != null) {
-            // egyszerűen az enum neve – ha akarsz, írhatsz egy szebb map-et
             f.setStatusText(f.getStatus().name());
         } else {
             f.setStatusText("");
