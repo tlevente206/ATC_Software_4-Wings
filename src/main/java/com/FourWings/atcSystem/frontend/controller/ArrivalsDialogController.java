@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.frontend.controller;
 
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.flight.Flight;
 import com.FourWings.atcSystem.model.flight.FlightService;
@@ -11,9 +12,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.stereotype.Component;
@@ -290,8 +295,63 @@ public class ArrivalsDialogController {
     }
 
     private void openFlightDetails(Flight flight) {
-        // Most csak a kijelölt infósávot frissítjük – később ide tehetsz külön dialogot is.
         updateSelectedFlightDetails(flight);
+    }
+
+    // ÚJ: Új járat
+    @FXML
+    private void onNewFlight() {
+        openCreateFlightDialog(null);
+    }
+
+    // ÚJ: Kijelölt szerkesztése
+    @FXML
+    private void onEditFlight() {
+        Flight selected = flightsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Nincs kiválasztva");
+            a.setHeaderText("Nincs kijelölt járat.");
+            a.setContentText("Válassz ki egy járatot a szerkesztéshez.");
+            a.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            a.showAndWait();
+            return;
+        }
+        openCreateFlightDialog(selected);
+    }
+
+    private void openCreateFlightDialog(Flight flight) {
+        if (currentAirport == null) return;
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/CreateFlightDialog.fxml"));
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            CreateFlightDialogController ctrl = loader.getController();
+            ctrl.init(currentAirport, flight);
+
+            Stage dialog = new Stage();
+            dialog.initOwner(flightsTable.getScene().getWindow());
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle((flight == null ? "Új érkező járat" : "Járat szerkesztése") +
+                    " – " + currentAirport.getIcaoCode());
+            dialog.setScene(new Scene(root, 520, 420));
+            dialog.centerOnScreen();
+            dialog.showAndWait();
+
+            // mentés után frissítjük
+            refreshData();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Hiba");
+            a.setHeaderText("Nem sikerült megnyitni a járat szerkesztő ablakot.");
+            a.setContentText(ex.getMessage());
+            a.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            a.showAndWait();
+        }
     }
 
     // ---------------------------------------------------

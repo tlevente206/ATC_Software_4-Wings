@@ -114,6 +114,8 @@
             <children>
                 <Label fx:id="statusLabel" text="Járatok betöltve."/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Új járat" onAction="#onNewFlight"/>
+                <Button text="Kijelölt szerkesztése" onAction="#onEditFlight"/>
                 <Button text="Bezárás" onAction="#onClose"/>
             </children>
         </HBox>

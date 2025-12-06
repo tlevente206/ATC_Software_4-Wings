@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.CreateFlightDialogController">
+
+    <!-- CÍMSOR -->
+    <top>
+        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" left="16" right="16" bottom="8"/>
+            </padding>
+            <children>
+                <Label fx:id="dialogTitleLabel" text="Új járat létrehozása">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
+
+                <!-- EZ A KRITIKUS LABEL -->
+                <Label fx:id="airportInfoLabel"
+                       text="LHBP – Budapest Ferenc Liszt (Budapest)"/>
+
+                <Label text="Add meg az induló/érkező járat alapadatait."/>
+            </children>
+        </VBox>
+    </top>
+
+    <!-- TARTALOM -->
+    <center>
+        <GridPane hgap="10" vgap="8" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="8" left="16" right="16" bottom="8"/>
+            </padding>
+
+            <columnConstraints>
+                <ColumnConstraints minWidth="120" />
+                <ColumnConstraints minWidth="240" />
+            </columnConstraints>
+
+            <children>
+                <Label text="Irány:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <children>
+                        <RadioButton fx:id="departureRadio" text="Induló"/>
+                        <RadioButton fx:id="arrivalRadio"   text="Érkező"/>
+                    </children>
+                </HBox>
+
+                <Label text="Járatszám:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="flightNumberField"
+                           promptText="pl. LH123"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Másik repülőtér:"
+                       GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="otherAirportCombo"
+                          prefWidth="260"
+                          promptText="Válassz repteret…"
+                          GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Dátum:"
+                       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="datePicker"
+                            GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Idő (HH:mm):"
+                       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="timeField"
+                           promptText="pl. 14:30"
+                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="Státusz:"
+                       GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="statusCombo"
+                          prefWidth="180"
+                          GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Megjegyzés:"
+                       GridPane.rowIndex="6" GridPane.columnIndex="0"
+                       GridPane.valignment="TOP"/>
+                <TextArea fx:id="noteArea"
+                          prefRowCount="3"
+                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </center>
+
+    <!-- ALSÓ SOR: hiba + gombok -->
+    <bottom>
+        <VBox spacing="4" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="4" left="16" right="16" bottom="8"/>
+            </padding>
+            <children>
+                <Label fx:id="errorLabel"
+                       textFill="red"
+                       text=""/>
+
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <children>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Mégse" onAction="#onCancel"/>
+                        <Button text="Mentés" defaultButton="true"
+                                onAction="#onSave"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </bottom>
+
+</BorderPane>

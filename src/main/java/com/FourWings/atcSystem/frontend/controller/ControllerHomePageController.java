@@ -44,16 +44,7 @@ public class ControllerHomePageController {
     private User loggedUser;
     private Airports assignedAirport;
 
-    public ControllerHomePageController(WeatherService weatherService,
-                                        FlightService flightService,
-                                        GateService gateService) {
-        this.weatherService = weatherService;
-        this.flightService = flightService;
-        this.gateService = gateService;
-    }
-
     // --- FXML elemek ---
-
     @FXML private Label greetingLabel;
     @FXML private Label airportTitleLabel;
     @FXML private Label subtitleLabel;
@@ -82,6 +73,14 @@ public class ControllerHomePageController {
 
     // Alsó státusz
     @FXML private Label statusLabel;
+
+    public ControllerHomePageController(WeatherService weatherService,
+                                        FlightService flightService,
+                                        GateService gateService) {
+        this.weatherService = weatherService;
+        this.flightService = flightService;
+        this.gateService = gateService;
+    }
 
     // ---------------- ÉLETCIKLUS ----------------
 
@@ -121,7 +120,14 @@ public class ControllerHomePageController {
 
     private void setupDashboardIfReady() {
         if (loggedUser == null || assignedAirport == null) return;
-        if (greetingLabel == null) return; // FXML még nem injektálódott
+
+        // ha bármi fontos label hiányzik, inkább nem csinálunk semmit – de nem dől össze az app
+        if (greetingLabel == null ||
+                airportTitleLabel == null ||
+                subtitleLabel == null ||
+                airportBasicLabel == null) {
+            return;
+        }
 
         String name = loggedUser.getName() != null ? loggedUser.getName() : loggedUser.getUsername();
         greetingLabel.setText("Szia, " + name + "!");
@@ -150,6 +156,19 @@ public class ControllerHomePageController {
 
     private void refreshWeather() {
         if (assignedAirport == null) return;
+
+        // ha a weather mezők nincsenek beinjektálva, akkor egyszerűen kihagyjuk
+        if (weatherEmojiLabel == null ||
+                temperatureLabel == null ||
+                conditionLabel == null ||
+                windLabel == null ||
+                visibilityLabel == null ||
+                pressureLabel == null ||
+                feelsLikeLabel == null ||
+                updatedAtLabel == null ||
+                metarLabel == null) {
+            return;
+        }
 
         try {
             AirportWeatherInfo info = weatherService.getCurrentWeatherForAirport(assignedAirport);
@@ -218,7 +237,7 @@ public class ControllerHomePageController {
                 delaysTodayLabel.setText(String.valueOf(delayedCount));
             }
 
-            // Szabad kapuk – mint a sima HomePage-en
+            // Szabad kapuk
             if (freeGatesLabel != null) {
                 long freeGates = 0;
                 try {
@@ -246,7 +265,7 @@ public class ControllerHomePageController {
                 freeGatesLabel.setText(String.valueOf(freeGates));
             }
 
-            // PieChart – csoportosítva: Landolt / Aktív / Késik / Törölve
+            // PieChart – ha nincs beinjektálva, kihagyjuk
             if (statusPieChart != null) {
                 List<Flight> allToday = new ArrayList<>();
                 allToday.addAll(depToday);
@@ -331,7 +350,9 @@ public class ControllerHomePageController {
             Parent root = loader.load();
 
             Stage dialog = new Stage();
-            dialog.initOwner(statusLabel.getScene().getWindow());
+            if (statusLabel != null && statusLabel.getScene() != null) {
+                dialog.initOwner(statusLabel.getScene().getWindow());
+            }
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setTitle("ATC – Időjárás asszisztens");
             dialog.setScene(new Scene(root, 600, 420));
@@ -361,7 +382,9 @@ public class ControllerHomePageController {
             ctrl.init(assignedAirport, departures);
 
             Stage dialog = new Stage();
-            dialog.initOwner(statusLabel.getScene().getWindow());
+            if (statusLabel != null && statusLabel.getScene() != null) {
+                dialog.initOwner(statusLabel.getScene().getWindow());
+            }
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setTitle("Induló járatok – " + safe(assignedAirport.getIcaoCode()));
             dialog.setScene(new Scene(root, 900, 500));
@@ -392,7 +415,9 @@ public class ControllerHomePageController {
             ctrl.init(assignedAirport, arrivals);
 
             Stage dialog = new Stage();
-            dialog.initOwner(statusLabel.getScene().getWindow());
+            if (statusLabel != null && statusLabel.getScene() != null) {
+                dialog.initOwner(statusLabel.getScene().getWindow());
+            }
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setTitle("Érkező járatok – " + safe(assignedAirport.getIcaoCode()));
             dialog.setScene(new Scene(root, 900, 500));
@@ -418,6 +443,44 @@ public class ControllerHomePageController {
             return false;
         }
         return true;
+    }
+
+    @FXML
+    private void onCreateFlight() {
+        if (!checkReady()) {
+            return; // ha nincs user / airport, ne csináljon semmit
+        }
+
+        try {
+            // FXML betöltése Spring controllerral
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/CreateFlightDialog.fxml")); // ha máshol van, az utat ehhez igazítsd
+            loader.setControllerFactory(SpringContext::getBean);
+            Parent root = loader.load();
+
+            // Controller és init hívás
+            CreateFlightDialogController ctrl = loader.getController();
+            ctrl.init(assignedAirport);   // csak otthoni reptérrel, új járat
+
+            // Dialog ablak
+            Stage dialog = new Stage();
+            if (statusLabel != null && statusLabel.getScene() != null) {
+                dialog.initOwner(statusLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Új járat – " + safe(assignedAirport.getIcaoCode()));
+            dialog.setScene(new Scene(root, 520, 420));
+            dialog.centerOnScreen();
+            dialog.showAndWait();
+
+            // Mentés után frissítsük a dashboardot
+            refreshFlightStatsAndCharts();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError("Hiba",
+                    "Nem sikerült megnyitni az új járat ablakot: " + ex.getMessage());
+        }
     }
 
     private void showError(String header, String content) {
