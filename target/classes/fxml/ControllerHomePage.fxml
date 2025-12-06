@@ -1,206 +1,281 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.controller.ControllerHomePageController"
-            prefWidth="1300.0" prefHeight="800.0"
-            stylesheets="@../css/atc-theme.css">
+<HBox prefHeight="800.0" prefWidth="1300.0"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.FourWings.atcSystem.frontend.controller.ControllerHomePageController">
 
-    <!-- Felső hero rész: üdvözlés + reptér basic info -->
-    <top>
-        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT"
-              styleClass="controller-hero">
-            <padding>
-                <Insets top="18" left="28" right="20" bottom="14"/>
-            </padding>
-            <children>
-                <Label fx:id="greetingLabel"
-                       text="Szia, Irányító!"
-                       styleClass="controller-greeting">
-                    <font>
-                        <Font size="28"/>
-                    </font>
-                </Label>
+    <children>
+        <AnchorPane prefHeight="800.0" prefWidth="1300.0"
+                    style="-fx-background-color: #0055ff;"
+                    HBox.hgrow="ALWAYS">
 
-                <Label fx:id="airportTitleLabel"
-                       text="Otthoni repülőtér: ICAO – Név"
-                       styleClass="controller-airport-title">
-                    <font>
-                        <Font size="18"/>
-                    </font>
-                </Label>
-
-                <Label fx:id="subtitleLabel"
-                       text="Valós idejű időjárás, induló és érkező járatok áttekintése."
-                       styleClass="controller-subtitle"/>
-            </children>
-        </VBox>
-    </top>
-
-    <!-- Középső rész: bal oldalt „üveg” időjárás kártya, jobb oldalt akció gombok -->
-    <center>
-        <HBox spacing="18" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets top="10" left="28" right="28" bottom="10"/>
-            </padding>
             <children>
 
-                <!-- Időjárás kártya -->
-                <StackPane HBox.hgrow="ALWAYS"
-                           styleClass="glass-card">
-                    <padding>
-                        <Insets top="18" left="20" right="20" bottom="18"/>
-                    </padding>
+                <!-- Felső cím + üdvözlés blokk -->
+                <VBox layoutX="26.0" layoutY="8.0" spacing="4.0">
                     <children>
-                        <VBox spacing="14">
+                        <Label fx:id="greetingLabel"
+                               text="Szia, Irányító!"
+                               textFill="WHITE">
+                            <font>
+                                <Font size="26.0"/>
+                            </font>
+                            <effect>
+                                <DropShadow>
+                                    <color>
+                                        <Color red="0.0258" green="0.6613" blue="0.86"/>
+                                    </color>
+                                </DropShadow>
+                            </effect>
+                        </Label>
+
+                        <Label fx:id="airportTitleLabel"
+                               text="Otthoni repülőtér: ICAO – Név"
+                               textFill="WHITE">
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+
+                        <Label fx:id="subtitleLabel"
+                               text="Valós idejű időjárás, induló és érkező járatok áttekintése."
+                               textFill="WHITE"/>
+                    </children>
+                </VBox>
+
+                <!-- Kijelentkezés -->
+                <Button layoutX="1150.0" layoutY="20.0"
+                        onAction="#onLogout"
+                        style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-weight: bold;"
+                        text="Kijelentkezés"/>
+
+                <!-- Felső gombsor / toolbar -->
+                <HBox layoutX="26.0" layoutY="90.0" spacing="12.0">
+                    <children>
+                        <Button text="Dashboard frissítése"
+                                onAction="#onRefreshDashboard"
+                                style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                        <Button text="Időjárás asszisztens"
+                                onAction="#onOpenWeatherAssistant"
+                                style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"/>
+
+                        <Button text="Induló járatok"
+                                onAction="#onShowDepartures"
+                                style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"/>
+
+                        <Button text="Érkező járatok"
+                                onAction="#onShowArrivals"
+                                style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"/>
+                    </children>
+                </HBox>
+
+                <!-- STAT KÁRTYÁK -->
+                <HBox layoutX="26.0" layoutY="140.0" prefWidth="1240.0" spacing="20.0"
+                      AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0">
+                    <children>
+
+                        <!-- Mai járatok -->
+                        <VBox alignment="CENTER" prefHeight="100.0"
+                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);"
+                              HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="MAI JÁRATOK" textFill="#0d47a1">
+                                    <font>
+                                        <Font name="System Bold" size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="flightsTodayLabel" text="0" textFill="#0d47a1">
+                                    <font>
+                                        <Font name="System Bold" size="36.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+
+                        <!-- Késések -->
+                        <VBox alignment="CENTER" prefHeight="100.0"
+                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);"
+                              HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="KÉSÉSEK (Delayed)" textFill="#b71c1c">
+                                    <font>
+                                        <Font name="System Bold" size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="delaysTodayLabel" text="0" textFill="#b71c1c">
+                                    <font>
+                                        <Font name="System Bold" size="36.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+
+                        <!-- Szabad kapuk -->
+                        <VBox alignment="CENTER" prefHeight="100.0"
+                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);"
+                              HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="SZABAD KAPUK" textFill="#1b5e20">
+                                    <font>
+                                        <Font name="System Bold" size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="freeGatesLabel" text="0" textFill="#1b5e20">
+                                    <font>
+                                        <Font name="System Bold" size="36.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+                <!-- DIAGRAMOK -->
+                <HBox layoutX="26.0" layoutY="260.0" prefHeight="260.0" prefWidth="1240.0"
+                      spacing="20.0"
+                      AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0">
+                    <children>
+
+                        <!-- PieChart -->
+                        <VBox style="-fx-background-color: white; -fx-background-radius: 10;"
+                              HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets top="10" bottom="10" left="10" right="10"/>
+                            </padding>
+                            <children>
+                                <Label text="Mai státuszok"
+                                       style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                                <PieChart fx:id="statusPieChart"/>
+                            </children>
+                        </VBox>
+
+                        <!-- BarChart -->
+                        <VBox style="-fx-background-color: white; -fx-background-radius: 10;"
+                              HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets top="10" bottom="10" left="10" right="10"/>
+                            </padding>
+                            <children>
+                                <Label text="Forgalom (Induló / Érkező)"
+                                       style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                                <BarChart fx:id="trafficBarChart">
+                                    <xAxis>
+                                        <CategoryAxis label="Irány"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis label="Járatok száma"/>
+                                    </yAxis>
+                                </BarChart>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+                <!-- IDŐJÁRÁS PANEL -->
+                <VBox layoutX="26.0" layoutY="540.0" prefWidth="1240.0" spacing="12.0"
+                      AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0">
+                    <children>
+                        <VBox style="-fx-background-color: white; -fx-background-radius: 10;">
+                            <padding>
+                                <Insets top="12" bottom="12" left="14" right="14"/>
+                            </padding>
                             <children>
 
+                                <!-- Reptér alap info -->
+                                <HBox spacing="8.0">
+                                    <children>
+                                        <Label text="Reptér:"/>
+                                        <Label fx:id="airportBasicLabel"
+                                               text="LHBP – Budapest Ferenc Liszt (Budapest)"/>
+                                    </children>
+                                </HBox>
+
                                 <!-- Felső sor: ikon + hőmérséklet + állapot -->
-                                <HBox spacing="14">
+                                <HBox spacing="12.0" style="-fx-padding: 4 0 4 0;">
                                     <children>
                                         <Label fx:id="weatherEmojiLabel"
-                                               text="☀️"
-                                               styleClass="weather-emoji"/>
-                                        <VBox spacing="4">
+                                               text="☀️">
+                                            <font>
+                                                <Font size="32.0"/>
+                                            </font>
+                                        </Label>
+                                        <VBox spacing="2.0">
                                             <children>
                                                 <Label fx:id="temperatureLabel"
-                                                       text="+21°C"
-                                                       styleClass="weather-temp-big"/>
+                                                       text="+21°C">
+                                                    <font>
+                                                        <Font size="22.0"/>
+                                                    </font>
+                                                </Label>
                                                 <Label fx:id="conditionLabel"
-                                                       text="Derült égbolt"
-                                                       styleClass="weather-condition"/>
+                                                       text="Derült égbolt"/>
                                             </children>
                                         </VBox>
                                     </children>
                                 </HBox>
 
-                                <!-- Reptér basic: ICAO / Név / Város -->
-                                <HBox spacing="10">
-                                    <children>
-                                        <Label text="Reptér:"
-                                               styleClass="weather-label-strong"/>
-                                        <Label fx:id="airportBasicLabel"
-                                               text="LHBP – Budapest Ferenc Liszt (Budapest)"
-                                               styleClass="weather-label"/>
-                                    </children>
-                                </HBox>
-
-                                <!-- Gridben a részletek -->
-                                <GridPane hgap="20" vgap="6">
+                                <!-- Részletes adatok -->
+                                <GridPane hgap="16" vgap="4">
                                     <columnConstraints>
                                         <ColumnConstraints percentWidth="50"/>
                                         <ColumnConstraints percentWidth="50"/>
                                     </columnConstraints>
-
                                     <children>
-                                        <Label text="Szél:"
-                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
-                                               styleClass="weather-label-strong"/>
-                                        <Label fx:id="windLabel"
-                                               text="230° / 14 kt"
-                                               GridPane.rowIndex="0" GridPane.columnIndex="1"
-                                               styleClass="weather-label"/>
+                                        <Label text="Szél:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                        <Label fx:id="windLabel" text="230° / 14 kt"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                                        <Label text="Látástáv:"
-                                               GridPane.rowIndex="1" GridPane.columnIndex="0"
-                                               styleClass="weather-label-strong"/>
-                                        <Label fx:id="visibilityLabel"
-                                               text="9999 m"
-                                               GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                               styleClass="weather-label"/>
+                                        <Label text="Látástáv:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                        <Label fx:id="visibilityLabel" text="9999 m"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                                        <Label text="QNH:"
-                                               GridPane.rowIndex="2" GridPane.columnIndex="0"
-                                               styleClass="weather-label-strong"/>
-                                        <Label fx:id="pressureLabel"
-                                               text="1015 hPa"
-                                               GridPane.rowIndex="2" GridPane.columnIndex="1"
-                                               styleClass="weather-label"/>
+                                        <Label text="QNH:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                        <Label fx:id="pressureLabel" text="1015 hPa"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                                        <Label text="Hőérzet / harmatpont:"
-                                               GridPane.rowIndex="3" GridPane.columnIndex="0"
-                                               styleClass="weather-label-strong"/>
-                                        <Label fx:id="feelsLikeLabel"
-                                               text="+19°C / +13°C"
-                                               GridPane.rowIndex="3" GridPane.columnIndex="1"
-                                               styleClass="weather-label"/>
+                                        <Label text="Hőérzet / harmatpont:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                        <Label fx:id="feelsLikeLabel" text="+19°C / +13°C"
+                                               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                                        <Label text="Frissítve:"
-                                               GridPane.rowIndex="4" GridPane.columnIndex="0"
-                                               styleClass="weather-label-strong"/>
-                                        <Label fx:id="updatedAtLabel"
-                                               text="2025-12-05 11:42 UTC"
-                                               GridPane.rowIndex="4" GridPane.columnIndex="1"
-                                               styleClass="weather-label"/>
+                                        <Label text="Frissítve:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                        <Label fx:id="updatedAtLabel" text="2025-12-05 11:42 UTC"
+                                               GridPane.rowIndex="4" GridPane.columnIndex="1"/>
                                     </children>
                                 </GridPane>
 
-                                <!-- METAR / megjegyzés -->
                                 <Label fx:id="metarLabel"
                                        text="METAR LHBP 051120Z 23014KT CAVOK 21/13 Q1015 NOSIG"
-                                       wrapText="true"
-                                       styleClass="weather-metar"/>
+                                       wrapText="true"/>
 
                             </children>
                         </VBox>
                     </children>
-                </StackPane>
-
-                <!-- Jobb oldal: akciók „csempe” jelleggel -->
-                <VBox spacing="14" prefWidth="260">
-                    <children>
-
-                        <Label text="Akciók"
-                               styleClass="actions-title"/>
-
-                        <Button fx:id="weatherAssistantButton"
-                                text="Időjárás asszisztens megnyitása"
-                                onAction="#onOpenWeatherAssistant"
-                                maxWidth="Infinity"
-                                styleClass="primary-action"/>
-
-                        <Button fx:id="departuresButton"
-                                text="Induló járatok"
-                                onAction="#onShowDepartures"
-                                maxWidth="Infinity"
-                                styleClass="secondary-action"/>
-
-                        <Button fx:id="arrivalsButton"
-                                text="Érkező járatok"
-                                onAction="#onShowArrivals"
-                                maxWidth="Infinity"
-                                styleClass="secondary-action"/>
-
-                        <Separator/>
-
-                        <Button fx:id="logoutButton"
-                                text="Kijelentkezés"
-                                onAction="#onLogout"
-                                maxWidth="Infinity"
-                                styleClass="danger-action"/>
-                    </children>
                 </VBox>
 
-            </children>
-        </HBox>
-    </center>
-
-    <!-- Alsó státuszsor -->
-    <bottom>
-        <HBox BorderPane.alignment="CENTER_LEFT"
-              styleClass="controller-statusbar">
-            <padding>
-                <Insets top="6" bottom="8" left="20" right="20"/>
-            </padding>
-            <children>
+                <!-- Alsó státuszsor -->
                 <Label fx:id="statusLabel"
+                       layoutX="26.0" layoutY="780.0"
+                       textFill="WHITE"
                        text="Készen áll."/>
+
             </children>
-        </HBox>
-    </bottom>
-</BorderPane>
+        </AnchorPane>
+    </children>
+</HBox>

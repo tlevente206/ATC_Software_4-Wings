@@ -45,7 +45,7 @@
 
                 <TableColumn fx:id="msnColumn" prefWidth="90.0" text="MSN" />
 
-                <TableColumn fx:id="airlineIdColumn" prefWidth="70.0" text="Airline ID" />
+                <TableColumn fx:id="airlineIdColumn" prefWidth="100.0" text="Üzemeltető" />
 
                 <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Státusz" />
 
