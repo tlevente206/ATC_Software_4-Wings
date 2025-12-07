@@ -1,167 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<HBox prefHeight="800.0" prefWidth="1300.0"
-      xmlns="http://javafx.com/javafx/23.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.FourWings.atcSystem.frontend.controller.ControllerHomePageController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.ControllerHomePageController"
+            fx:id="rootPane">
 
-    <children>
-        <AnchorPane prefHeight="800.0" prefWidth="1300.0"
-                    style="-fx-background-color: #0055ff;"
-                    HBox.hgrow="ALWAYS">
-
+    <!-- FELSŐ RÉSZ: köszöntés + repülőtér -->
+    <top>
+        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" left="16" right="16" bottom="8"/>
+            </padding>
             <children>
+                <Label fx:id="greetingLabel" text="Szia, Controller!">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
 
-                <!-- Felső cím + üdvözlés blokk -->
-                <VBox layoutX="26.0" layoutY="8.0" spacing="4.0">
-                    <children>
-                        <Label fx:id="greetingLabel"
-                               text="Szia, Irányító!"
-                               textFill="WHITE">
-                            <font>
-                                <Font size="26.0"/>
-                            </font>
-                            <effect>
-                                <DropShadow>
-                                    <color>
-                                        <Color red="0.0258" green="0.6613" blue="0.86"/>
-                                    </color>
-                                </DropShadow>
-                            </effect>
-                        </Label>
+                <Label fx:id="airportLabel" text="Otthoni repülőtér: (nincs beállítva)"/>
 
-                        <Label fx:id="airportTitleLabel"
-                               text="Otthoni repülőtér: ICAO – Név"
-                               textFill="WHITE">
-                            <font>
-                                <Font size="18.0"/>
-                            </font>
-                        </Label>
-
-                        <Label fx:id="subtitleLabel"
-                               text="Valós idejű időjárás, induló és érkező járatok áttekintése."
-                               textFill="WHITE"/>
-                    </children>
-                </VBox>
-
-                <!-- Kijelentkezés -->
-                <Button layoutX="1150.0" layoutY="20.0"
-                        onAction="#onLogout"
-                        style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-weight: bold;"
-                        text="Kijelentkezés"/>
-
-                <!-- Felső gombsor / toolbar -->
-                <HBox layoutX="26.0" layoutY="90.0" spacing="12.0">
-                    <children>
-                        <Button text="Dashboard frissítése"
-                                onAction="#onRefreshDashboard"
-                                style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;"/>
-
-                        <Button text="Új járat"
-                                onAction="#onCreateFlight"
-                                style="-fx-background-color: #ffee58; -fx-text-fill: #000000; -fx-font-weight: bold;"/>
-
-                        <Button text="Időjárás asszisztens"
-                                onAction="#onOpenWeatherAssistant"
-                                style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"/>
-
-                        <Button text="Induló járatok"
-                                onAction="#onShowDepartures"
-                                style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"/>
-
-                        <Button text="Érkező járatok"
-                                onAction="#onShowArrivals"
-                                style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"/>
-                    </children>
-                </HBox>
-
-                <!-- STAT KÁRTYÁK -->
-                <!-- ... innen lefelé ugyanaz, mint amit küldtél, nem változtattam ... -->
-
-                <HBox layoutX="26.0" layoutY="140.0" prefWidth="1240.0" spacing="20.0"
-                      AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0">
-                    <children>
-
-                        <!-- Mai járatok -->
-                        <VBox alignment="CENTER" prefHeight="100.0"
-                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);"
-                              HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label text="MAI JÁRATOK" textFill="#0d47a1">
-                                    <font>
-                                        <Font name="System Bold" size="14.0"/>
-                                    </font>
-                                </Label>
-                                <Label fx:id="flightsTodayLabel" text="0" textFill="#0d47a1">
-                                    <font>
-                                        <Font name="System Bold" size="36.0"/>
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-
-                        <!-- Késések -->
-                        <VBox alignment="CENTER" prefHeight="100.0"
-                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);"
-                              HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label text="KÉSÉSEK (Delayed)" textFill="#b71c1c">
-                                    <font>
-                                        <Font name="System Bold" size="14.0"/>
-                                    </font>
-                                </Label>
-                                <Label fx:id="delaysTodayLabel" text="0" textFill="#b71c1c">
-                                    <font>
-                                        <Font name="System Bold" size="36.0"/>
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-
-                        <!-- Szabad kapuk -->
-                        <VBox alignment="CENTER" prefHeight="100.0"
-                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);"
-                              HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label text="SZABAD KAPUK" textFill="#1b5e20">
-                                    <font>
-                                        <Font name="System Bold" size="14.0"/>
-                                    </font>
-                                </Label>
-                                <Label fx:id="freeGatesLabel" text="0" textFill="#1b5e20">
-                                    <font>
-                                        <Font name="System Bold" size="36.0"/>
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-
-                    </children>
-                </HBox>
-
-                <!-- DIAGRAMOK, IDŐJÁRÁS PANEL, STÁTUSZSOR: ugyanaz, mint amit küldtél -->
-
-                <!-- ... (nem ismétlem, mert nem módosítottam) ... -->
-
-                <Label fx:id="statusLabel"
-                       layoutX="26.0" layoutY="780.0"
-                       textFill="WHITE"
-                       text="Készen áll."/>
-
+                <Separator/>
             </children>
-        </AnchorPane>
-    </children>
-</HBox>
+        </VBox>
+    </top>
+
+    <!-- KÖZÉP: egyszerű tartalom + próba gomb -->
+    <center>
+        <VBox spacing="12" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20" left="16" right="16" bottom="16"/>
+            </padding>
+            <children>
+                <Label text="Controller dashboard – ALAP VERZIÓ">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+
+                <Label text="Itt majd később lesz: időjárás, statisztikák, diagramok, új járat gomb stb."/>
+
+                <Button text="Próba gomb"
+                        onAction="#onDummyAction"/>
+
+                <Button text="Kijelentkezés"
+                        onAction="#onLogout"/>
+            </children>
+        </VBox>
+    </center>
+
+    <!-- ALSÓ SOR: státusz -->
+    <bottom>
+        <HBox spacing="8" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="4" left="16" right="16" bottom="8"/>
+            </padding>
+            <children>
+                <Label text="Státusz:"/>
+                <Label fx:id="statusLabel" text=""/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>
