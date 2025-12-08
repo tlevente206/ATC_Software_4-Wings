@@ -199,7 +199,7 @@ public class TerminalPageController {
 
     private void setupMenuNavigation() {
         if (menuComboBox == null) return;
-        menuComboBox.setValue("Kapuk(Ez inkább a repterekhez menne)");
+        menuComboBox.setValue("Terminál(Ez is inkább reptér)");
         menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
             switch (newVal) {
