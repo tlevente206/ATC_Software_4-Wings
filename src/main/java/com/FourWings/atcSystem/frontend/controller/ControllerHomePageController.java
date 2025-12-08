@@ -30,9 +30,14 @@ public class ControllerHomePageController {
     @FXML private Label airportLabel;
     @FXML private Label statusLabel;
     @FXML private javafx.scene.control.Button refreshButton;
+    @FXML private javafx.scene.control.Button showDepartures;
+    @FXML private javafx.scene.control.Button showArrivals;
+    @FXML private javafx.scene.control.Button createFlight;
+    @FXML private javafx.scene.control.Button openWeatherAssistant;
+    @FXML private javafx.scene.control.Button logoutButton;
 
 
-    private static final String REFRESH_NORMAL_STYLE =
+    private static final String NORMAL_STYLE =
             "-fx-background-color: rgba(248,250,252,0.06);" +
                     "-fx-text-fill: #e5e7eb;" +
                     "-fx-background-radius: 20;" +
@@ -40,13 +45,46 @@ public class ControllerHomePageController {
                     "-fx-font-size: 13px;" +
                     "-fx-cursor: hand;";
 
-    private static final String REFRESH_HOVER_STYLE =
+    private static final String HOVER_STYLE =
             "-fx-background-color: rgba(248,250,252,0.18);" +
                     "-fx-text-fill: #ffffff;" +
                     "-fx-background-radius: 20;" +
                     "-fx-padding: 6 14 6 14;" +
                     "-fx-font-size: 14px;" +
                     "-fx-cursor: hand;";
+
+    private static final String CREATE_NORMAL_STYLE =
+            "-fx-background-color: #2563eb;" +
+            "-fx-text-fill: white;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 6 16 6 16;" +
+            "-fx-font-weight: bold;" + "-fx-font-size: 13px;" +
+            "-fx-cursor: hand;";
+
+    private static final String CREATE_HOVER_STYLE =
+            "-fx-background-color: #2563eb;" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
+                    "-fx-cursor: hand;";
+
+    private static final String LOGOUT_NORMAL_STYLE =
+            "-fx-background-color: #dc2626;" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" + "-fx-font-size: 13px;" +
+                    "-fx-cursor: hand;";
+
+    private static final String LOGOUT_HOVER_STYLE =
+            "-fx-background-color: #dc2626;" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
+                    "-fx-cursor: hand;";
+
     public ControllerHomePageController() {
         // üres konstruktor – Spring tölti be
     }
@@ -59,12 +97,35 @@ public class ControllerHomePageController {
             statusLabel.setText("Várakozás a felhasználói adatokra…");
         }
 
-        if (refreshButton != null) {
-            refreshButton.setStyle(REFRESH_NORMAL_STYLE);
-            refreshButton.setOnMouseEntered(e -> refreshButton.setStyle(REFRESH_HOVER_STYLE));
-            refreshButton.setOnMouseExited(e -> refreshButton.setStyle(REFRESH_NORMAL_STYLE));
-        }
+        setupButton(refreshButton, " ");
+        setupButton(showDepartures, " ");
+        setupButton(showArrivals, " ");
+        setupButton(createFlight, "create");
+        setupButton(openWeatherAssistant, " ");
+        setupButton(logoutButton, "log");
+
         System.out.println("ControllerHomePage: initialize() lefutott");
+    }
+
+    private void setupButton(javafx.scene.control.Button btn, String type) {
+
+        if (type.equals(" ")) {
+            if (btn == null) return;
+            btn.setStyle(NORMAL_STYLE);
+            btn.setOnMouseEntered(e -> btn.setStyle(HOVER_STYLE));
+            btn.setOnMouseExited(e -> btn.setStyle(NORMAL_STYLE));
+        }else if (type.equals("create")) {
+            if (btn == null) return;
+            btn.setStyle(CREATE_NORMAL_STYLE);
+            btn.setOnMouseEntered(e -> btn.setStyle(CREATE_HOVER_STYLE));
+            btn.setOnMouseExited(e -> btn.setStyle(CREATE_NORMAL_STYLE));
+        }else if (type.equals("log")) {
+            if (btn == null) return;
+            btn.setStyle(LOGOUT_NORMAL_STYLE);
+            btn.setOnMouseEntered(e -> btn.setStyle(LOGOUT_HOVER_STYLE));
+            btn.setOnMouseExited(e -> btn.setStyle(LOGOUT_NORMAL_STYLE));
+        }
+
     }
 
     private String getTimeBasedGreeting() {

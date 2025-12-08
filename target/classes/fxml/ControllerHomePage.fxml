@@ -62,23 +62,30 @@
                                             -fx-font-size: 13px;
                                             -fx-cursor: hand;
                                         "/>
-                                <Button text="Induló járatok"
+                                <Button fx:id="showDepartures"
+                                        text="Induló járatok"
                                         onAction="#onShowDepartures"
                                         style="
                                             -fx-background-color: rgba(248,250,252,0.06);
                                             -fx-text-fill: #e5e7eb;
                                             -fx-background-radius: 20;
                                             -fx-padding: 6 14 6 14;
+                                            -fx-font-size: 13px;
+                                            -fx-cursor: hand;
                                         "/>
-                                <Button text="Érkező járatok"
+                                <Button fx:id="showArrivals"
+                                        text="Érkező járatok"
                                         onAction="#onShowArrivals"
                                         style="
                                             -fx-background-color: rgba(248,250,252,0.06);
                                             -fx-text-fill: #e5e7eb;
                                             -fx-background-radius: 20;
                                             -fx-padding: 6 14 6 14;
+                                            -fx-font-size: 13px;
+                                            -fx-cursor: hand;
                                         "/>
-                                <Button text="Új járat"
+                                <Button fx:id="createFlight"
+                                        text="Új járat"
                                         onAction="#onCreateFlight"
                                         style="
                                             -fx-background-color: #2563eb;
@@ -86,17 +93,21 @@
                                             -fx-background-radius: 20;
                                             -fx-padding: 6 16 6 16;
                                             -fx-font-weight: bold;
+                                            -fx-cursor: hand;
                                         "/>
-                                <Button text="Időjárás asszisztens"
+                                <Button fx:id="openWeatherAssistant"
+                                        text="Időjárás asszisztens"
                                         onAction="#onOpenWeatherAssistant"
                                         style="
                                             -fx-background-color: rgba(248,250,252,0.06);
                                             -fx-text-fill: #e5e7eb;
                                             -fx-background-radius: 20;
                                             -fx-padding: 6 14 6 14;
+                                            -fx-cursor: hand;
                                         "/>
 
-                                <Button text="Kijelentkezés"
+                                <Button fx:id="logoutButton"
+                                        text="Kijelentkezés"
                                         onAction="#onLogout"
                                         style="
                                             -fx-background-color: #dc2626;
@@ -104,6 +115,7 @@
                                             -fx-background-radius: 20;
                                             -fx-padding: 6 16 6 16;
                                             -fx-font-weight: bold;
+                                            -fx-cursor: hand;
                                         "/>
                             </children>
                         </HBox>
