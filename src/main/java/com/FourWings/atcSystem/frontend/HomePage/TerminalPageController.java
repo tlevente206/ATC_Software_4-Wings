@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.model.aircraft.Aircraft; // Aircraft import
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
 import com.FourWings.atcSystem.model.flight.Flight;
@@ -21,15 +22,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;@Component
+import java.util.stream.Collectors;
+
+@Component
 public class TerminalPageController {
 
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 600;
-    private final Random rand = new Random();
 
-    // SERVICE-ek használata (GatesPage mintára)
     private final AirportsService airportService;
     private final GateService gateService;
     private final FlightService flightService;
@@ -39,11 +39,10 @@ public class TerminalPageController {
     @FXML private FlowPane gatesContainer;
     @FXML private ScrollPane scrollPane;
 
-    // Statisztikai Label-ek (Ezek a Terminál oldal specifikumai)
     @FXML private Label totalGatesLabel;
     @FXML private Label occupiedGatesLabel;
-    @FXML private Label passengerFlowLabel;
-    @FXML private Label statusLabel; // Alsó információs sáv
+    @FXML private Label passengerFlowLabel; // Ezen most már a Cargo-t is mutatjuk
+    @FXML private Label statusLabel;
 
     public TerminalPageController(AirportsService airportService, GateService gateService, FlightService flightService) {
         this.airportService = airportService;
@@ -62,11 +61,9 @@ public class TerminalPageController {
         }
     }
 
-    // --- FŐ LOGIKA: ADATOK BETÖLTÉSE ---
     private void loadTerminalDataForAirport(Airports airport) {
-        // Törlés és alaphelyzet
         gatesContainer.getChildren().clear();
-        updateStats(0, 0, 0);
+        updateStats(0, 0, 0, 0); // Reset
 
         if (airport == null) {
             statusLabel.setText("Válassz repteret!");
@@ -75,13 +72,11 @@ public class TerminalPageController {
 
         statusLabel.setText("Terminál adatok betöltése...");
 
-        // 1. Kapuk lekérése az adott reptérhez
+        // 1. Kapuk és Járatok lekérése
         List<Gate> gates = gateService.getGatesForAirport(airport);
-
-        // 2. Induló járatok lekérése (ezek vannak a terminálon)
         List<Flight> departures = flightService.getDeparturesForAirport(airport);
 
-        // 3. Map készítése: Melyik kapunál van járat?
+        // 2. Map készítése
         Map<Long, Flight> gateFlightMap = departures.stream()
                 .filter(f -> f.getGate() != null)
                 .collect(Collectors.toMap(
@@ -90,23 +85,51 @@ public class TerminalPageController {
                         (existing, replacement) -> existing
                 ));
 
-        // 4. Kártyák generálása
+        // 3. Kártyák generálása
         for (Gate gate : gates) {
             Flight flightAtGate = gateFlightMap.get(gate.getId());
             VBox gateCard = createGateCard(gate, flightAtGate);
             gatesContainer.getChildren().add(gateCard);
         }
 
-        // 5. Statisztikák frissítése
-        int total = gates.size();
-        int occupied = gateFlightMap.size();
-        // Utasbecslés: Csak a foglalt kapukon lévő járatokra
-        int passengers = gateFlightMap.values().stream()
-                .mapToInt(f -> rand.nextInt(50, 250)) // Demo adat, ha nincs Aircraft kapacitás
-                .sum();
+        // 4. STATISZTIKÁK SZÁMÍTÁSA (UTAS + CARGO)
+        int totalGates = gates.size();
+        int occupiedGates = gateFlightMap.size();
 
-        updateStats(total, occupied, passengers);
+        int totalPassengers = 0;
+        int totalCargo = 0;
+
+        // Végigmegyünk a terminálon lévő járatokon
+        for (Flight flight : gateFlightMap.values()) {
+            Aircraft aircraft = flight.getAircraft();
+
+            if (aircraft != null) {
+                // Utasok (Max Seat Capacity)
+                if (aircraft.getMaxSeatCapacity() != null) {
+                    totalPassengers += aircraft.getMaxSeatCapacity();
+                }
+
+                // Cargo (Cargo Capacity Base)
+                if (aircraft.getCargoCapacityBase() != null) {
+                    totalCargo += aircraft.getCargoCapacityBase();
+                }
+            }
+        }
+
+        updateStats(totalGates, occupiedGates, totalPassengers, totalCargo);
         statusLabel.setText(airport.getName() + " terminál áttekintés betöltve.");
+    }
+
+    private void updateStats(int total, int occupied, int passengers, int cargo) {
+        if (totalGatesLabel != null) totalGatesLabel.setText(String.valueOf(total));
+        if (occupiedGatesLabel != null) occupiedGatesLabel.setText(String.valueOf(occupied));
+
+        // Itt jelenítjük meg mindkét értéket
+        if (passengerFlowLabel != null) {
+            passengerFlowLabel.setText(String.format("%d fő / %d kg", passengers, cargo));
+            // Ha túl hosszú lenne a szöveg, csökkenthetjük a betűméretet CSS-el,
+            // vagy az FXML-ben a Label szélességét növelhetjük.
+        }
     }
 
     private VBox createGateCard(Gate gate, Flight flight) {
@@ -116,7 +139,7 @@ public class TerminalPageController {
         box.setAlignment(Pos.TOP_CENTER);
         box.setSpacing(5);
 
-        // GatesPage stílus
+        // Alap stílus
         String baseStyle = "-fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);";
 
         Label codeLabel = new Label(gate.getCode());
@@ -126,27 +149,55 @@ public class TerminalPageController {
         Label detailLabel = new Label();
         detailLabel.setStyle("-fx-text-alignment: center; -fx-font-size: 11px;");
 
-        // 1. Inaktív kapu
+        // 1. ESET: A kapu le van zárva (A Gate tábla status mezője alapján)
+        // Csak azt nézzük, hogy a kapu működőképes-e
         if (gate.getStatus() != null && !gate.getStatus().name().equals("OPEN") && !gate.getStatus().name().equals("ACTIVE")) {
-            box.setStyle(baseStyle + "-fx-background-color: #cfd8dc;");
+            box.setStyle(baseStyle + "-fx-background-color: #cfd8dc;"); // Szürke
             infoLabel.setText(gate.getStatus().name());
             infoLabel.setStyle("-fx-text-fill: #546e7a; -fx-font-weight: bold;");
         }
-        // 2. Foglalt kapu
+        // 2. ESET: Van járat a kapunál -> Megnézzük a GÉP típusát
         else if (flight != null) {
-            box.setStyle(baseStyle + "-fx-background-color: #ffcccc;"); // Pirosas
-            infoLabel.setText("FOGLALT");
-            infoLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-weight: bold;");
+
+            boolean isCargoPlane = false;
+            String aircraftType = "?";
+
+            // --- ITT KÉRDEZZÜK LE A GÉP ADATAIT ---
+            if (flight.getAircraft() != null) {
+                Aircraft ac = flight.getAircraft();
+                aircraftType = ac.getTypeIcao(); // Pl. B747
+
+                // Logika: Ha nincs ülőhely (0 vagy null), de van cargo kapacitás -> CARGO GÉP
+                int seats = (ac.getMaxSeatCapacity() != null) ? ac.getMaxSeatCapacity() : 0;
+                int cargo = (ac.getCargoCapacityBase() != null) ? ac.getCargoCapacityBase() : 0;
+
+                if (seats == 0 && cargo > 0) {
+                    isCargoPlane = true;
+                }
+            }
+
+            if (isCargoPlane) {
+                // --- CARGO MEGJELENÍTÉS (Lila) ---
+                box.setStyle(baseStyle + "-fx-background-color: #d1c4e9;");
+                infoLabel.setText("CARGO");
+                infoLabel.setStyle("-fx-text-fill: #512da8; -fx-font-weight: bold;");
+            } else {
+                // --- UTASSZÁLLÍTÓ MEGJELENÍTÉS (Pirosas) ---
+                box.setStyle(baseStyle + "-fx-background-color: #ffcccc;");
+                infoLabel.setText("FOGLALT");
+                infoLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-weight: bold;");
+            }
 
             String dest = (flight.getDestinationName() != null) ? flight.getDestinationName() : "N/A";
+
             detailLabel.setText(
-                    flight.getFlightNumber() + "\n" +
+                    flight.getFlightNumber() + " (" + aircraftType + ")\n" +
                             "Cél: " + dest
             );
         }
-        // 3. Szabad kapu
+        // 3. ESET: Üres a kapu
         else {
-            box.setStyle(baseStyle + "-fx-background-color: #dff0d8;"); // Zöldes
+            box.setStyle(baseStyle + "-fx-background-color: #dff0d8;"); // Zöld
             infoLabel.setText("SZABAD");
             infoLabel.setStyle("-fx-text-fill: #3c763d; -fx-font-weight: bold;");
             detailLabel.setText("Várakozás...");
@@ -156,13 +207,7 @@ public class TerminalPageController {
         return box;
     }
 
-    private void updateStats(int total, int occupied, int passengers) {
-        if (totalGatesLabel != null) totalGatesLabel.setText(String.valueOf(total));
-        if (occupiedGatesLabel != null) occupiedGatesLabel.setText(String.valueOf(occupied));
-        if (passengerFlowLabel != null) passengerFlowLabel.setText(passengers + " fő");
-    }
-
-    // --- SETUP RÉSZEK ---
+    // --- SETUP (Változatlan) ---
 
     private void setupAirportSelector() {
         airportSelector.setConverter(new StringConverter<Airports>() {
@@ -187,8 +232,7 @@ public class TerminalPageController {
         }
     }
 
-    @FXML
-    private void onRefresh() {
+    @FXML private void onRefresh() {
         loadTerminalDataForAirport(airportSelector.getSelectionModel().getSelectedItem());
     }
 
@@ -198,17 +242,20 @@ public class TerminalPageController {
 
     private void setupMenuNavigation() {
         if (menuComboBox == null) return;
-        menuComboBox.setValue("Terminál(Ez is inkább reptér)");
+        menuComboBox.setPromptText("Menü választása...");
+        menuComboBox.setValue(null);
+
         menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
             switch (newVal) {
-                case "Főoldal" -> SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
-                case "Repülők" -> SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
-                case "Repterek" -> SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
-                case "Repülőutak" -> SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
-                case "Kapuk(Ez inkább a repterekhez menne)" -> SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
-                case "Terminál(Ez is inkább reptér)" -> SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
+                case "Főoldal" -> SceneManager.switchTo("fxml/HomePage.fxml", "ATC – Főoldal", 800, 600);
+                case "Repülők" -> SceneManager.switchTo("fxml/HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
+                case "Repterek" -> SceneManager.switchTo("fxml/HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
+                case "Repülőutak" -> SceneManager.switchTo("fxml/HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
+                case "Kapuk" -> SceneManager.switchTo("fxml/HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
+                case "Terminál" -> SceneManager.switchTo("fxml/HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
             }
+            javafx.application.Platform.runLater(() -> menuComboBox.setValue(null));
         });
     }
 }
