@@ -6,5 +6,6 @@ public enum AircraftStatus {
     ACTIVE,
     MAINTENANCE,
     WITHDRAWN,
-    GROUNDED
+    GROUNDED,
+    STORED
 }

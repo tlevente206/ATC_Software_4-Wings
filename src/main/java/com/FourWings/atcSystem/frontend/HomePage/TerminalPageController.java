@@ -248,12 +248,12 @@ public class TerminalPageController {
         menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
             switch (newVal) {
-                case "Főoldal" -> SceneManager.switchTo("fxml/HomePage.fxml", "ATC – Főoldal", 800, 600);
-                case "Repülők" -> SceneManager.switchTo("fxml/HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
-                case "Repterek" -> SceneManager.switchTo("fxml/HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
-                case "Repülőutak" -> SceneManager.switchTo("fxml/HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
-                case "Kapuk" -> SceneManager.switchTo("fxml/HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
-                case "Terminál" -> SceneManager.switchTo("fxml/HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
+                case "Főoldal" -> SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
+                case "Repülők" -> SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
+                case "Repterek" -> SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
+                case "Repülőutak" -> SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
+                case "Kapuk" -> SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
+                case "Terminál" -> SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
             }
             javafx.application.Platform.runLater(() -> menuComboBox.setValue(null));
         });
