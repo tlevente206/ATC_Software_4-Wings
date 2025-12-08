@@ -59,7 +59,7 @@ public class MainPageController {
         ControllerHomePageController ctrl = SceneManager.switchTo(
                 "ControllerHomePage.fxml",          // <- FXML neve
                 "ATC – Irányító munkaállomás",      // ablak címe
-                1100, 700                           // nagyobb, „dashboard” méret
+                1200, 750                           // nagyobb, „dashboard” méret
         );
         ctrl.initWithUser(user);
     }

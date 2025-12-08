@@ -162,6 +162,31 @@ public class ControllerHomePageController {
         }
     }
 
+    @FXML
+    private void onOpenWeatherDetails() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/WeatherDetailsDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            if (statusLabel != null && statusLabel.getScene() != null) {
+                dialog.initOwner(statusLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Részletes időjárás");
+            dialog.setScene(new Scene(root, 500, 400));
+            dialog.setResizable(false);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     // --- GOMBOK ---
 
     @FXML

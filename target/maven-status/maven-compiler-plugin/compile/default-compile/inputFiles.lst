@@ -23,6 +23,7 @@
 /Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/frontend/controller/ControllerHomePageController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/frontend/controller/CreateFlightDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/frontend/controller/DeparturesDialogController.java
+/Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/frontend/controller/WeatherDetailsDialogController.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/model/aircraft/Aircraft.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftRepository.java
 /Users/tothleventelaszlo/Desktop/SFM projekt/AronCommitjeiUtan/src/main/java/com/FourWings/atcSystem/model/aircraft/AircraftService.java

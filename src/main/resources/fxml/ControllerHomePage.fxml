@@ -62,9 +62,18 @@
 
             <children>
                 <!-- IDŐJÁRÁS BLOKK (bal oldalt, nagyobb, 2 sort foglal) -->
-                <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.rowSpan="2"
+                <VBox fx:id="weatherCard"
+                      onMouseClicked="#onOpenWeatherDetails"
+                      GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.rowSpan="2"
                       spacing="8"
-                      style="-fx-border-color: #cccccc; -fx-border-radius: 6; -fx-background-color: #f5f5f5; -fx-background-radius: 6; -fx-padding: 10;">
+                      style="
+                          -fx-border-color: #cccccc;
+                          -fx-border-radius: 6;
+                          -fx-background-color: #f5f5f5;
+                          -fx-background-radius: 6;
+                          -fx-padding: 10;
+                          -fx-cursor: hand;
+                      ">
                     <children>
                         <Label text="Időjárás"
                                style="-fx-font-size: 14px; -fx-font-weight: bold;"/>

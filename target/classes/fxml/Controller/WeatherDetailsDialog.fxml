@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.WeatherDetailsDialogController">
+
+    <top>
+        <Label text="Részletes időjárási adatok"
+               style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10;"/>
+    </top>
+
+    <center>
+        <VBox spacing="8" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="10" left="16" right="16" bottom="10"/>
+            </padding>
+            <children>
+                <Label text="Repülőtér:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="airportLabel" text="LHBP – Budapest Liszt Ferenc (Budapest)"/>
+
+                <Separator/>
+
+                <Label text="Hőmérséklet:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="temperatureLabel" text="-- °C"/>
+
+                <Label text="Időjárás:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="conditionLabel" text="Nincs adat"/>
+
+                <Label text="Szél:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="windLabel" text="--"/>
+
+                <Label text="Láthatóság:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="visibilityLabel" text="--"/>
+
+                <Label text="Légnyomás:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="pressureLabel" text="--"/>
+
+                <Label text="Hőérzet:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="feelsLikeLabel" text="--"/>
+
+                <Label text="Frissítve:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="updatedAtLabel" text="--"/>
+
+                <Label text="METAR:" style="-fx-font-weight: bold;"/>
+                <TextArea fx:id="metarTextArea"
+                          editable="false"
+                          wrapText="true"
+                          prefRowCount="3"
+                          text="METAR adatok itt fognak megjelenni."/>
+            </children>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="8" left="16" right="16" bottom="8"/>
+            </padding>
+            <children>
+                <Button fx:id="closeButton"
+                        text="Bezárás"
+                        onAction="#onClose"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>
