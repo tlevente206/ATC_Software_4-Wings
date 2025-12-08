@@ -29,16 +29,40 @@ public class ControllerHomePageController {
     @FXML private Label greetingLabel;
     @FXML private Label airportLabel;
     @FXML private Label statusLabel;
+    @FXML private javafx.scene.control.Button refreshButton;
 
+
+    private static final String REFRESH_NORMAL_STYLE =
+            "-fx-background-color: rgba(248,250,252,0.06);" +
+                    "-fx-text-fill: #e5e7eb;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 14 6 14;" +
+                    "-fx-font-size: 13px;" +
+                    "-fx-cursor: hand;";
+
+    private static final String REFRESH_HOVER_STYLE =
+            "-fx-background-color: rgba(248,250,252,0.18);" +
+                    "-fx-text-fill: #ffffff;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 14 6 14;" +
+                    "-fx-font-size: 14px;" +
+                    "-fx-cursor: hand;";
     public ControllerHomePageController() {
         // üres konstruktor – Spring tölti be
     }
 
     @FXML
     public void initialize() {
+
         // Itt még NINCS user/airport, csak az FXML elemek léteznek
         if (statusLabel != null) {
             statusLabel.setText("Várakozás a felhasználói adatokra…");
+        }
+
+        if (refreshButton != null) {
+            refreshButton.setStyle(REFRESH_NORMAL_STYLE);
+            refreshButton.setOnMouseEntered(e -> refreshButton.setStyle(REFRESH_HOVER_STYLE));
+            refreshButton.setOnMouseExited(e -> refreshButton.setStyle(REFRESH_NORMAL_STYLE));
         }
         System.out.println("ControllerHomePage: initialize() lefutott");
     }
