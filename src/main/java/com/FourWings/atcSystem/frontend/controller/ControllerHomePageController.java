@@ -179,7 +179,7 @@ public class ControllerHomePageController {
             }
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setTitle("Részletes időjárás");
-            dialog.setScene(new Scene(root, 500, 400));
+            dialog.setScene(new Scene(root, 500, 600));
             dialog.setResizable(false);
             dialog.showAndWait();
 
