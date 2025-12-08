@@ -19,7 +19,7 @@
             <image>
                <Image url="@../images/1.png" />
             </image></ImageView>
-         <Label fx:id="motivaion" layoutX="69.0" layoutY="307.0" prefHeight="85.0" prefWidth="213.0" text="Ide jön a motivációs üzenet" textFill="WHITE" />
+         <Label fx:id="motivation" layoutX="69.0" layoutY="307.0" prefHeight="85.0" prefWidth="213.0" text="Ide jön a motivációs üzenet" textFill="WHITE" />
         </children>
     </AnchorPane>
 

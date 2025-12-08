@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 class AircraftPageController {
 
     public static final int WIDTH = 1200;
-    public static final int HEIGHT = 800; // Frissítettem 800-ra a dashboardhoz igazítva
+    public static final int HEIGHT = 600; // Frissítettem 800-ra a dashboardhoz igazítva
 
     private final AircraftService aircraftService;
     private final AirlineRepository airlineRepository;
