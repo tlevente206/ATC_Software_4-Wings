@@ -17,53 +17,29 @@ import java.util.List;
 public class AirportsPageController {
 
     private final AirportsService airportService;
-    public static final int WIDTH = 1200; //Window szélesség
-    public static final int HEIGHT = 600; //Window magasság
-    // Menü
-    @FXML
-    private ComboBox<String> menuComboBox;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 600;
 
-    // Tábla + oszlopok
-    @FXML
-    private TableView<Airports> airportsTable;
+    @FXML private ComboBox<String> menuComboBox;
 
-    @FXML
-    private TableColumn<Airports, String> icaoCodeColumn;
-    @FXML
-    private TableColumn<Airports, String> iataCodeColumn;
-    @FXML
-    private TableColumn<Airports, String> nameColumn;
-    @FXML
-    private TableColumn<Airports, String> cityColumn;
-    @FXML
-    private TableColumn<Airports, String> countryColumn;
-    @FXML
-    private TableColumn<Airports, String> timezoneColumn;
+    @FXML private TableView<Airports> airportsTable;
+    @FXML private TableColumn<Airports, String> icaoCodeColumn;
+    @FXML private TableColumn<Airports, String> iataCodeColumn;
+    @FXML private TableColumn<Airports, String> nameColumn;
+    @FXML private TableColumn<Airports, String> cityColumn;
+    @FXML private TableColumn<Airports, String> countryColumn;
+    @FXML private TableColumn<Airports, String> timezoneColumn;
+    @FXML private TableColumn<Airports, Number> latitudeColumn;
+    @FXML private TableColumn<Airports, Number> longitudeColumn;
+    @FXML private TableColumn<Airports, Integer> elevationColumn;
+    @FXML private TableColumn<Airports, String> addressColumn;
+    @FXML private TableColumn<Airports, String> postalCodeColumn;
+    @FXML private TableColumn<Airports, String> websiteUrlColumn;
+    @FXML private TableColumn<Airports, String> phoneMainColumn;
+    @FXML private TableColumn<Airports, String> emailMainColumn;
 
-    @FXML
-    private TableColumn<Airports, Number> latitudeColumn;
-    @FXML
-    private TableColumn<Airports, Number> longitudeColumn;
-    @FXML
-    private TableColumn<Airports, Integer> elevationColumn;
-
-    @FXML
-    private TableColumn<Airports, String> addressColumn;
-    @FXML
-    private TableColumn<Airports, String> postalCodeColumn;
-    @FXML
-    private TableColumn<Airports, String> websiteUrlColumn;
-    @FXML
-    private TableColumn<Airports, String> phoneMainColumn;
-    @FXML
-    private TableColumn<Airports, String> emailMainColumn;
-
-    // Keresés + státusz
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private Label statusLabel;
+    @FXML private TextField searchField;
+    @FXML private Label statusLabel;
 
     private final ObservableList<Airports> airports = FXCollections.observableArrayList();
     private FilteredList<Airports> filteredAirports;
@@ -74,41 +50,32 @@ public class AirportsPageController {
 
     @FXML
     public void initialize() {
+        setupMenuNavigation(); // Javított navigáció hívása
         setupAirportTable();
         loadAirportData();
         setupSearchFunctionality();
-        setupMenuNavigation();
     }
 
-    // ----------------- Menü navigáció -----------------
+    // ----------------- Menü navigáció (JAVÍTOTT) -----------------
 
     private void setupMenuNavigation() {
-        if (menuComboBox == null) return;
+        if (menuComboBox != null) {
+            menuComboBox.setPromptText("Menü választása...");
+            menuComboBox.setValue(null); // Reseteljük, hogy mindig kattintható legyen
 
-        // Ha nem FXML-ből töltenéd, itt is lehetne:
-        // menuComboBox.getItems().setAll("Főoldal", "Repülők", ... );
+            menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal == null) return;
 
-        // aktuális oldal kijelölése
-        menuComboBox.getSelectionModel().select("Repterek");
-
-        menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) return;
-
-            switch (newVal) {
-                case "Főoldal" ->
-                        SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
-                case "Repülők" ->
-                            SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
-                case "Repterek" ->
-                { /* már ezen az oldalon vagyunk */ }
-                case "Repülőutak" ->
-                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", WIDTH, HEIGHT);
-                case "Kapuk(Ez inkább a repterekhez menne)" ->
-                        SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
-                case "Terminál(Ez is inkább reptér)" ->
-                        SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
-            }
-        });
+                switch (newVal) {
+                    case "Főoldal" -> SceneManager.switchTo("fxml/HomePage.fxml", "ATC – Főoldal", 800, 600);
+                    case "Repülők" -> SceneManager.switchTo("fxml/HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
+                    case "Repterek" -> {} // Itt vagyunk
+                    case "Repülőutak" -> SceneManager.switchTo("fxml/HomePage/RoutesPage.fxml", "ATC – Repülőutak", WIDTH, HEIGHT);
+                    case "Kapuk" -> SceneManager.switchTo("fxml/HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
+                    case "Terminál" -> SceneManager.switchTo("fxml/HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
+                }
+            });
+        }
     }
 
     // ----------------- Táblázat beállítása -----------------
@@ -116,8 +83,6 @@ public class AirportsPageController {
     private void setupAirportTable() {
         if (airportsTable == null) return;
 
-        // Itt a property neveknek a Airports entity mezőneveihez kell passzolniuk:
-        // private String icaoCode; private String iataCode; stb.
         icaoCodeColumn.setCellValueFactory(new PropertyValueFactory<>("icaoCode"));
         iataCodeColumn.setCellValueFactory(new PropertyValueFactory<>("iataCode"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -153,7 +118,6 @@ public class AirportsPageController {
             }
 
         } catch (Exception e) {
-            System.err.println("Hiba a repülőtér adatok betöltésekor: " + e.getMessage());
             e.printStackTrace();
             if (statusLabel != null) {
                 statusLabel.setText("Hiba a repülőterek betöltésekor.");
@@ -161,7 +125,7 @@ public class AirportsPageController {
         }
     }
 
-    // ----------------- Keresés -----------------
+    // ----------------- Keresés  -----------------
 
     private void setupSearchFunctionality() {
         if (searchField == null) return;
@@ -174,33 +138,32 @@ public class AirportsPageController {
             filteredAirports.setPredicate(airport -> {
                 if (filter.isEmpty()) return true;
 
+                // Adatok előkészítése (null check fontos!)
                 String icao = airport.getIcaoCode() != null ? airport.getIcaoCode().toLowerCase() : "";
                 String name = airport.getName() != null ? airport.getName().toLowerCase() : "";
                 String city = airport.getCity() != null ? airport.getCity().toLowerCase() : "";
 
+                // --- ÚJ: Ország lekérése ---
+                String country = airport.getCountry() != null ? airport.getCountry().toLowerCase() : "";
+
+                // --- ÚJ: Hozzáadva a country ellenőrzés is ---
                 return icao.contains(filter)
                         || name.contains(filter)
-                        || city.contains(filter);
+                        || city.contains(filter)
+                        || country.contains(filter);
             });
 
             if (statusLabel != null) {
-                statusLabel.setText("Találatok: "
-                        + filteredAirports.size()
-                        + " / Összes: "
-                        + airports.size());
+                statusLabel.setText("Találatok: " + filteredAirports.size() + " / Összes: " + airports.size());
             }
         });
     }
 
-    // ----------------- Gombok -----------------
-
-    @FXML
-    private void onRefresh() {
+    @FXML private void onRefresh() {
         loadAirportData();
     }
 
-    @FXML
-    private void onLogout() {
-        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
+    @FXML private void onLogout() {
+        SceneManager.switchTo("fxml/MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 }

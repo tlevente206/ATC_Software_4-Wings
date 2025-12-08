@@ -13,105 +13,67 @@
 
     <children>
 
-        <!-- Cím -->
         <Label layoutX="20.0" layoutY="20.0"
-               style="-fx-font-size: 24px;"
-               text="Repterek oldal"/>
+               style="-fx-font-size: 24px; -fx-font-weight: bold;"
+               text="Repterek Kezelése"/>
 
-        <!-- Kijelentkezés gomb -->
         <Button fx:id="logoutButton"
                 layoutX="1080.0" layoutY="14.0"
                 onAction="#onLogout"
+                style="-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-weight: bold;"
                 text="Kijelentkezés"/>
 
-        <!-- Menü ComboBox -->
         <ComboBox fx:id="menuComboBox"
                   layoutX="25.0" layoutY="80.0"
-                  prefWidth="220.0">
+                  prefWidth="220.0"
+                  promptText="Menü választása...">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="Főoldal"/>
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
+                    <String fx:value="Kapuk"/>
                     <String fx:value="Repülők"/>
                     <String fx:value="Repterek"/>
                     <String fx:value="Repülőutak"/>
-                    <String fx:value="Terminál(Ez is inkább reptér)"/>
+                    <String fx:value="Terminál"/>
                 </FXCollections>
             </items>
         </ComboBox>
 
-        <!-- Keresőmező -->
-        <Label layoutX="270.0" layoutY="84.0" text="Keresés:"/>
+        <Label layoutX="270.0" layoutY="84.0" text="Keresés:" style="-fx-font-weight: bold;"/>
         <TextField fx:id="searchField"
                    layoutX="330.0" layoutY="80.0"
-                   prefWidth="260.0"
-                   promptText="Név / város / ICAO"/>
+                   prefWidth="280.0"
+                   promptText="Név / város / ország / ICAO"/>
 
-        <!-- Frissítés gomb -->
-        <Button layoutX="610.0" layoutY="80.0"
+        <Button layoutX="630.0" layoutY="80.0"
                 text="Frissítés"
                 onAction="#onRefresh"/>
 
-        <!-- Státusz szöveg -->
         <Label fx:id="statusLabel"
                layoutX="25.0" layoutY="560.0"
                text="Repülőterek betöltése..."/>
 
-        <!-- Repterek táblázat -->
         <TableView fx:id="airportsTable"
                    layoutX="25.0" layoutY="130.0"
                    prefHeight="410.0" prefWidth="1150.0">
 
             <columns>
+                <TableColumn fx:id="icaoCodeColumn" prefWidth="70.0" text="ICAO"/>
+                <TableColumn fx:id="iataCodeColumn" prefWidth="60.0" text="IATA"/>
+                <TableColumn fx:id="nameColumn" prefWidth="200.0" text="Név"/>
+                <TableColumn fx:id="cityColumn" prefWidth="120.0" text="Város"/>
+                <TableColumn fx:id="countryColumn" prefWidth="120.0" text="Ország"/>
 
-                <!-- kódok / alapadatok -->
-                <TableColumn fx:id="icaoCodeColumn"
-                             prefWidth="80.0"
-                             text="ICAO"/>
-                <TableColumn fx:id="iataCodeColumn"
-                             prefWidth="70.0"
-                             text="IATA"/>
-                <TableColumn fx:id="nameColumn"
-                             prefWidth="220.0"
-                             text="Név"/>
-                <TableColumn fx:id="cityColumn"
-                             prefWidth="150.0"
-                             text="Város"/>
-                <TableColumn fx:id="countryColumn"
-                             prefWidth="140.0"
-                             text="Ország"/>
+                <TableColumn fx:id="timezoneColumn" prefWidth="120.0" text="Időzóna"/>
+                <TableColumn fx:id="latitudeColumn" prefWidth="80.0" text="Szélesség"/>
+                <TableColumn fx:id="longitudeColumn" prefWidth="80.0" text="Hosszúság"/>
+                <TableColumn fx:id="elevationColumn" prefWidth="70.0" text="Magasság"/>
 
-                <!-- időzóna + pozíció -->
-                <TableColumn fx:id="timezoneColumn"
-                             prefWidth="150.0"
-                             text="Időzóna"/>
-                <TableColumn fx:id="latitudeColumn"
-                             prefWidth="90.0"
-                             text="Szélesség"/>
-                <TableColumn fx:id="longitudeColumn"
-                             prefWidth="90.0"
-                             text="Hosszúság"/>
-                <TableColumn fx:id="elevationColumn"
-                             prefWidth="90.0"
-                             text="Magasság"/>
-
-                <!-- elérhetőség -->
-                <TableColumn fx:id="addressColumn"
-                             prefWidth="220.0"
-                             text="Cím"/>
-                <TableColumn fx:id="postalCodeColumn"
-                             prefWidth="90.0"
-                             text="Irányítószám"/>
-                <TableColumn fx:id="websiteUrlColumn"
-                             prefWidth="180.0"
-                             text="Weboldal"/>
-                <TableColumn fx:id="phoneMainColumn"
-                             prefWidth="130.0"
-                             text="Telefon"/>
-                <TableColumn fx:id="emailMainColumn"
-                             prefWidth="180.0"
-                             text="Email"/>
-
+                <TableColumn fx:id="addressColumn" prefWidth="180.0" text="Cím"/>
+                <TableColumn fx:id="postalCodeColumn" prefWidth="80.0" text="Irszám"/>
+                <TableColumn fx:id="websiteUrlColumn" prefWidth="150.0" text="Weboldal"/>
+                <TableColumn fx:id="phoneMainColumn" prefWidth="120.0" text="Telefon"/>
+                <TableColumn fx:id="emailMainColumn" prefWidth="160.0" text="Email"/>
             </columns>
         </TableView>
 
