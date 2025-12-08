@@ -154,7 +154,7 @@ public class ControllerHomePageController {
             }
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setTitle("Érkező járatok");
-            dialog.setScene(new Scene(root));
+            dialog.setScene(new Scene(root, 1490, 700));
             dialog.setResizable(true);
             dialog.showAndWait();
 
