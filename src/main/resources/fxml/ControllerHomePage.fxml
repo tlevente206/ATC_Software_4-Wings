@@ -116,9 +116,18 @@
                 </VBox>
 
                 <!-- INDULÓ JÁRATOK SZEGMENS -->
-                <VBox GridPane.rowIndex="0" GridPane.columnIndex="1"
+                <VBox fx:id="departuresCard"
+                      onMouseClicked="#onShowDepartures"
+                      GridPane.rowIndex="0" GridPane.columnIndex="1"
                       spacing="6"
-                      style="-fx-border-color: #cccccc; -fx-border-radius: 6; -fx-background-color: #f5f5f5; -fx-background-radius: 6; -fx-padding: 10;">
+                      style="
+        -fx-border-color: #cccccc;
+        -fx-border-radius: 6;
+        -fx-background-color: #f5f5f5;
+        -fx-background-radius: 6;
+        -fx-padding: 10;
+        -fx-cursor: hand;
+      ">
                     <children>
                         <Label text="Induló járatok (ma)"
                                style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
@@ -131,9 +140,18 @@
                 </VBox>
 
                 <!-- ÉRKEZŐ JÁRATOK SZEGMENS -->
-                <VBox GridPane.rowIndex="0" GridPane.columnIndex="2"
+                <VBox fx:id="arrivalsCard"
+                      GridPane.rowIndex="0" GridPane.columnIndex="2"
                       spacing="6"
-                      style="-fx-border-color: #cccccc; -fx-border-radius: 6; -fx-background-color: #f5f5f5; -fx-background-radius: 6; -fx-padding: 10;">
+                      onMouseClicked="#onShowArrivals"
+                      style="
+        -fx-border-color: #cccccc;
+        -fx-border-radius: 6;
+        -fx-background-color: #f5f5f5;
+        -fx-background-radius: 6;
+        -fx-padding: 10;
+        -fx-cursor: hand;
+      ">
                     <children>
                         <Label text="Érkező járatok (ma)"
                                style="-fx-font-size: 14px; -fx-font-weight: bold;"/>

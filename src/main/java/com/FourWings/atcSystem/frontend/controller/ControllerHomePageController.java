@@ -1,11 +1,17 @@
 package com.FourWings.atcSystem.frontend.controller;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.user.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
@@ -101,6 +107,59 @@ public class ControllerHomePageController {
             statusLabel.setText(msg != null ? msg : "");
         }
         System.out.println("ControllerHomePage: " + msg);
+    }
+
+    @FXML
+    private void onShowDepartures() {
+        try {
+            // FXML betöltése – egyszerű, még nem adunk át semmit
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/DeparturesDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            // ownernek használjuk pl. a greetingLabel-t (bármelyik már beinjektált Node jó)
+            if (greetingLabel != null && greetingLabel.getScene() != null) {
+                dialog.initOwner(greetingLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Induló járatok");
+            dialog.setScene(new Scene(root));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onShowArrivals() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/ArrivalsDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            // ugyanúgy, mint az indulóknál: használjuk ownernek a greetingLabel-t
+            if (greetingLabel != null && greetingLabel.getScene() != null) {
+                dialog.initOwner(greetingLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Érkező járatok");
+            dialog.setScene(new Scene(root));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     // --- GOMBOK ---
