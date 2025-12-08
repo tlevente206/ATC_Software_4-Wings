@@ -13,7 +13,10 @@ public class AtcSystemApplication{
 
 
     public static void main(String[] args) {
+        System.setProperty("prism.order", "sw");
+        System.setProperty("prism.text", "t2k");
         SpringApplication.run(AtcSystemApplication.class, args);
+
     }
 
 }
