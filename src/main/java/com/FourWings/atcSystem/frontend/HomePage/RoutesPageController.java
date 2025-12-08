@@ -38,17 +38,17 @@ public class RoutesPageController {
     @FXML private CheckBox filterTodayCheckBox;
     @FXML private TextField searchField;
 
-    // Térkép
     @FXML private WebView mapWebView;
     private WebEngine webEngine;
     private boolean isMapLoaded = false;
 
-    // Táblázatok (kicsit rövidítve a kódot, a deklarációk maradnak)
     @FXML private TableView<Flight> departuresTable;
-    @FXML private TableColumn<Flight, String> depFlightNumCol, depAirlineCol, depDestinationCol, depTimeCol, depStatusCol, depGateCol;
+    @FXML private TableColumn<Flight, String> depFlightNumCol, depAirlineCol, depDestinationCol,
+            depTimeCol, depStatusCol, depGateCol;
 
     @FXML private TableView<Flight> arrivalsTable;
-    @FXML private TableColumn<Flight, String> arrFlightNumCol, arrAirlineCol, arrOriginCol, arrTimeCol, arrStatusCol, arrGateCol;
+    @FXML private TableColumn<Flight, String> arrFlightNumCol, arrAirlineCol, arrOriginCol,
+            arrTimeCol, arrStatusCol, arrGateCol;
 
     // Adatlisták
     private final ObservableList<Airports> airportList = FXCollections.observableArrayList();
@@ -70,123 +70,132 @@ public class RoutesPageController {
         setupAirportSelector();
         setupFilters();
         loadAirports();
-
-        // Térkép betöltése indításkor
         loadMap();
+
+        // ha sort választasz, automatikusan frissíti a térképet
+        departuresTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                showFlightOnMap(newVal);
+            }
+        });
+        arrivalsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                showFlightOnMap(newVal);
+            }
+        });
     }
 
-    // ----------------- TÉRKÉP KEZELÉS (ÚJ RÉSZ) -----------------
+    // ----------------- TÉRKÉP KEZELÉS -----------------
 
     private void loadMap() {
-        webEngine = mapWebView.getEngine();
+        if (mapWebView == null) return;
 
-        // Betöltjük a web.html-t a resources mappából
+        webEngine = mapWebView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
+
         URL url = getClass().getResource("/web.html");
         if (url != null) {
             webEngine.load(url.toExternalForm());
-
-            // Figyeljük, hogy betöltődött-e
             webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     isMapLoaded = true;
-                    System.out.println("Térkép sikeresen betöltve.");
+                    if (statusLabel != null) {
+                        statusLabel.setText("Térkép sikeresen betöltve.");
+                    }
                 }
             });
         } else {
-            statusLabel.setText("HIBA: Térkép fájl (web.html) nem található!");
+            if (statusLabel != null) {
+                statusLabel.setText("HIBA: Térkép fájl (web.html) nem található!");
+            }
         }
     }
 
     @FXML
     private void onShowMap() {
-        if (!isMapLoaded) {
-            statusLabel.setText("A térkép még nem töltődött be!");
-            return;
-        }
-
-        // 1. Megnézzük, melyik járat van kiválasztva (induló vagy érkező)
         Flight selectedFlight = departuresTable.getSelectionModel().getSelectedItem();
         if (selectedFlight == null) {
             selectedFlight = arrivalsTable.getSelectionModel().getSelectedItem();
         }
 
         if (selectedFlight == null) {
-            statusLabel.setText("Kérlek válassz ki egy járatot a táblázatból!");
+            if (statusLabel != null) {
+                statusLabel.setText("Kérlek válassz ki egy járatot a táblázatból!");
+            }
             Alert alert = new Alert(Alert.AlertType.WARNING, "Válassz ki egy járatot a listából!");
             alert.show();
             return;
         }
 
-        // 2. Koordináták beszerzése az adatbázisból
+        showFlightOnMap(selectedFlight);
+    }
+
+    private void showFlightOnMap(Flight selectedFlight) {
+        if (!isMapLoaded || webEngine == null) {
+            if (statusLabel != null) {
+                statusLabel.setText("A térkép még nem töltődött be!");
+            }
+            return;
+        }
+        if (selectedFlight == null) return;
+
         try {
-            // Feltételezzük, hogy a Flight objektumban van ICAO kód vagy maga az Airport objektum.
-            // Ha a Flight objektum csak stringet tárol (pl. "LHBP"), akkor le kell kérni a Service-től a teljes objektumot.
+            Airports originAirport = selectedFlight.getDepartureAirport() != null
+                    ? selectedFlight.getDepartureAirport()
+                    : findAirportInDb(selectedFlight.getOriginName());
 
-            Airports originAirport = null;
-            Airports destAirport = null;
+            Airports destAirport = selectedFlight.getArrivalAirport() != null
+                    ? selectedFlight.getArrivalAirport()
+                    : findAirportInDb(selectedFlight.getDestinationName());
 
-            // Opció A: Ha a Flight objektumban már benne vannak az Airport objektumok
-            if (selectedFlight.getDepartureAirport() != null) {
-                originAirport = selectedFlight.getDepartureAirport();
-            } else {
-                // Opció B: Ha csak a név/kód van meg, lekérjük az adatbázisból (Implementáld a service-ben!)
-                // Példa: originAirport = airportService.findAirportByNameOrCode(selectedFlight.getOriginName());
-                // Mivel nem látom a Flight osztályodat, itt most feltételezem, hogy a Service tud segíteni.
+            if (originAirport != null && destAirport != null &&
+                    originAirport.getLatitude() != null && originAirport.getLongitude() != null &&
+                    destAirport.getLatitude() != null && destAirport.getLongitude() != null) {
 
-                // Demo céljából: Keressük meg a listából (ami már be van töltve a selectorba, ha szerencsénk van)
-                // De a helyes út az adatbázis lekérdezés lenne ICAO kód alapján.
-                originAirport = findAirportInDb(selectedFlight.getOriginName()); // Segédfüggvény lent
-            }
+                double lat1 = originAirport.getLatitude().doubleValue();
+                double lon1 = originAirport.getLongitude().doubleValue();
+                double lat2 = destAirport.getLatitude().doubleValue();
+                double lon2 = destAirport.getLongitude().doubleValue();
 
-            if (selectedFlight.getArrivalAirport() != null) {
-                destAirport = selectedFlight.getArrivalAirport();
-            } else {
-                destAirport = findAirportInDb(selectedFlight.getDestinationName());
-            }
+                if (statusLabel != null) {
+                    statusLabel.setText("Útvonal kirajzolása: " +
+                            originAirport.getName() + " -> " + destAirport.getName());
+                }
 
-            // 3. Ha megvannak az adatok, rajzoljunk
-            if (originAirport != null && destAirport != null) {
-                BigDecimal lat1 = originAirport.getLatitude();
-                BigDecimal lon1 = originAirport.getLongitude();
-                BigDecimal lat2 = destAirport.getLatitude();
-                BigDecimal lon2 = destAirport.getLongitude();
-
-                statusLabel.setText("Útvonal kirajzolása: " + originAirport.getName() + " -> " + destAirport.getName());
-
-                // JavaScript hívás
-                String script = String.format("connectAirports(%s, %s, %s, %s)", lat1, lon1, lat2, lon2);
+                String script = String.format(
+                        "connectAirports(%f, %f, %f, %f)",
+                        lat1, lon1, lat2, lon2
+                );
                 webEngine.executeScript(script);
-
             } else {
-                statusLabel.setText("Hiba: Nem találhatók koordináták a repterekhez.");
+                if (statusLabel != null) {
+                    statusLabel.setText("Hiba: Nem találhatók koordináták a repterekhez.");
+                }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            statusLabel.setText("Hiba a koordináták lekérdezésekor: " + e.getMessage());
+            if (statusLabel != null) {
+                statusLabel.setText("Hiba a koordináták lekérdezésekor: " + e.getMessage());
+            }
         }
     }
 
-    // Segédfüggvény a reptér kereséshez (Ha a Flight objektumban csak String név van)
+    // reptér keresése, ha Flight-ban csak név/kód van
     private Airports findAirportInDb(String airportNameOrCode) {
         if (airportNameOrCode == null) return null;
-
-        // IGAZI MEGOLDÁS: Service hívás
-        // return airportService.findByCode(airportNameOrCode);
-
-        // Mivel nincs meg a Service kódod erre, itt egy ideiglenes megoldás:
-        // Végigmegyünk az összes reptéren, amit ismerünk
-        for (Airports a : airportService.getAllAirports()) { // Ez lehet lassú, ha sok van, jobb lenne célzott SQL query
-            if (a.getName().equalsIgnoreCase(airportNameOrCode) || a.getIcaoCode().equalsIgnoreCase(airportNameOrCode)) {
+        List<Airports> all = airportService.getAllAirports();
+        for (Airports a : all) {
+            if (airportNameOrCode.equalsIgnoreCase(a.getName())
+                    || airportNameOrCode.equalsIgnoreCase(a.getIcaoCode())
+                    || airportNameOrCode.equalsIgnoreCase(a.getIataCode())) {
                 return a;
             }
         }
         return null;
     }
 
-    // ----------------- Meglévő logikák (Szűrés, Táblázat) -----------------
-    // Ezek változatlanok maradnak a te kódodból, csak a helyhiány miatt nem másolom be újra mindet.
-    // A setupFilters, updateFilters, setupTables metódusaidat hagyd meg úgy, ahogy voltak!
+    // ----------------- TÁBLÁZATOK, SZŰRÉS -----------------
 
     private void setupFilters() {
         filteredDepartures = new FilteredList<>(departureList, p -> true);
@@ -203,34 +212,48 @@ public class RoutesPageController {
     }
 
     private void updateFilters() {
-        boolean onlyToday = filterTodayCheckBox.isSelected();
+        boolean onlyToday = filterTodayCheckBox != null && filterTodayCheckBox.isSelected();
         LocalDate today = LocalDate.now();
-        String searchText = (searchField.getText() != null) ? searchField.getText().toLowerCase().trim() : "";
+        String searchText = (searchField != null && searchField.getText() != null)
+                ? searchField.getText().toLowerCase().trim()
+                : "";
 
         filteredDepartures.setPredicate(flight -> {
-            boolean dateMatch = !onlyToday || (flight.getScheduledDeparture() != null && flight.getScheduledDeparture().toLocalDate().equals(today));
+            boolean dateMatch = !onlyToday ||
+                    (flight.getScheduledDeparture() != null &&
+                            flight.getScheduledDeparture().toLocalDate().equals(today));
             return dateMatch && matchesSearch(flight, searchText, true);
         });
 
         filteredArrivals.setPredicate(flight -> {
-            boolean dateMatch = !onlyToday || (flight.getScheduledArrival() != null && flight.getScheduledArrival().toLocalDate().equals(today));
+            boolean dateMatch = !onlyToday ||
+                    (flight.getScheduledArrival() != null &&
+                            flight.getScheduledArrival().toLocalDate().equals(today));
             return dateMatch && matchesSearch(flight, searchText, false);
         });
 
-        // Státusz frissítése
-        if(statusLabel != null) statusLabel.setText(String.format("Listázva: %d induló, %d érkező", filteredDepartures.size(), filteredArrivals.size()));
+        if (statusLabel != null) {
+            statusLabel.setText(String.format("Listázva: %d induló, %d érkező",
+                    filteredDepartures.size(), filteredArrivals.size()));
+        }
     }
 
     private boolean matchesSearch(Flight flight, String searchText, boolean isDeparture) {
         if (searchText.isEmpty()) return true;
-        String fullData = (flight.getFlightNumber() + flight.getAirlineName() + flight.getStatusText()).toLowerCase();
+
+        StringBuilder sb = new StringBuilder();
+        if (flight.getFlightNumber() != null) sb.append(flight.getFlightNumber());
+        if (flight.getAirlineName() != null) sb.append(flight.getAirlineName());
+        if (flight.getStatusText() != null) sb.append(flight.getStatusText());
+
         String loc = isDeparture ? flight.getDestinationName() : flight.getOriginName();
-        if (loc != null) fullData += loc.toLowerCase();
-        return fullData.contains(searchText);
+        if (loc != null) sb.append(loc);
+
+        return sb.toString().toLowerCase().contains(searchText);
     }
 
     private void setupTables() {
-        // A te eredeti setupTables kódod...
+        // induló járatok
         depFlightNumCol.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
         depAirlineCol.setCellValueFactory(new PropertyValueFactory<>("airlineName"));
         depDestinationCol.setCellValueFactory(new PropertyValueFactory<>("destinationName"));
@@ -238,14 +261,13 @@ public class RoutesPageController {
         depStatusCol.setCellValueFactory(new PropertyValueFactory<>("statusText"));
         depGateCol.setCellValueFactory(new PropertyValueFactory<>("gateCode"));
 
+        // érkező járatok
         arrFlightNumCol.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
         arrAirlineCol.setCellValueFactory(new PropertyValueFactory<>("airlineName"));
         arrOriginCol.setCellValueFactory(new PropertyValueFactory<>("originName"));
         arrTimeCol.setCellValueFactory(new PropertyValueFactory<>("scheduledArrivalText"));
         arrStatusCol.setCellValueFactory(new PropertyValueFactory<>("statusText"));
         arrGateCol.setCellValueFactory(new PropertyValueFactory<>("gateCode"));
-
-        // Színezés (row factory) is maradhat...
     }
 
     private void loadRoutesForAirport(Airports airport) {
@@ -254,46 +276,70 @@ public class RoutesPageController {
             departureList.setAll(flightService.getDeparturesForAirport(airport));
             arrivalList.setAll(flightService.getArrivalsForAirport(airport));
             updateFilters();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupAirportSelector() {
         airportSelector.setConverter(new StringConverter<Airports>() {
-            @Override public String toString(Airports a) { return (a == null) ? "" : a.getIcaoCode() + " - " + a.getName(); }
-            @Override public Airports fromString(String s) { return null; }
+            @Override
+            public String toString(Airports a) {
+                return (a == null) ? "" : a.getIcaoCode() + " - " + a.getName();
+            }
+            @Override
+            public Airports fromString(String s) {
+                return null;
+            }
         });
-        airportSelector.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> loadRoutesForAirport(newVal));
+
+        airportSelector.getSelectionModel().selectedItemProperty().addListener(
+                (obs, old, newVal) -> loadRoutesForAirport(newVal)
+        );
     }
 
     private void loadAirports() {
         try {
             airportList.setAll(airportService.getAllAirports());
             airportSelector.setItems(airportList);
-            if (!airportList.isEmpty()) airportSelector.getSelectionModel().selectFirst();
-        } catch (Exception e) { statusLabel.setText("Hiba repterek betöltésekor."); }
+            if (!airportList.isEmpty()) {
+                airportSelector.getSelectionModel().selectFirst();
+            }
+        } catch (Exception e) {
+            if (statusLabel != null) {
+                statusLabel.setText("Hiba repterek betöltésekor.");
+            }
+        }
     }
 
     private void setupMenuNavigation() {
-        // A te eredeti menü kódod...
         if (menuComboBox == null) return;
         menuComboBox.setValue("Repülőutak");
         menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
             switch (newVal) {
-                case "Főoldal" -> SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
-                case "Repülők" -> SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
-                case "Repterek" -> SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
-                case "Repülőutak" -> SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
+                case "Főoldal" ->
+                        SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
+                case "Repülők" ->
+                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
+                case "Repterek" ->
+                        SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
+                case "Repülőutak" ->
+                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
             }
         });
     }
 
-    @FXML private void onRefresh() {
+    @FXML
+    private void onRefresh() {
         Airports selected = airportSelector.getSelectionModel().getSelectedItem();
-        if (selected != null) loadRoutesForAirport(selected);
+        if (selected != null) {
+            loadRoutesForAirport(selected);
+        }
     }
 
-    @FXML private void onLogout() {
+    @FXML
+    private void onLogout() {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 }
