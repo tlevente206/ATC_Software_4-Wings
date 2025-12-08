@@ -59,23 +59,19 @@ public class AirportsPageController {
     // ----------------- Menü navigáció (JAVÍTOTT) -----------------
 
     private void setupMenuNavigation() {
-        if (menuComboBox != null) {
-            menuComboBox.setPromptText("Menü választása...");
-            menuComboBox.setValue(null); // Reseteljük, hogy mindig kattintható legyen
-
-            menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal == null) return;
-
-                switch (newVal) {
-                    case "Főoldal" -> SceneManager.switchTo("fxml/HomePage.fxml", "ATC – Főoldal", 800, 600);
-                    case "Repülők" -> SceneManager.switchTo("fxml/HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
-                    case "Repterek" -> {} // Itt vagyunk
-                    case "Repülőutak" -> SceneManager.switchTo("fxml/HomePage/RoutesPage.fxml", "ATC – Repülőutak", WIDTH, HEIGHT);
-                    case "Kapuk" -> SceneManager.switchTo("fxml/HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
-                    case "Terminál" -> SceneManager.switchTo("fxml/HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
-                }
-            });
-        }
+        if (menuComboBox == null) return;
+        menuComboBox.setValue("Repterek");
+        menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) return;
+            switch (newVal) {
+                case "Főoldal" -> SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
+                case "Repülők" -> SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
+                case "Repterek" -> SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
+                case "Repülőutak" -> SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Repülőutak", WIDTH, HEIGHT);
+                case "Kapuk(Ez inkább a repterekhez menne)" -> SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
+                case "Terminál(Ez is inkább reptér)" -> SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
+            }
+        });
     }
 
     // ----------------- Táblázat beállítása -----------------
@@ -164,6 +160,6 @@ public class AirportsPageController {
     }
 
     @FXML private void onLogout() {
-        SceneManager.switchTo("fxml/MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
+        SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 }
