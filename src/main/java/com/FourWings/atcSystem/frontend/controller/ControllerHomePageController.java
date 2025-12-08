@@ -4,6 +4,7 @@ import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.user.User;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -198,4 +199,17 @@ public class ControllerHomePageController {
     private void onLogout() {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
+
+    public void onRefreshDashboard(ActionEvent event) {
+        System.out.println("ControllerHomePageController: onRefreshDashboard()");
+    }
+
+    public void onCreateFlight(ActionEvent event) {
+        System.out.println("ControllerHomePageController: onCreateFlight()");
+    }
+
+    public void onOpenWeatherAssistant(ActionEvent event) {
+        System.out.println("ControllerHomePageController: onOpenWeatherAssistant()");
+    }
+
 }
