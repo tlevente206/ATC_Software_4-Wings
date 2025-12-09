@@ -49,6 +49,7 @@ public class SceneManager {
             }
             // LEVIII EDDIG TART A MÁSODIK
 
+
             // LEVIII EZ ITT A HARMADIK
             // --- Save last loaded scene info ---
             lastLoadedFxml = fxml;

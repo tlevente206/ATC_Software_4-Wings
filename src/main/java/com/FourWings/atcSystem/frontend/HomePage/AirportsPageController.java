@@ -180,10 +180,10 @@ public class AirportsPageController {
 
         // Váltás dark / light között
         if (darkMode) {
-            scene.getStylesheets().add(getClass().getResource("/styles/light.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/styles/light-theme.css").toExternalForm());
             statusLabel.setText("Világos mód bekapcsolva");
         } else {
-            scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
             statusLabel.setText("Sötét mód bekapcsolva");
         }
 
