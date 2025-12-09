@@ -36,6 +36,7 @@ public class ArrivalsDialogController {
     @FXML private Label subtitleLabel;
 
     @FXML private TableView<Flight> arrivalsTable;
+    @FXML private Label totalArrivalsLabel;
 
     public ArrivalsDialogController(FlightService flightService) {
         this.flightService = flightService;
@@ -47,29 +48,37 @@ public class ArrivalsDialogController {
 
         String city = airport.getCity() != null ? airport.getCity() : "";
 
-        titleLabel.setText(
-                safe(airport.getIcaoCode()) + " – " +
-                        safe(airport.getName()) +
-                        (city.isBlank() ? "" : " (" + city + ")")
-        );
+        if (titleLabel != null) {
+            titleLabel.setText(
+                    safe(airport.getIcaoCode()) + " – " +
+                            safe(airport.getName()) +
+                            (city.isBlank() ? "" : " (" + city + ")")
+            );
+        }
 
-        subtitleLabel.setText("Mai érkező járatok áttekintése");
+        if (subtitleLabel != null) {
+            subtitleLabel.setText("Mai érkező járatok áttekintése");
+        }
 
-        // ✅ LEKÉRÉS BACKENDRŐL
+        // 🔹 Lekérjük az adott reptérre érkező járatokat
         List<Flight> arrivals = flightService.getArrivalsForAirport(airport);
-
         LocalDate today = LocalDate.now();
 
-        // ✅ SZŰRÉS: CSAK A MAI ÉRKEZŐK
+        // 🔹 Csak a maiak
         List<Flight> todayArrivals = arrivals.stream()
-                .filter(f ->
-                        f.getScheduledArrival() != null &&
-                                f.getScheduledArrival().toLocalDate().equals(today)
-                )
+                .filter(f -> f.getScheduledArrival() != null &&
+                        f.getScheduledArrival().toLocalDate().equals(today))
                 .collect(Collectors.toList());
 
-        // ✅ BETÖLTÉS A TÁBLÁBA
-        arrivalsTable.getItems().setAll(todayArrivals);
+        // 🔹 Tábla feltöltése
+        if (arrivalsTable != null) {
+            arrivalsTable.getItems().setAll(todayArrivals);
+        }
+
+        // 🔹 Darabszám kiírása
+        if (totalArrivalsLabel != null) {
+            totalArrivalsLabel.setText(String.valueOf(todayArrivals.size()));
+        }
     }
 
     @FXML

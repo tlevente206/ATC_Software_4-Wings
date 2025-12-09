@@ -91,7 +91,8 @@
                                 <Label text="Összes érkező járat (ma)"
                                        style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
 
-                                <Label text="—"
+                                <Label fx:id="totalArrivalsLabel"
+                                       text="—"
                                        style="-fx-text-fill: #e5e7eb; -fx-font-size: 22px; -fx-font-weight: bold;"/>
 
                                 <Label text="A tábla backendje később kerül bekötésre."

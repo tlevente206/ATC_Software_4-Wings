@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.frontend.controller;
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
+import com.FourWings.atcSystem.model.flight.FlightService;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.WeatherService;
 import com.FourWings.atcSystem.service.dto.AirportWeatherInfo;
@@ -26,6 +27,7 @@ public class ControllerHomePageController {
     private User loggedUser;
     private Airports assignedAirport;
     private final WeatherService weatherService;
+    private final FlightService flightService;
 
     // --- FXML elemek ---
     @FXML private BorderPane rootPane;
@@ -51,6 +53,7 @@ public class ControllerHomePageController {
     @FXML private Label feelsLikeLabel;
     @FXML private Label updatedAtLabel;
     @FXML private Label metarLabel;
+    @FXML private Label arrivalsCountLabel;
 
     private static final String NORMAL_STYLE =
             "-fx-background-color: rgba(248,250,252,0.06);" +
@@ -100,8 +103,9 @@ public class ControllerHomePageController {
                     "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
                     "-fx-cursor: hand;";
 
-    public ControllerHomePageController(WeatherService weatherService) {
+    public ControllerHomePageController(WeatherService weatherService, FlightService flightService) {
          this.weatherService = weatherService;
+        this.flightService = flightService;
     }
 
     @FXML
@@ -131,6 +135,25 @@ public class ControllerHomePageController {
         setupButton(createFlight, "create");
         setupButton(openWeatherAssistant, " ");
         setupButton(logoutButton, "log");
+    }
+
+    private void refreshTodayArrivalsCount() {
+        if (assignedAirport == null || arrivalsCountLabel == null) return;
+
+        try {
+            var allArrivals = flightService.getArrivalsForAirport(assignedAirport);
+
+            long todayCount = allArrivals.stream()
+                    .filter(f -> f.getScheduledArrival() != null)
+                    .filter(f -> f.getScheduledArrival().toLocalDate().equals(java.time.LocalDate.now()))
+                    .count();
+
+            arrivalsCountLabel.setText(String.valueOf(todayCount));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            arrivalsCountLabel.setText("—");
+        }
     }
 
     private void setupButton(javafx.scene.control.Button btn, String type) {
@@ -223,6 +246,7 @@ public class ControllerHomePageController {
 
         setStatus("Controller dashboard alap verzió betöltve.");
         refreshWeather();
+        refreshTodayArrivalsCount();
     }
 
     private String safe(String s) {
@@ -272,11 +296,14 @@ public class ControllerHomePageController {
             loader.setControllerFactory(SpringContext::getBean);
 
             Parent root = loader.load();
+
+            // 🔹 Itt kérjük le a controllert
             ArrivalsDialogController ctrl = loader.getController();
-            ctrl.init(assignedAirport);
+            if (assignedAirport != null) {
+                ctrl.init(assignedAirport);   // 🔹 átadjuk a controller otthoni repterét
+            }
 
             Stage dialog = new Stage();
-            // ugyanúgy, mint az indulóknál: használjuk ownernek a greetingLabel-t
             if (greetingLabel != null && greetingLabel.getScene() != null) {
                 dialog.initOwner(greetingLabel.getScene().getWindow());
             }
@@ -382,6 +409,7 @@ public class ControllerHomePageController {
     public void onRefreshDashboard(ActionEvent event) {
         System.out.println("ControllerHomePageController: onRefreshDashboard()");
         refreshWeather();
+        refreshTodayArrivalsCount();
     }
 
     public void onCreateFlight(ActionEvent event) {
