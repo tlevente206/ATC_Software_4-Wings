@@ -166,6 +166,7 @@ public class GatesPageController {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 
+
     private void setupMenuNavigation() {
         if (menuComboBox == null) return;
         menuComboBox.setValue("Kapuk(Ez inkább a repterekhez menne)");
