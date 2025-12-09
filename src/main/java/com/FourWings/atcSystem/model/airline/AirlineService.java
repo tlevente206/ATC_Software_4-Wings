@@ -16,7 +16,18 @@ public class AirlineService {
         return repo.findTopByOrderByIdDesc();
     }
 
-    public Optional<Airline> findByIcao(String icao) { return repo.findByIcaoCode(icao); }
+    @Transactional(readOnly = true)
+    public Optional<Airline> findByIcao(String icao) {
+        return repo.findByIcaoCode(icao);
+    }
 
-    public Optional<Airline> findByIata(String iata) { return repo.findByIataCode(iata); }
+    @Transactional(readOnly = true)
+    public Optional<Airline> findByIata(String iata) {
+        return repo.findByIataCode(iata);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Airline> findByIdWithAirport(Long id) {
+        return repo.findById(id);   // itt már EntityGraph tölti a baseAirport-ot is
+    }
 }

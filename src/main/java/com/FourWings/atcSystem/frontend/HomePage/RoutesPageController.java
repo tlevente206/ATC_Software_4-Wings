@@ -1,6 +1,10 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.model.aircraft.Aircraft;
+import com.FourWings.atcSystem.model.aircraft.AircraftRepository;
+import com.FourWings.atcSystem.model.airline.Airline;
+import com.FourWings.atcSystem.model.airline.AirlineService;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
 import com.FourWings.atcSystem.model.flight.Flight;
@@ -10,17 +14,22 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class RoutesPageController {
@@ -30,6 +39,8 @@ public class RoutesPageController {
 
     private final AirportsService airportService;
     private final FlightService flightService;
+    private final AircraftRepository aircraftRepository;
+    private final AirlineService airlineService;
 
     // --- FXML Elemek ---
     @FXML private ComboBox<String> menuComboBox;
@@ -58,9 +69,14 @@ public class RoutesPageController {
     private FilteredList<Flight> filteredDepartures;
     private FilteredList<Flight> filteredArrivals;
 
-    public RoutesPageController(AirportsService airportService, FlightService flightService) {
+    public RoutesPageController(AirportsService airportService,
+                                FlightService flightService,
+                                AircraftRepository aircraftRepository,
+                                AirlineService airlineService) {
         this.airportService = airportService;
         this.flightService = flightService;
+        this.aircraftRepository = aircraftRepository;
+        this.airlineService = airlineService;
     }
 
     @FXML
@@ -82,6 +98,27 @@ public class RoutesPageController {
             if (newVal != null) {
                 showFlightOnMap(newVal);
             }
+        });
+
+        // --- ÚJ: dupla kattintás a járatra -> részletek dialógus ---
+        departuresTable.setRowFactory(tv -> {
+            TableRow<Flight> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    showFlightDetailsDialog(row.getItem());
+                }
+            });
+            return row;
+        });
+
+        arrivalsTable.setRowFactory(tv -> {
+            TableRow<Flight> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    showFlightDetailsDialog(row.getItem());
+                }
+            });
+            return row;
         });
     }
 
@@ -193,6 +230,241 @@ public class RoutesPageController {
             }
         }
         return null;
+    }
+
+    // ----------------- ÚJ: JÁRAT DIALÓGUS – AIRCRAFT + AIRLINE TABOK -----------------
+
+
+    private void showFlightDetailsDialog(Flight flight) {
+        if (flight == null) return;
+
+        Aircraft aircraft = resolveAircraft(flight);
+        Airline airline = resolveAirline(flight);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/HomePage/FlightDetailsDialog.fxml")
+            );
+            Parent root = loader.load();
+
+            FlightDetailsDialogController controller = loader.getController();
+            controller.setData(flight, aircraft, airline);
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Járat részletei – " + safe(flight.getFlightNumber()));
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            dialog.getDialogPane().setContent(root);
+
+// >>> IDE JÖN A MÉRET BEÁLLÍTÁS <<<
+            double DIALOG_WIDTH = 800;
+            double DIALOG_HEIGHT = 700;
+
+            dialog.getDialogPane().setMinWidth(DIALOG_WIDTH);
+            dialog.getDialogPane().setMinHeight(DIALOG_HEIGHT);
+            dialog.getDialogPane().setPrefWidth(DIALOG_WIDTH);
+            dialog.getDialogPane().setPrefHeight(DIALOG_HEIGHT);
+            dialog.getDialogPane().setMaxWidth(DIALOG_WIDTH);
+            dialog.getDialogPane().setMaxHeight(DIALOG_HEIGHT);
+
+// hogy ne legyen átméretezhető:
+            dialog.setResizable(false);
+// <<< IDÁIG >>>
+
+            dialog.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "Hiba a járat részleteinek megjelenítésekor: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    private String safe(Object o) {
+        return o == null ? "" : o.toString();
+    }
+
+    // aircraft adatlap
+    private GridPane buildAircraftPane(Aircraft aircraft) {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(8);
+
+        if (aircraft == null) {
+            grid.add(new Label("Nincs repülőgép adat ehhez a járathoz."), 0, 0);
+            return grid;
+        }
+
+        int row = 0;
+        grid.add(new Label("Lajstromjel:"), 0, row);
+        grid.add(new Label(safe(aircraft.getRegistration())), 1, row++);
+
+        grid.add(new Label("Típus ICAO:"), 0, row);
+        grid.add(new Label(safe(aircraft.getTypeIcao())), 1, row++);
+
+        grid.add(new Label("Max. utaskapacitás:"), 0, row);
+        grid.add(new Label(safe(aircraft.getMaxSeatCapacity())), 1, row++);
+
+        grid.add(new Label("Cargo kapacitás (alap):"), 0, row);
+        grid.add(new Label(safe(aircraft.getCargoCapacityBase())), 1, row++);
+
+        grid.add(new Label("Bázis reptér ID:"), 0, row);
+        grid.add(new Label(safe(aircraft.getBaseAirportId())), 1, row++);
+
+        grid.add(new Label("Gyártási év:"), 0, row);
+        grid.add(new Label(safe(aircraft.getManufactureYear())), 1, row++);
+
+        grid.add(new Label("Státusz:"), 0, row);
+        grid.add(new Label(safe(aircraft.getStatus())), 1, row++);
+
+        grid.add(new Label("Megjegyzés:"), 0, row);
+        grid.add(new Label(safe(aircraft.getNote())), 1, row++);
+
+        return grid;
+    }
+
+    // airline adatlap
+    private GridPane buildAirlinePane(Airline airline) {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(8);
+
+        if (airline == null) {
+            grid.add(new Label("Nincs légitársaság adat ehhez a járathoz."), 0, 0);
+            return grid;
+        }
+
+        int row = 0;
+        grid.add(new Label("Név:"), 0, row);
+        grid.add(new Label(safe(airline.getName())), 1, row++);
+
+        grid.add(new Label("ICAO kód:"), 0, row);
+        grid.add(new Label(safe(airline.getIcaoCode())), 1, row++);
+
+        grid.add(new Label("IATA kód:"), 0, row);
+        grid.add(new Label(safe(airline.getIataCode())), 1, row++);
+
+        grid.add(new Label("Ország:"), 0, row);
+        grid.add(new Label(safe(airline.getCountry())), 1, row++);
+
+        grid.add(new Label("Alapítás éve:"), 0, row);
+        grid.add(new Label(safe(airline.getFoundedYear())), 1, row++);
+
+        grid.add(new Label("Aktív:"), 0, row);
+        grid.add(new Label(airline.getActive() != null && airline.getActive() ? "Igen" : "Nem"), 1, row++);
+
+        grid.add(new Label("Üzleti modell:"), 0, row);
+        grid.add(new Label(safe(airline.getBusinessMode())), 1, row++);
+
+        grid.add(new Label("Bázis reptér:"), 0, row);
+        grid.add(new Label(airline.getBaseAirport() != null
+                ? safe(airline.getBaseAirport().getName())
+                : ""), 1, row++);
+
+        grid.add(new Label("Weboldal:"), 0, row);
+        grid.add(new Label(safe(airline.getWebsiteUrl())), 1, row++);
+
+        grid.add(new Label("Telefon:"), 0, row);
+        grid.add(new Label(safe(airline.getPhoneMain())), 1, row++);
+
+        grid.add(new Label("Email:"), 0, row);
+        grid.add(new Label(safe(airline.getEmailMain())), 1, row++);
+
+        grid.add(new Label("Központ címe:"), 0, row);
+        grid.add(new Label(safe(airline.getHeadquartersAddress())), 1, row++);
+
+        grid.add(new Label("Megjegyzés:"), 0, row);
+        grid.add(new Label(safe(airline.getNote())), 1, row++);
+
+        return grid;
+    }
+
+    // Aircraft feloldása: először próbáljuk getAircraft()-tal, ha nincs, getAircraftId() + repo
+    private Aircraft resolveAircraft(Flight flight) {
+        if (flight == null) return null;
+
+        // 1) ha van getAircraft() metódus
+        try {
+            Method m = flight.getClass().getMethod("getAircraft");
+            Object obj = m.invoke(flight);
+            if (obj instanceof Aircraft a) {
+                return a;
+            }
+        } catch (Exception ignored) {}
+
+        // 2) ha van getAircraftId() és long/Long-ot ad vissza
+        Long id = null;
+        try {
+            Method m = flight.getClass().getMethod("getAircraftId");
+            Object obj = m.invoke(flight);
+            if (obj instanceof Number n) {
+                id = n.longValue();
+            }
+        } catch (Exception ignored) {}
+
+        if (id != null) {
+            return aircraftRepository.findById(id).orElse(null);
+        }
+
+        return null;
+    }
+
+    // Airline feloldása: először getAirline(), aztán ICAO/IATA, végül airlineId
+    private Airline resolveAirline(Flight flight) {
+        if (flight == null) return null;
+
+        // 1) ha van getAirline() metódus és közvetlenül visszaad egy Airline-t
+        try {
+            Method m = flight.getClass().getMethod("getAirline");
+            Object obj = m.invoke(flight);
+            if (obj instanceof Airline a) {
+                return a;
+            }
+        } catch (Exception ignored) {
+            // ha nincs ilyen metódus vagy hiba van, lépünk tovább
+        }
+
+        // 2) Próbáljuk ICAO kóddal
+        String code = tryGetStringProperty(flight, "getAirlineIcao");
+        if (code == null) code = tryGetStringProperty(flight, "getAirlineIcaoCode");
+        if (code != null && !code.isBlank()) {
+            Optional<Airline> found = airlineService.findByIcao(code);
+            if (found.isPresent()) return found.get();
+        }
+
+        // 3) Ha nincs ICAO, próbáljuk IATA-val
+        code = tryGetStringProperty(flight, "getAirlineIata");
+        if (code == null) code = tryGetStringProperty(flight, "getAirlineIataCode");
+        if (code != null && !code.isBlank()) {
+            Optional<Airline> found = airlineService.findByIata(code);
+            if (found.isPresent()) return found.get();
+        }
+
+        // 4) airlineId alapján (ha van ilyen meződ a Flight-ban)
+        Long id = null;
+        try {
+            Method m = flight.getClass().getMethod("getAirlineId");
+            Object v = m.invoke(flight);
+            if (v instanceof Number n) {
+                id = n.longValue();
+            }
+        } catch (Exception ignored) {}
+
+        if (id != null) {
+            return airlineService.findByIdWithAirport(id).orElse(null);
+        }
+
+        // semmilyen info nincs róla
+        return null;
+    }
+
+    private String tryGetStringProperty(Object obj, String methodName) {
+        try {
+            Method m = obj.getClass().getMethod(methodName);
+            Object v = m.invoke(obj);
+            return v != null ? v.toString() : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // ----------------- TÁBLÁZATOK, SZŰRÉS -----------------
