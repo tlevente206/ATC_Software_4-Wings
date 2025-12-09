@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend.controller;
 
 import com.FourWings.atcSystem.model.airport.Airports;
+import com.FourWings.atcSystem.service.WeatherService;
 import com.FourWings.atcSystem.service.dto.AirportWeatherInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -11,54 +12,62 @@ import org.springframework.stereotype.Component;
 @Component
 public class WeatherDetailsDialogController {
 
-    @FXML private Label airportTitleLabel;
+    private final WeatherService weatherService;
+    private Airports airport;
 
-    @FXML private Label weatherEmojiLabel;
-    @FXML private Label temperatureLabel;
+    @FXML private Label titleLabel;
+    @FXML private Label emojiLabel;
+    @FXML private Label tempLabel;
     @FXML private Label conditionLabel;
-    @FXML private Label feelsLikeLabel;
-
     @FXML private Label windLabel;
     @FXML private Label visibilityLabel;
     @FXML private Label pressureLabel;
+    @FXML private Label feelsLikeLabel;
     @FXML private Label updatedAtLabel;
-
     @FXML private TextArea metarLabel;
 
-    // Ezt hívhatod a ControllerHomePageController-ből,
-    // ha majd később valódi adatokat akarsz betölteni.
-    public void init(Airports airport, AirportWeatherInfo info) {
-        if (airport != null && airportTitleLabel != null) {
-            String city = airport.getCity() != null ? airport.getCity() : "";
-            airportTitleLabel.setText(
-                    safe(airport.getIcaoCode()) + " – " +
-                            safe(airport.getName()) +
-                            (city.isBlank() ? "" : " (" + city + ")")
-            );
-        }
-
-        if (info != null) {
-            if (weatherEmojiLabel != null) weatherEmojiLabel.setText(info.emoji());
-            if (temperatureLabel != null) temperatureLabel.setText(String.format("%.0f °C", info.temperatureC()));
-            if (conditionLabel != null) conditionLabel.setText(info.conditionText());
-            if (feelsLikeLabel != null) feelsLikeLabel.setText(info.feelsLikeText());
-            if (windLabel != null) windLabel.setText(info.windText());
-            if (visibilityLabel != null) visibilityLabel.setText(info.visibilityText());
-            if (pressureLabel != null) pressureLabel.setText(info.pressureText());
-            if (updatedAtLabel != null) updatedAtLabel.setText(info.updatedAtText());
-            if (metarLabel != null) metarLabel.setText(info.metarRaw());
-        }
+    public WeatherDetailsDialogController(WeatherService weatherService) {
+        this.weatherService = weatherService;
     }
 
-    private String safe(String s) {
-        return s != null ? s : "";
+    public void init(Airports airport) {
+        this.airport = airport;
+        loadWeather();
+    }
+
+    private void loadWeather() {
+        if (airport == null) return;
+
+        try {
+            AirportWeatherInfo info = weatherService.getCurrentWeatherForAirport(airport);
+            if (info == null) return;
+
+            if (titleLabel != null) {
+                titleLabel.setText("Időjárás – " +
+                        (airport.getIcaoCode() != null ? airport.getIcaoCode() : "") +
+                        " – " +
+                        (airport.getName() != null ? airport.getName() : ""));
+            }
+
+            emojiLabel.setText(info.emoji());
+            tempLabel.setText(String.format("%.1f °C", info.temperatureC()));
+            conditionLabel.setText(info.conditionText());
+            windLabel.setText(info.windText());
+            visibilityLabel.setText(info.visibilityText());
+            pressureLabel.setText(info.pressureText());
+            feelsLikeLabel.setText(info.feelsLikeText());
+            updatedAtLabel.setText(info.updatedAtText());
+            metarLabel.setText(info.metarRaw());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @FXML
     private void onClose() {
-        // Kis NPE-safe megoldás
-        if (airportTitleLabel != null && airportTitleLabel.getScene() != null) {
-            Stage stage = (Stage) airportTitleLabel.getScene().getWindow();
+        if (titleLabel != null && titleLabel.getScene() != null) {
+            Stage stage = (Stage) titleLabel.getScene().getWindow();
             stage.close();
         }
     }

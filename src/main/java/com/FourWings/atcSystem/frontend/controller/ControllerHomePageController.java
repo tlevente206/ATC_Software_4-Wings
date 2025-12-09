@@ -4,6 +4,8 @@ import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.user.User;
+import com.FourWings.atcSystem.service.WeatherService;
+import com.FourWings.atcSystem.service.dto.AirportWeatherInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +25,7 @@ public class ControllerHomePageController {
     // --- állapot ---
     private User loggedUser;
     private Airports assignedAirport;
+    private final WeatherService weatherService;
 
     // --- FXML elemek ---
     @FXML private BorderPane rootPane;
@@ -39,6 +42,15 @@ public class ControllerHomePageController {
     @FXML private javafx.scene.control.Button openWeatherAssistant;
     @FXML private javafx.scene.control.Button logoutButton;
 
+    @FXML private Label weatherEmojiLabel;
+    @FXML private Label temperatureLabel;
+    @FXML private Label conditionLabel;
+    @FXML private Label windLabel;
+    @FXML private Label visibilityLabel;
+    @FXML private Label pressureLabel;
+    @FXML private Label feelsLikeLabel;
+    @FXML private Label updatedAtLabel;
+    @FXML private Label metarLabel;
 
     private static final String NORMAL_STYLE =
             "-fx-background-color: rgba(248,250,252,0.06);" +
@@ -88,8 +100,8 @@ public class ControllerHomePageController {
                     "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
                     "-fx-cursor: hand;";
 
-    public ControllerHomePageController() {
-        // üres konstruktor – Spring tölti be
+    public ControllerHomePageController(WeatherService weatherService) {
+         this.weatherService = weatherService;
     }
 
     @FXML
@@ -182,8 +194,7 @@ public class ControllerHomePageController {
                 airportTitleLabel.setText("Otthoni repülőtér: " + icao + " – " + airportName);
             }
             if (subtitleLabel != null) {
-                subtitleLabel.setText("Áttekintés: időjárás, kapuk és mai járatok a "
-                        + airportName + " repülőtéren.");
+                subtitleLabel.setText("Áttekintés: időjárás, kapuk és mai járatok");
             }
             if (airportBasicLabel != null) {
                 airportBasicLabel.setText(
@@ -200,6 +211,7 @@ public class ControllerHomePageController {
         }
 
         setStatus("Controller dashboard alap verzió betöltve.");
+        refreshWeather();
     }
 
     private String safe(String s) {
@@ -266,6 +278,52 @@ public class ControllerHomePageController {
         }
     }
 
+    private void refreshWeather() {
+        // Ha nincs assignedAirport, nincs mit lekérdezni
+        if (assignedAirport == null) {
+            setStatus("Nincs hozzárendelt repülőtér, nem tudok időjárást lekérni.");
+            return;
+        }
+
+        // Ha valamiért a label-ek nem injektálódtak, inkább lépjünk ki csendben
+        if (weatherEmojiLabel == null ||
+                temperatureLabel == null ||
+                conditionLabel == null ||
+                windLabel == null ||
+                visibilityLabel == null ||
+                pressureLabel == null ||
+                feelsLikeLabel == null ||
+                updatedAtLabel == null ||
+                metarLabel == null) {
+            System.out.println("ControllerHomePage: weather label-ek nem injektálódtak, kihagyom a frissítést.");
+            return;
+        }
+
+        try {
+            AirportWeatherInfo info = weatherService.getCurrentWeatherForAirport(assignedAirport);
+            if (info == null) {
+                setStatus("Nem sikerült időjárási adatokat lekérni.");
+                return;
+            }
+
+            weatherEmojiLabel.setText(info.emoji());
+            temperatureLabel.setText(String.format("%.0f °C", info.temperatureC()));
+            conditionLabel.setText(info.conditionText());
+            windLabel.setText(info.windText());
+            visibilityLabel.setText(info.visibilityText());
+            pressureLabel.setText(info.pressureText());
+            feelsLikeLabel.setText(info.feelsLikeText());
+            updatedAtLabel.setText(info.updatedAtText());
+            metarLabel.setText(info.metarRaw());
+
+            setStatus("Időjárás frissítve.");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            setStatus("Hiba az időjárás lekérésekor: " + ex.getMessage());
+        }
+    }
+
     @FXML
     private void onOpenWeatherDetails() {
         try {
@@ -275,6 +333,11 @@ public class ControllerHomePageController {
             loader.setControllerFactory(SpringContext::getBean);
 
             Parent root = loader.load();
+
+            WeatherDetailsDialogController ctrl = loader.getController();
+            if (assignedAirport != null) {
+                ctrl.init(assignedAirport);
+            }
 
             Stage dialog = new Stage();
             if (statusLabel != null && statusLabel.getScene() != null) {
@@ -305,6 +368,7 @@ public class ControllerHomePageController {
 
     public void onRefreshDashboard(ActionEvent event) {
         System.out.println("ControllerHomePageController: onRefreshDashboard()");
+        refreshWeather();
     }
 
     public void onCreateFlight(ActionEvent event) {

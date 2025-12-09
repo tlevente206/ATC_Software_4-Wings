@@ -4,8 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <?import javafx.scene.Cursor?>
+
 <BorderPane xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.controller.WeatherDetailsDialogController"
@@ -19,14 +19,15 @@
                 <Insets top="12" left="18" right="18" bottom="10"/>
             </padding>
             <children>
-                <Label text="Részletes időjárás"
+                <Label fx:id="titleLabel" text="Részletes időjárás"
                        style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;">
                     <font>
                         <Font size="20"/>
                     </font>
                 </Label>
 
-                <Label fx:id="airportTitleLabel"
+                <!-- EDDIG: fx:id="airportTitleLabel" -->
+                <Label fx:id="airportLabel"
                        text="LHBP – Budapest Liszt Ferenc (Budapest)"
                        style="-fx-font-size: 13px; -fx-text-fill: #e5e7eb;"/>
 
@@ -66,12 +67,14 @@
 
                                 <HBox spacing="12" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label fx:id="weatherEmojiLabel" text="⏳"
+                                        <!-- EDDIG: fx:id="weatherEmojiLabel" -->
+                                        <Label fx:id="emojiLabel" text="⏳"
                                                style="-fx-font-size: 40px; -fx-text-fill: #facc15;"/>
 
                                         <VBox spacing="4">
                                             <children>
-                                                <Label fx:id="temperatureLabel"
+                                                <!-- EDDIG: fx:id="temperatureLabel" -->
+                                                <Label fx:id="tempLabel"
                                                        text="-- °C"
                                                        style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #f9fafb;"/>
 
