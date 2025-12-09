@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.config.ThemeManager;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
 import com.FourWings.atcSystem.model.flight.Flight;
@@ -44,6 +45,12 @@ public class GatesPageController {
         this.airportService = airportService;
         this.gateService = gateService;
         this.flightService = flightService;
+    }
+
+    @FXML
+    private void onToggleTheme() {
+        ThemeManager.toggleTheme();
+        SceneManager.reloadCurrentScene();  // új funkció
     }
 
     @FXML

@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.config.ThemeManager;
 import com.FourWings.atcSystem.model.aircraft.Aircraft;
 import com.FourWings.atcSystem.model.aircraft.AircraftRepository;
 import com.FourWings.atcSystem.model.airline.Airline;
@@ -32,6 +33,13 @@ import java.util.Optional;
 
 @Component
 public class RoutesPageController {
+
+    @FXML
+    private void onToggleTheme() {
+        ThemeManager.toggleTheme();
+        SceneManager.reloadCurrentScene();
+    }
+
 
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 600;
