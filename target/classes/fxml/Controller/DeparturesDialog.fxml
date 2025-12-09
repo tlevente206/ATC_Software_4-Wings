@@ -1,119 +1,208 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.controller.DeparturesDialogController">
+            fx:controller="com.FourWings.atcSystem.frontend.controller.DeparturesDialogController"
+            prefWidth="900" prefHeight="550"
+            style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #020617);">
 
+    <!-- FELSŐ SÁV: cím + bezárás -->
     <top>
-        <VBox spacing="8" BorderPane.alignment="CENTER_LEFT">
+        <HBox spacing="10" BorderPane.alignment="CENTER">
             <padding>
-                <Insets top="10" left="16" right="16" bottom="8"/>
+                <Insets top="14" left="18" right="18" bottom="10"/>
             </padding>
             <children>
-                <Label fx:id="titleLabel" text="Induló járatok">
-                    <font>
-                        <Font size="20"/>
-                    </font>
-                </Label>
-                <Label fx:id="subtitleLabel"
-                       text="A legközelebbi indulások a kijelölt repülőtérről."/>
-                <HBox spacing="8">
+
+                <!-- Bal oldali címek -->
+                <VBox spacing="4">
                     <children>
-                        <Label text="Keresés:"/>
-                        <TextField fx:id="searchField"
-                                   promptText="Járatszám, légitársaság, repülőtér..."/>
-                        <Label text="Státusz:"/>
-                        <ComboBox fx:id="statusFilterBox" prefWidth="140"/>
+                        <Label text="Induló járatok"
+                               style="-fx-text-fill: #e5e7eb; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+                        <Label fx:id="titleLabel"
+                               text="LHBP – Budapest Liszt Ferenc (Budapest)"
+                               style="-fx-text-fill: #9ca3af; -fx-font-size: 13px;"/>
+
+                        <Label fx:id="subtitleLabel"
+                               text="Mai induló járatok áttekintése."
+                               style="-fx-text-fill: #6b7280; -fx-font-size: 12px;"/>
                     </children>
-                </HBox>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Bezárás gomb -->
+                <Button text="Bezárás"
+                        onAction="#onClose"
+                        style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: #4b5563;
+                            -fx-border-radius: 999;
+                            -fx-text-fill: #e5e7eb;
+                            -fx-font-size: 12px;
+                            -fx-padding: 6 14 6 14;
+                        ">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <tooltip>
+                        <Tooltip text="Ablak bezárása"/>
+                    </tooltip>
+                </Button>
+
             </children>
-        </VBox>
+        </HBox>
     </top>
 
+    <!-- KÖZÉP: fő kártya + tábla -->
     <center>
-        <VBox spacing="8" BorderPane.alignment="CENTER">
+        <VBox spacing="14" BorderPane.alignment="CENTER">
             <padding>
-                <Insets top="4" left="16" right="16" bottom="4"/>
+                <Insets top="0" left="18" right="18" bottom="16"/>
             </padding>
             <children>
-                <TableView fx:id="flightsTable">
-                    <columns>
-                        <TableColumn fx:id="flightNumberColumn" text="Járatszám" prefWidth="120"/>
-                        <TableColumn fx:id="airlineColumn" text="Légitársaság" prefWidth="180"/>
-                        <TableColumn fx:id="destinationColumn" text="Cél repülőtér" prefWidth="250"/>
-                        <TableColumn fx:id="schedDepColumn" text="Menetrend szerinti indulás" prefWidth="180"/>
-                        <TableColumn fx:id="estDepColumn" text="Várható indulás" prefWidth="160"/>
-                        <TableColumn fx:id="gateColumn" text="Kapú" prefWidth="80"/>
-                        <TableColumn fx:id="statusColumn" text="Státusz" prefWidth="150"/>
-                    </columns>
-                </TableView>
 
-                <Separator/>
-
-                <GridPane hgap="10" vgap="4">
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="80" />
-                        <ColumnConstraints minWidth="180" />
-                        <ColumnConstraints minWidth="100" />
-                        <ColumnConstraints minWidth="150" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="24"/>
-                        <RowConstraints minHeight="24"/>
-                        <RowConstraints minHeight="24"/>
-                        <RowConstraints minHeight="24"/>
-                    </rowConstraints>
-
+                <!-- Felső info kártya -->
+                <HBox spacing="12">
                     <children>
-                        <Label text="Kijelölt járat:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <Label fx:id="selectedFlightLabel" text="–"
-                               GridPane.rowIndex="0" GridPane.columnIndex="1"
-                               GridPane.columnSpan="3"/>
+                        <VBox spacing="6"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-color: #1f2937;
+                                  -fx-border-radius: 14;
+                                  -fx-padding: 12;
+                              ">
+                            <children>
+                                <Label text="Összes induló járat (ma)"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
 
-                        <Label text="Lajstromjel:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <Label fx:id="aircraftRegLabel" text="–"
-                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <Label text="—"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 22px; -fx-font-weight: bold;"/>
 
-                        <Label text="Típus (ICAO):" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                        <Label fx:id="aircraftTypeLabel" text="–"
-                               GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                                <Label text="A tábla backendje később kerül bekötésre."
+                                       wrapText="true"
+                                       style="-fx-text-fill: #6b7280; -fx-font-size: 11px;"/>
+                            </children>
+                        </VBox>
 
-                        <Label text="Férőhely:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <Label fx:id="aircraftSeatsLabel" text="–"
-                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                        <Label text="Gyártási év:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                        <Label fx:id="aircraftYearLabel" text="–"
-                               GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-
-                        <Label text="Gép státusza:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <Label fx:id="aircraftStatusLabel" text="–"
-                               GridPane.rowIndex="3" GridPane.columnIndex="1"
-                               GridPane.columnSpan="3"/>
+                        <Region HBox.hgrow="ALWAYS"/>
                     </children>
-                </GridPane>
+                </HBox>
+
+                <!-- FŐ TÁBLA KÁRTYA -->
+                <VBox spacing="10"
+                      VBox.vgrow="ALWAYS"
+                      style="
+                          -fx-background-color: #020617;
+                          -fx-background-radius: 14;
+                          -fx-border-color: #1f2937;
+                          -fx-border-radius: 14;
+                          -fx-padding: 12;
+                      ">
+                    <children>
+
+                        <!-- Tábla fej -->
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <children>
+                                <Label text="Induló járatok listája"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                                <Label text="• UI kész, adatok később"
+                                       style="-fx-text-fill: #6b7280; -fx-font-size: 11px;"/>
+                            </children>
+                        </HBox>
+
+                        <!-- Tábla -->
+                        <TableView fx:id="departuresTable"
+                                   VBox.vgrow="ALWAYS"
+                                   style="-fx-background-color: transparent;">
+
+                            <!-- Indulási repülőtér -->
+                            <columns>
+                                <TableColumn fx:id="arrivalAirportCol"
+                                             text="Érkezési repülőtér"
+                                             prefWidth="150.0" />
+
+                                <!-- Légitársaság -->
+                                <TableColumn fx:id="airlineCol"
+                                             text="Légitársaság"
+                                             prefWidth="160.0" />
+
+                                <!-- Járatszám -->
+                                <TableColumn fx:id="flightNumberCol"
+                                             text="Járatszám"
+                                             prefWidth="120.0" />
+
+                                <!-- Tervezett érkezés -->
+                                <TableColumn fx:id="scheduledDepartureCol"
+                                             text="Tervezett indulás"
+                                             prefWidth="150.0" />
+
+                                <TableColumn fx:id="scheduledArrivalCol"
+                                             text="Tervezett érkezés"
+                                             prefWidth="150.0" />
+
+                                <!-- Státusz -->
+                                <TableColumn fx:id="statusCol"
+                                             text="Státusz"
+                                             prefWidth="120.0" />
+
+                                <TableColumn fx:id="estimatedDepartureCol"
+                                             text="Becsült indulás"
+                                             prefWidth="150.0" />
+
+                                <!-- Becsült érkezés -->
+                                <TableColumn fx:id="estimatedArrivalCol"
+                                             text="Becsült érkezés"
+                                             prefWidth="150.0" />
+
+                                <!-- Tényleges érkezés -->
+
+                                <TableColumn fx:id="actualDepartureCol"
+                                             text="Tényleges indulás"
+                                             prefWidth="150.0" />
+
+                                <TableColumn fx:id="actualArrivalCol"
+                                             text="Tényleges érkezés"
+                                             prefWidth="150.0" />
+
+                                <!-- Légijármű -->
+                                <TableColumn fx:id="aircraftCol"
+                                             text="Légijármű"
+                                             prefWidth="150.0" />
+
+                                <!-- Kapu -->
+                                <TableColumn fx:id="gateCol"
+                                             text="Kapu"
+                                             prefWidth="130.0" />
+
+                                <!-- Utolsó frissítés -->
+                                <TableColumn fx:id="updatedAtCol"
+                                             text="Utolsó frissítés"
+                                             prefWidth="150.0" />
+                            </columns>
+                        </TableView>
+
+                    </children>
+                </VBox>
+
             </children>
         </VBox>
     </center>
-
-    <bottom>
-        <HBox spacing="10" BorderPane.alignment="CENTER_RIGHT">
-            <padding>
-                <Insets top="8" left="16" right="16" bottom="10"/>
-            </padding>
-            <children>
-                <Label fx:id="statusLabel" text="Járatok betöltve."/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Új járat" onAction="#onNewFlight"/>
-                <Button text="Kijelölt szerkesztése" onAction="#onEditFlight"/>
-                <Button text="Bezárás" onAction="#onClose"/>
-            </children>
-        </HBox>
-    </bottom>
 
 </BorderPane>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.Cursor?>
+
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.WeatherDetailsDialogController"
+            style="-fx-background-color: linear-gradient(to bottom, #0f172a, #020617);">
+
+    <!-- FELSŐ SÁV: cím + reptér -->
+    <top>
+        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(to right, #1d4ed8, #2563eb);">
+            <padding>
+                <Insets top="12" left="18" right="18" bottom="10"/>
+            </padding>
+            <children>
+                <Label fx:id="titleLabel" text="Részletes időjárás"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
+
+                <!-- EDDIG: fx:id="airportTitleLabel" -->
+                <Label fx:id="airportLabel"
+                       text="LHBP – Budapest Liszt Ferenc (Budapest)"
+                       style="-fx-font-size: 13px; -fx-text-fill: #e5e7eb;"/>
+
+                <Label text="Aktuális állapot, részletes adatokkal a kiválasztott repülőtérhez."
+                       style="-fx-text-fill: #dbeafe; -fx-font-size: 11px;"/>
+            </children>
+        </VBox>
+    </top>
+
+    <!-- KÖZÉP: kék kártyák, dashboard stílusban -->
+    <center>
+        <VBox spacing="14" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="14" left="18" right="18" bottom="14"/>
+            </padding>
+            <children>
+
+                <!-- FELSŐ SOR: fő időjárás + szél/látótáv kártya -->
+                <HBox spacing="14">
+                    <children>
+
+                        <!-- FŐ IDŐJÁRÁS KÁRTYA -->
+                        <VBox spacing="10"
+                              HBox.hgrow="ALWAYS"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
+                            <children>
+                                <Label text="Összefoglaló"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
+
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <children>
+                                        <!-- EDDIG: fx:id="weatherEmojiLabel" -->
+                                        <Label fx:id="emojiLabel" text="⏳"
+                                               style="-fx-font-size: 40px; -fx-text-fill: #facc15;"/>
+
+                                        <VBox spacing="4">
+                                            <children>
+                                                <!-- EDDIG: fx:id="temperatureLabel" -->
+                                                <Label fx:id="tempLabel"
+                                                       text="-- °C"
+                                                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #f9fafb;"/>
+
+                                                <Label fx:id="conditionLabel"
+                                                       text="Nincs adat"
+                                                       style="-fx-font-size: 13px; -fx-text-fill: #cbd5f5;"/>
+
+                                                <Label fx:id="feelsLikeLabel"
+                                                       text="Hőérzet: -- °C"
+                                                       style="-fx-font-size: 12px; -fx-text-fill: #9ca3af;"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <Label fx:id="updatedAtLabel"
+                                       text="Utolsó frissítés: --"
+                                       style="-fx-font-size: 11px; -fx-text-fill: #6b7280; -fx-padding: 6 0 0 0;"/>
+                            </children>
+                        </VBox>
+
+                        <!-- SZÉL / LÁTHATÓSÁG KÁRTYA -->
+                        <VBox spacing="10"
+                              prefWidth="270"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
+                            <children>
+                                <Label text="Szél és látótávolság"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
+
+                                <GridPane hgap="10" vgap="6">
+                                    <children>
+                                        <Label text="Szél:"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <Label fx:id="windLabel" text="--"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                               style="-fx-text-fill: #e5e7eb;"/>
+
+                                        <Label text="Láthatóság:"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <Label fx:id="visibilityLabel" text="--"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                               style="-fx-text-fill: #e5e7eb;"/>
+
+                                        <Label text="Légnyomás:"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <Label fx:id="pressureLabel" text="--"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                               style="-fx-text-fill: #e5e7eb;"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+                <!-- ALSÓ KÁRTYA: METAR / részletes jelentés -->
+                <VBox spacing="8"
+                      style="
+                          -fx-background-color: #020617;
+                          -fx-background-radius: 14;
+                          -fx-border-radius: 14;
+                          -fx-border-color: #1d4ed8;
+                          -fx-border-width: 1;
+                          -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                          -fx-padding: 14;
+                      ">
+                    <children>
+                        <Label text="METAR / részletes jelentés"
+                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
+
+                        <Label text="Nyers METAR:"
+                               style="-fx-font-size: 12px; -fx-text-fill: #9ca3af;"/>
+
+                        <TextArea fx:id="metarLabel"
+                                  editable="false"
+                                  wrapText="true"
+                                  prefRowCount="4"
+                                  text="METAR adatok itt fognak megjelenni."
+                                  style="
+                                      -fx-font-family: 'JetBrains Mono', 'Consolas', monospace;
+                                      -fx-control-inner-background: #020617;
+                                      -fx-text-fill: #e5e7eb;
+                                      -fx-highlight-fill: #1d4ed8;
+                                      -fx-highlight-text-fill: white;
+                                      -fx-border-color: #1f2937;
+                                      -fx-border-radius: 8;
+                                      -fx-background-radius: 8;
+                                  "/>
+
+                        <Label text="További részletes paraméterek (pl. harmatpont, felhőalap, stb.) később ide kerülhetnek."
+                               style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+                    </children>
+                </VBox>
+
+            </children>
+        </VBox>
+    </center>
+
+    <!-- ALSÓ SOR: Bezárás gomb -->
+    <bottom>
+        <BorderPane BorderPane.alignment="CENTER_RIGHT"
+                    style="-fx-background-color: transparent;">
+            <padding>
+                <Insets top="6" left="12" right="18" bottom="10"/>
+            </padding>
+            <right>
+                <Button text="Bezárás"
+                        onAction="#onClose"
+                        style="
+                            -fx-background-color: linear-gradient(to right, #1d4ed8, #3b82f6);
+                            -fx-text-fill: white;
+                            -fx-font-weight: bold;
+                            -fx-background-radius: 999;
+                            -fx-padding: 6 20 6 20;
+                        ">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+            </right>
+        </BorderPane>
+    </bottom>
+
+</BorderPane>

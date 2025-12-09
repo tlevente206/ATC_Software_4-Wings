@@ -3,55 +3,45 @@ package com.FourWings.atcSystem.frontend.controller;
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
-import com.FourWings.atcSystem.model.flight.Flight;
-import com.FourWings.atcSystem.model.flight.FlightService;
-import com.FourWings.atcSystem.model.flight.FlightStatus;
-import com.FourWings.atcSystem.model.gate.Gate;
-import com.FourWings.atcSystem.model.gate.GateService;
 import com.FourWings.atcSystem.model.user.User;
-import com.FourWings.atcSystem.model.user.UserRole;
 import com.FourWings.atcSystem.service.WeatherService;
 import com.FourWings.atcSystem.service.dto.AirportWeatherInfo;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.time.LocalTime;
 
 @Component
 public class ControllerHomePageController {
 
-    private final WeatherService weatherService;
-    private final FlightService flightService;
-    private final GateService gateService;
-
+    // --- állapot ---
     private User loggedUser;
     private Airports assignedAirport;
+    private final WeatherService weatherService;
 
     // --- FXML elemek ---
+    @FXML private BorderPane rootPane;
     @FXML private Label greetingLabel;
+    @FXML private Label airportLabel;
+    @FXML private Label statusLabel;
     @FXML private Label airportTitleLabel;
     @FXML private Label subtitleLabel;
-
     @FXML private Label airportBasicLabel;
+    @FXML private javafx.scene.control.Button refreshButton;
+    @FXML private javafx.scene.control.Button showDepartures;
+    @FXML private javafx.scene.control.Button showArrivals;
+    @FXML private javafx.scene.control.Button createFlight;
+    @FXML private javafx.scene.control.Button openWeatherAssistant;
+    @FXML private javafx.scene.control.Button logoutButton;
 
-    // Időjárás
     @FXML private Label weatherEmojiLabel;
     @FXML private Label temperatureLabel;
     @FXML private Label conditionLabel;
@@ -62,102 +52,240 @@ public class ControllerHomePageController {
     @FXML private Label updatedAtLabel;
     @FXML private Label metarLabel;
 
-    // Stat kártyák
-    @FXML private Label flightsTodayLabel;
-    @FXML private Label delaysTodayLabel;
-    @FXML private Label freeGatesLabel;
+    private static final String NORMAL_STYLE =
+            "-fx-background-color: rgba(248,250,252,0.06);" +
+                    "-fx-text-fill: #e5e7eb;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 14 6 14;" +
+                    "-fx-font-size: 13px;" +
+                    "-fx-cursor: hand;";
 
-    // Diagramok
-    @FXML private PieChart statusPieChart;
-    @FXML private BarChart<String, Number> trafficBarChart;
+    private static final String HOVER_STYLE =
+            "-fx-background-color: rgba(248,250,252,0.18);" +
+                    "-fx-text-fill: #ffffff;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 14 6 14;" +
+                    "-fx-font-size: 14px;" +
+                    "-fx-cursor: hand;";
 
-    // Alsó státusz
-    @FXML private Label statusLabel;
+    private static final String CREATE_NORMAL_STYLE =
+            "-fx-background-color: #2563eb;" +
+            "-fx-text-fill: white;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 6 16 6 16;" +
+            "-fx-font-weight: bold;" + "-fx-font-size: 13px;" +
+            "-fx-cursor: hand;";
 
-    public ControllerHomePageController(WeatherService weatherService,
-                                        FlightService flightService,
-                                        GateService gateService) {
-        this.weatherService = weatherService;
-        this.flightService = flightService;
-        this.gateService = gateService;
+    private static final String CREATE_HOVER_STYLE =
+            "-fx-background-color: #2563eb;" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
+                    "-fx-cursor: hand;";
+
+    private static final String LOGOUT_NORMAL_STYLE =
+            "-fx-background-color: #dc2626;" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" + "-fx-font-size: 13px;" +
+                    "-fx-cursor: hand;";
+
+    private static final String LOGOUT_HOVER_STYLE =
+            "-fx-background-color: #dc2626;" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
+                    "-fx-cursor: hand;";
+
+    public ControllerHomePageController(WeatherService weatherService) {
+         this.weatherService = weatherService;
     }
-
-    // ---------------- ÉLETCIKLUS ----------------
 
     @FXML
     public void initialize() {
+
+        // Itt még NINCS user/airport, csak az FXML elemek léteznek
         if (statusLabel != null) {
             statusLabel.setText("Várakozás a felhasználói adatokra…");
         }
-        setupDashboardIfReady();
+
+        setupButton(refreshButton, " ");
+        setupButton(showDepartures, " ");
+        setupButton(showArrivals, " ");
+        setupButton(createFlight, "create");
+        setupButton(openWeatherAssistant, " ");
+        setupButton(logoutButton, "log");
+
+        System.out.println("ControllerHomePage: initialize() lefutott");
     }
 
-    /** Login után hívja a router. */
+    private void setupButton(javafx.scene.control.Button btn, String type) {
+
+        if (type.equals(" ")) {
+            if (btn == null) return;
+            btn.setStyle(NORMAL_STYLE);
+            btn.setOnMouseEntered(e -> btn.setStyle(HOVER_STYLE));
+            btn.setOnMouseExited(e -> btn.setStyle(NORMAL_STYLE));
+        }else if (type.equals("create")) {
+            if (btn == null) return;
+            btn.setStyle(CREATE_NORMAL_STYLE);
+            btn.setOnMouseEntered(e -> btn.setStyle(CREATE_HOVER_STYLE));
+            btn.setOnMouseExited(e -> btn.setStyle(CREATE_NORMAL_STYLE));
+        }else if (type.equals("log")) {
+            if (btn == null) return;
+            btn.setStyle(LOGOUT_NORMAL_STYLE);
+            btn.setOnMouseEntered(e -> btn.setStyle(LOGOUT_HOVER_STYLE));
+            btn.setOnMouseExited(e -> btn.setStyle(LOGOUT_NORMAL_STYLE));
+        }
+
+    }
+
+    private String getTimeBasedGreeting() {
+        int hour = LocalTime.now().getHour(); // 0–23
+
+        if (hour >= 5 && hour < 10) {
+            return "Jó reggelt";
+        } else if (hour >= 10 && hour < 18) {
+            return "Jó napot";
+        } else if (hour >= 18 && hour < 22) {
+            return "Jó estét";
+        } else {
+            return "Jó éjszakát";
+        }
+    }
+
+    /**
+     * Ezt hívja a MainPageController login után.
+     */
     public void initWithUser(User user) {
+        System.out.println("ControllerHomePage: initWithUser() hívva, user = " +
+                (user != null ? user.getUsername() : "null"));
+
         this.loggedUser = user;
 
         if (user == null) {
-            showError("Nincs betöltött felhasználó.",
-                    "A vezérlő oldal megnyitásához be kell jelentkezni.");
-            return;
-        }
-
-        if (user.getRole() != UserRole.CONTROLLER) {
-            showError("Jogosultsági hiba",
-                    "Ez az oldal csak 'CONTROLLER' felhasználók számára érhető el.");
+            setStatus("Nincs bejelentkezett felhasználó.");
             return;
         }
 
         this.assignedAirport = user.getAssignedAirport();
+
         if (assignedAirport == null) {
-            showError("Nincs hozzárendelt repülőtér",
-                    "A controller felhasználóhoz nincs repülőtér rendelve.");
-            return;
+            setStatus("Nincs hozzárendelt repülőtér a controller felhasználóhoz.");
         }
 
-        setupDashboardIfReady();
-    }
-
-    private void setupDashboardIfReady() {
-        if (loggedUser == null || assignedAirport == null) return;
-
-        // ha bármi fontos label hiányzik, inkább nem csinálunk semmit – de nem dől össze az app
-        if (greetingLabel == null ||
-                airportTitleLabel == null ||
-                subtitleLabel == null ||
-                airportBasicLabel == null) {
-            return;
+        // Köszönés
+        if (greetingLabel != null) {
+            String name = user.getName() != null ? user.getName() : user.getUsername();
+            String greeting = getTimeBasedGreeting();   // napszakhoz illő köszönés
+            greetingLabel.setText(greeting + ", " + name + "!");
         }
 
-        String name = loggedUser.getName() != null ? loggedUser.getName() : loggedUser.getUsername();
-        greetingLabel.setText("Szia, " + name + "!");
-        airportTitleLabel.setText("Otthoni repülőtér: " +
-                safe(assignedAirport.getIcaoCode()) + " – " +
-                safe(assignedAirport.getName()));
-        subtitleLabel.setText("Az aktuális időjárás és a járatok áttekintése a " +
-                safe(assignedAirport.getName()) + " repülőtérre.");
+        // Reptér címek – ITT ÍRATJUK KI AZ OTTHONI REPTÉRT
+        if (assignedAirport != null) {
+            String icao = safe(assignedAirport.getIcaoCode());
+            String airportName = safe(assignedAirport.getName());
+            String city = safe(assignedAirport.getCity());
 
-        String city = safe(assignedAirport.getCity());
-        airportBasicLabel.setText(
-                safe(assignedAirport.getIcaoCode()) + " – " +
-                        safe(assignedAirport.getName()) +
-                        (city.isBlank() ? "" : " (" + city + ")")
-        );
+            if (airportTitleLabel != null) {
+                airportTitleLabel.setText("Otthoni repülőtér: " + icao + " – " + airportName);
+            }
+            if (subtitleLabel != null) {
+                subtitleLabel.setText("Áttekintés: időjárás, kapuk és mai járatok");
+            }
+            if (airportBasicLabel != null) {
+                airportBasicLabel.setText(
+                        icao + " – " + airportName + (city.isBlank() ? "" : " (" + city + ")")
+                );
+            }
+        } else {
+            if (airportTitleLabel != null) {
+                airportTitleLabel.setText("Otthoni repülőtér: nincs hozzárendelve");
+            }
+            if (airportBasicLabel != null) {
+                airportBasicLabel.setText("Nincs hozzárendelt repülőtér");
+            }
+        }
 
+        setStatus("Controller dashboard alap verzió betöltve.");
         refreshWeather();
-        refreshFlightStatsAndCharts();
     }
 
     private String safe(String s) {
         return s != null ? s : "";
     }
 
-    // ---------------- IDŐJÁRÁS ----------------
+    private void setStatus(String msg) {
+        if (statusLabel != null) {
+            statusLabel.setText(msg != null ? msg : "");
+        }
+        System.out.println("ControllerHomePage: " + msg);
+    }
+
+    @FXML
+    private void onShowDepartures() {
+        try {
+            // FXML betöltése – egyszerű, még nem adunk át semmit
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/DeparturesDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            // ownernek használjuk pl. a greetingLabel-t (bármelyik már beinjektált Node jó)
+            if (greetingLabel != null && greetingLabel.getScene() != null) {
+                dialog.initOwner(greetingLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Induló járatok");
+            dialog.setScene(new Scene(root));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onShowArrivals() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/ArrivalsDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            // ugyanúgy, mint az indulóknál: használjuk ownernek a greetingLabel-t
+            if (greetingLabel != null && greetingLabel.getScene() != null) {
+                dialog.initOwner(greetingLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Érkező járatok");
+            dialog.setScene(new Scene(root, 1490, 700));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     private void refreshWeather() {
-        if (assignedAirport == null) return;
+        // Ha nincs assignedAirport, nincs mit lekérdezni
+        if (assignedAirport == null) {
+            setStatus("Nincs hozzárendelt repülőtér, nem tudok időjárást lekérni.");
+            return;
+        }
 
-        // ha a weather mezők nincsenek beinjektálva, akkor egyszerűen kihagyjuk
+        // Ha valamiért a label-ek nem injektálódtak, inkább lépjünk ki csendben
         if (weatherEmojiLabel == null ||
                 temperatureLabel == null ||
                 conditionLabel == null ||
@@ -167,20 +295,19 @@ public class ControllerHomePageController {
                 feelsLikeLabel == null ||
                 updatedAtLabel == null ||
                 metarLabel == null) {
+            System.out.println("ControllerHomePage: weather label-ek nem injektálódtak, kihagyom a frissítést.");
             return;
         }
 
         try {
             AirportWeatherInfo info = weatherService.getCurrentWeatherForAirport(assignedAirport);
             if (info == null) {
-                if (statusLabel != null) {
-                    statusLabel.setText("Nem sikerült időjárási adatokat lekérni.");
-                }
+                setStatus("Nem sikerült időjárási adatokat lekérni.");
                 return;
             }
 
             weatherEmojiLabel.setText(info.emoji());
-            temperatureLabel.setText(String.format("%.0f°C", info.temperatureC()));
+            temperatureLabel.setText(String.format("%.0f °C", info.temperatureC()));
             conditionLabel.setText(info.conditionText());
             windLabel.setText(info.windText());
             visibilityLabel.setText(info.visibilityText());
@@ -189,247 +316,49 @@ public class ControllerHomePageController {
             updatedAtLabel.setText(info.updatedAtText());
             metarLabel.setText(info.metarRaw());
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            if (statusLabel != null) {
-                statusLabel.setText("Hiba az időjárás lekérésekor: " + ex.getMessage());
-            }
-        }
-    }
-
-    // ---------------- STATISZTIKÁK + DIAGRAMOK ----------------
-
-    private void refreshFlightStatsAndCharts() {
-        if (assignedAirport == null) return;
-
-        try {
-            LocalDate today = LocalDate.now(ZoneId.systemDefault());
-
-            List<Flight> departures = flightService.getDeparturesForAirport(assignedAirport);
-            List<Flight> arrivals   = flightService.getArrivalsForAirport(assignedAirport);
-
-            List<Flight> depToday = departures.stream()
-                    .filter(f -> f.getScheduledDeparture() != null &&
-                            f.getScheduledDeparture().toLocalDate().equals(today))
-                    .toList();
-
-            List<Flight> arrToday = arrivals.stream()
-                    .filter(f -> f.getScheduledArrival() != null &&
-                            f.getScheduledArrival().toLocalDate().equals(today))
-                    .toList();
-
-            long depCount = depToday.size();
-            long arrCount = arrToday.size();
-            long total    = depCount + arrCount;
-
-            long delayedCount = depToday.stream()
-                    .filter(f -> f.getStatus() == FlightStatus.DELAYED)
-                    .count()
-                    +
-                    arrToday.stream()
-                            .filter(f -> f.getStatus() == FlightStatus.DELAYED)
-                            .count();
-
-            if (flightsTodayLabel != null) {
-                flightsTodayLabel.setText(String.valueOf(total));
-            }
-            if (delaysTodayLabel != null) {
-                delaysTodayLabel.setText(String.valueOf(delayedCount));
-            }
-
-            // Szabad kapuk
-            if (freeGatesLabel != null) {
-                long freeGates = 0;
-                try {
-                    List<Gate> gates = gateService.getGatesForAirport(assignedAirport);
-
-                    List<Flight> allToday = new ArrayList<>();
-                    allToday.addAll(depToday);
-                    allToday.addAll(arrToday);
-
-                    Set<Long> occupiedGateIds = allToday.stream()
-                            .filter(f -> f.getGate() != null)
-                            .map(f -> f.getGate().getId())
-                            .collect(Collectors.toSet());
-
-                    freeGates = gates.stream()
-                            .filter(g -> g.getStatus() != null &&
-                                    (g.getStatus().name().equals("OPEN") ||
-                                            g.getStatus().name().equals("FREE") ||
-                                            g.getStatus().name().equals("ACTIVE")))
-                            .filter(g -> !occupiedGateIds.contains(g.getId()))
-                            .count();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                freeGatesLabel.setText(String.valueOf(freeGates));
-            }
-
-            // PieChart – ha nincs beinjektálva, kihagyjuk
-            if (statusPieChart != null) {
-                List<Flight> allToday = new ArrayList<>();
-                allToday.addAll(depToday);
-                allToday.addAll(arrToday);
-
-                long landed = allToday.stream()
-                        .filter(f -> isStatus(f, "LANDED", "ARRIVED"))
-                        .count();
-
-                long active = allToday.stream()
-                        .filter(f -> isStatus(f, "AIRBORNE", "TAXI", "TAXING", "BOARDING", "DEPARTED"))
-                        .count();
-
-                long delayedTotal = allToday.stream()
-                        .filter(f -> isStatus(f, "DELAYED"))
-                        .count();
-
-                long cancelled = allToday.stream()
-                        .filter(f -> isStatus(f, "CANCELLED"))
-                        .count();
-
-                ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList(
-                        new PieChart.Data("Landolt (" + landed + ")", landed),
-                        new PieChart.Data("Aktív (" + active + ")", active),
-                        new PieChart.Data("Késik (" + delayedTotal + ")", delayedTotal),
-                        new PieChart.Data("Törölve (" + cancelled + ")", cancelled)
-                );
-
-                statusPieChart.setData(pieData);
-                statusPieChart.setTitle("Mai státuszok");
-            }
-
-            // BarChart – induló / érkező
-            if (trafficBarChart != null) {
-                trafficBarChart.getData().clear();
-
-                XYChart.Series<String, Number> series = new XYChart.Series<>();
-                series.setName("Járatszám");
-                series.getData().add(new XYChart.Data<>("Induló", depCount));
-                series.getData().add(new XYChart.Data<>("Érkező", arrCount));
-
-                trafficBarChart.getData().add(series);
-            }
-
-            if (statusLabel != null) {
-                statusLabel.setText("Dashboard frissítve. Ma induló: " +
-                        depCount + ", érkező: " + arrCount + ", késés: " + delayedCount + ".");
-            }
+            setStatus("Időjárás frissítve.");
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            if (statusLabel != null) {
-                statusLabel.setText("Hiba a járat statisztikák frissítésekor: " + ex.getMessage());
-            }
+            setStatus("Hiba az időjárás lekérésekor: " + ex.getMessage());
         }
     }
 
-    // Helper: státusznévben substring keresés
-    private boolean isStatus(Flight f, String... searchStrings) {
-        if (f.getStatus() == null) return false;
-        String s = f.getStatus().name().toUpperCase();
-        for (String search : searchStrings) {
-            if (s.contains(search.toUpperCase())) return true;
-        }
-        return false;
-    }
-
     @FXML
-    private void onRefreshDashboard() {
-        refreshWeather();
-        refreshFlightStatsAndCharts();
-    }
-
-    // ---------------- GOMBOK ----------------
-
-    @FXML
-    private void onOpenWeatherAssistant() {
+    private void onOpenWeatherDetails() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/FlightWeatherAssistantDialog.fxml"));
+                    getClass().getResource("/fxml/Controller/WeatherDetailsDialog.fxml")
+            );
             loader.setControllerFactory(SpringContext::getBean);
+
             Parent root = loader.load();
+
+            WeatherDetailsDialogController ctrl = loader.getController();
+            if (assignedAirport != null) {
+                ctrl.init(assignedAirport);
+            }
 
             Stage dialog = new Stage();
             if (statusLabel != null && statusLabel.getScene() != null) {
                 dialog.initOwner(statusLabel.getScene().getWindow());
             }
             dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("ATC – Időjárás asszisztens");
-            dialog.setScene(new Scene(root, 600, 420));
-            dialog.centerOnScreen();
+            dialog.setTitle("Részletes időjárás");
+            dialog.setScene(new Scene(root, 500, 600));
+            dialog.setResizable(false);
             dialog.showAndWait();
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            showError("Hiba",
-                    "Nem sikerült megnyitni az időjárás asszisztenst: " + ex.getMessage());
         }
     }
 
-    @FXML
-    private void onShowDepartures() {
-        if (!checkReady()) return;
-
-        try {
-            List<Flight> departures = flightService.getDeparturesForAirport(assignedAirport);
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/Controller/DeparturesDialog.fxml"));
-            loader.setControllerFactory(SpringContext::getBean);
-            Parent root = loader.load();
-
-            DeparturesDialogController ctrl = loader.getController();
-            ctrl.init(assignedAirport, departures);
-
-            Stage dialog = new Stage();
-            if (statusLabel != null && statusLabel.getScene() != null) {
-                dialog.initOwner(statusLabel.getScene().getWindow());
-            }
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("Induló járatok – " + safe(assignedAirport.getIcaoCode()));
-            dialog.setScene(new Scene(root, 900, 500));
-            dialog.centerOnScreen();
-            dialog.showAndWait();
-
-            refreshFlightStatsAndCharts();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            showError("Hiba", "Nem sikerült megnyitni az induló járatok ablakot: " + ex.getMessage());
-        }
-    }
+    // --- GOMBOK ---
 
     @FXML
-    private void onShowArrivals() {
-        if (!checkReady()) return;
-
-        try {
-            List<Flight> arrivals = flightService.getArrivalsForAirport(assignedAirport);
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/Controller/ArrivalsDialog.fxml"));
-            loader.setControllerFactory(SpringContext::getBean);
-            Parent root = loader.load();
-
-            ArrivalsDialogController ctrl = loader.getController();
-            ctrl.init(assignedAirport, arrivals);
-
-            Stage dialog = new Stage();
-            if (statusLabel != null && statusLabel.getScene() != null) {
-                dialog.initOwner(statusLabel.getScene().getWindow());
-            }
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("Érkező járatok – " + safe(assignedAirport.getIcaoCode()));
-            dialog.setScene(new Scene(root, 900, 500));
-            dialog.centerOnScreen();
-            dialog.showAndWait();
-
-            refreshFlightStatsAndCharts();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            showError("Hiba", "Nem sikerült megnyitni az érkező járatok ablakot: " + ex.getMessage());
-        }
+    private void onDummyAction() {
+        setStatus("Próba gomb megnyomva – a controller oldal működik. 🎉");
     }
 
     @FXML
@@ -437,60 +366,17 @@ public class ControllerHomePageController {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 
-    private boolean checkReady() {
-        if (loggedUser == null || assignedAirport == null) {
-            showError("Nem elérhető", "Nincs bejelentkezett controller vagy hozzárendelt repülőtér.");
-            return false;
-        }
-        return true;
+    public void onRefreshDashboard(ActionEvent event) {
+        System.out.println("ControllerHomePageController: onRefreshDashboard()");
+        refreshWeather();
     }
 
-    @FXML
-    private void onCreateFlight() {
-        if (!checkReady()) {
-            return; // ha nincs user / airport, ne csináljon semmit
-        }
-
-        try {
-            // FXML betöltése Spring controllerral
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/Controller/CreateFlightDialog.fxml")); // ha máshol van, az utat ehhez igazítsd
-            loader.setControllerFactory(SpringContext::getBean);
-            Parent root = loader.load();
-
-            // Controller és init hívás
-            CreateFlightDialogController ctrl = loader.getController();
-            ctrl.init(assignedAirport);   // csak otthoni reptérrel, új járat
-
-            // Dialog ablak
-            Stage dialog = new Stage();
-            if (statusLabel != null && statusLabel.getScene() != null) {
-                dialog.initOwner(statusLabel.getScene().getWindow());
-            }
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("Új járat – " + safe(assignedAirport.getIcaoCode()));
-            dialog.setScene(new Scene(root, 520, 420));
-            dialog.centerOnScreen();
-            dialog.showAndWait();
-
-            // Mentés után frissítsük a dashboardot
-            refreshFlightStatsAndCharts();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            showError("Hiba",
-                    "Nem sikerült megnyitni az új járat ablakot: " + ex.getMessage());
-        }
+    public void onCreateFlight(ActionEvent event) {
+        System.out.println("ControllerHomePageController: onCreateFlight()");
     }
 
-    private void showError(String header, String content) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setTitle("Hiba");
-        a.setHeaderText(header);
-        a.setContentText(content);
-        a.showAndWait();
-        if (statusLabel != null) {
-            statusLabel.setText(header + " – " + content);
-        }
+    public void onOpenWeatherAssistant(ActionEvent event) {
+        System.out.println("ControllerHomePageController: onOpenWeatherAssistant()");
     }
+
 }
