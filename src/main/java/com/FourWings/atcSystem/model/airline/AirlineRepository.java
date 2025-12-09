@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.model.airline;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AirlineRepository extends JpaRepository<Airline, Long> {
@@ -18,4 +19,7 @@ public interface AirlineRepository extends JpaRepository<Airline, Long> {
     @Override
     @EntityGraph(attributePaths = "baseAirport")
     Optional<Airline> findById(Long id);
+
+    @EntityGraph(attributePaths = "baseAirport")
+    List<Airline> findAllByBaseAirport_Id(Long airportId);
 }

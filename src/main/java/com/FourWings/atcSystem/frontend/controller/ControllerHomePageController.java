@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Component
@@ -53,7 +54,10 @@ public class ControllerHomePageController {
     @FXML private Label feelsLikeLabel;
     @FXML private Label updatedAtLabel;
     @FXML private Label metarLabel;
+
+    // 🔹 Dashboard kis kártyák számai
     @FXML private Label arrivalsCountLabel;
+    @FXML private Label departuresCountLabel;
 
     private static final String NORMAL_STYLE =
             "-fx-background-color: rgba(248,250,252,0.06);" +
@@ -73,18 +77,20 @@ public class ControllerHomePageController {
 
     private static final String CREATE_NORMAL_STYLE =
             "-fx-background-color: #2563eb;" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 20;" +
-            "-fx-padding: 6 16 6 16;" +
-            "-fx-font-weight: bold;" + "-fx-font-size: 13px;" +
-            "-fx-cursor: hand;";
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-padding: 6 16 6 16;" +
+                    "-fx-font-weight: bold;" +
+                    "-fx-font-size: 13px;" +
+                    "-fx-cursor: hand;";
 
     private static final String CREATE_HOVER_STYLE =
             "-fx-background-color: #2563eb;" +
                     "-fx-text-fill: white;" +
                     "-fx-background-radius: 20;" +
                     "-fx-padding: 6 16 6 16;" +
-                    "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
+                    "-fx-font-weight: bold;" +
+                    "-fx-font-size: 14px;" +
                     "-fx-cursor: hand;";
 
     private static final String LOGOUT_NORMAL_STYLE =
@@ -92,7 +98,8 @@ public class ControllerHomePageController {
                     "-fx-text-fill: white;" +
                     "-fx-background-radius: 20;" +
                     "-fx-padding: 6 16 6 16;" +
-                    "-fx-font-weight: bold;" + "-fx-font-size: 13px;" +
+                    "-fx-font-weight: bold;" +
+                    "-fx-font-size: 13px;" +
                     "-fx-cursor: hand;";
 
     private static final String LOGOUT_HOVER_STYLE =
@@ -100,11 +107,13 @@ public class ControllerHomePageController {
                     "-fx-text-fill: white;" +
                     "-fx-background-radius: 20;" +
                     "-fx-padding: 6 16 6 16;" +
-                    "-fx-font-weight: bold;" + "-fx-font-size: 14px;" +
+                    "-fx-font-weight: bold;" +
+                    "-fx-font-size: 14px;" +
                     "-fx-cursor: hand;";
 
-    public ControllerHomePageController(WeatherService weatherService, FlightService flightService) {
-         this.weatherService = weatherService;
+    public ControllerHomePageController(WeatherService weatherService,
+                                        FlightService flightService) {
+        this.weatherService = weatherService;
         this.flightService = flightService;
     }
 
@@ -115,10 +124,9 @@ public class ControllerHomePageController {
         if (rootPane != null) {
             rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
                 if (newScene != null) {
-                    // Figyeljük a windowProperty-t is, mert a Scene még lehet "gazda" nélkül
                     newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
                         if (newWin instanceof Stage stage) {
-                            stage.setMaximized(true);   // ✅ csak akkor hívjuk, ha tényleg van Stage
+                            stage.setMaximized(true);
                         }
                     });
                 }
@@ -137,6 +145,7 @@ public class ControllerHomePageController {
         setupButton(logoutButton, "log");
     }
 
+    // 🔹 Aznapi érkező járatok száma
     private void refreshTodayArrivalsCount() {
         if (assignedAirport == null || arrivalsCountLabel == null) return;
 
@@ -145,7 +154,7 @@ public class ControllerHomePageController {
 
             long todayCount = allArrivals.stream()
                     .filter(f -> f.getScheduledArrival() != null)
-                    .filter(f -> f.getScheduledArrival().toLocalDate().equals(java.time.LocalDate.now()))
+                    .filter(f -> f.getScheduledArrival().toLocalDate().equals(LocalDate.now()))
                     .count();
 
             arrivalsCountLabel.setText(String.valueOf(todayCount));
@@ -156,25 +165,46 @@ public class ControllerHomePageController {
         }
     }
 
-    private void setupButton(javafx.scene.control.Button btn, String type) {
+    // 🔹 Aznapi induló járatok száma
+    private void refreshTodayDeparturesCount() {
+        if (assignedAirport == null || departuresCountLabel == null) return;
 
-        if (type.equals(" ")) {
-            if (btn == null) return;
-            btn.setStyle(NORMAL_STYLE);
-            btn.setOnMouseEntered(e -> btn.setStyle(HOVER_STYLE));
-            btn.setOnMouseExited(e -> btn.setStyle(NORMAL_STYLE));
-        }else if (type.equals("create")) {
-            if (btn == null) return;
-            btn.setStyle(CREATE_NORMAL_STYLE);
-            btn.setOnMouseEntered(e -> btn.setStyle(CREATE_HOVER_STYLE));
-            btn.setOnMouseExited(e -> btn.setStyle(CREATE_NORMAL_STYLE));
-        }else if (type.equals("log")) {
-            if (btn == null) return;
-            btn.setStyle(LOGOUT_NORMAL_STYLE);
-            btn.setOnMouseEntered(e -> btn.setStyle(LOGOUT_HOVER_STYLE));
-            btn.setOnMouseExited(e -> btn.setStyle(LOGOUT_NORMAL_STYLE));
+        try {
+            var allDepartures = flightService.getDeparturesForAirport(assignedAirport);
+
+            long todayCount = allDepartures.stream()
+                    .filter(f -> f.getScheduledDeparture() != null)
+                    .filter(f -> f.getScheduledDeparture().toLocalDate().equals(LocalDate.now()))
+                    .count();
+
+            departuresCountLabel.setText(String.valueOf(todayCount));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            departuresCountLabel.setText("—");
         }
+    }
 
+    private void setupButton(javafx.scene.control.Button btn, String type) {
+        if (btn == null) return;
+
+        switch (type) {
+            case " " -> {
+                btn.setStyle(NORMAL_STYLE);
+                btn.setOnMouseEntered(e -> btn.setStyle(HOVER_STYLE));
+                btn.setOnMouseExited(e -> btn.setStyle(NORMAL_STYLE));
+            }
+            case "create" -> {
+                btn.setStyle(CREATE_NORMAL_STYLE);
+                btn.setOnMouseEntered(e -> btn.setStyle(CREATE_HOVER_STYLE));
+                btn.setOnMouseExited(e -> btn.setStyle(CREATE_NORMAL_STYLE));
+            }
+            case "log" -> {
+                btn.setStyle(LOGOUT_NORMAL_STYLE);
+                btn.setOnMouseEntered(e -> btn.setStyle(LOGOUT_HOVER_STYLE));
+                btn.setOnMouseExited(e -> btn.setStyle(LOGOUT_NORMAL_STYLE));
+            }
+        }
     }
 
     private String getTimeBasedGreeting() {
@@ -214,11 +244,11 @@ public class ControllerHomePageController {
         // Köszönés
         if (greetingLabel != null) {
             String name = user.getName() != null ? user.getName() : user.getUsername();
-            String greeting = getTimeBasedGreeting();   // napszakhoz illő köszönés
+            String greeting = getTimeBasedGreeting();
             greetingLabel.setText(greeting + ", " + name + "!");
         }
 
-        // Reptér címek – ITT ÍRATJUK KI AZ OTTHONI REPTÉRT
+        // Reptér címek
         if (assignedAirport != null) {
             String icao = safe(assignedAirport.getIcaoCode());
             String airportName = safe(assignedAirport.getName());
@@ -247,6 +277,7 @@ public class ControllerHomePageController {
         setStatus("Controller dashboard alap verzió betöltve.");
         refreshWeather();
         refreshTodayArrivalsCount();
+        refreshTodayDeparturesCount();
     }
 
     private String safe(String s) {
@@ -260,10 +291,11 @@ public class ControllerHomePageController {
         System.out.println("ControllerHomePage: " + msg);
     }
 
+    // --- Dialógusok megnyitása ---
+
     @FXML
     private void onShowDepartures() {
         try {
-            // FXML betöltése – egyszerű, még nem adunk át semmit
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/Controller/DeparturesDialog.fxml")
             );
@@ -271,14 +303,18 @@ public class ControllerHomePageController {
 
             Parent root = loader.load();
 
+            DeparturesDialogController ctrl = loader.getController();
+            if (assignedAirport != null) {
+                ctrl.init(assignedAirport);
+            }
+
             Stage dialog = new Stage();
-            // ownernek használjuk pl. a greetingLabel-t (bármelyik már beinjektált Node jó)
             if (greetingLabel != null && greetingLabel.getScene() != null) {
                 dialog.initOwner(greetingLabel.getScene().getWindow());
             }
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setTitle("Induló járatok");
-            dialog.setScene(new Scene(root));
+            dialog.setScene(new Scene(root, 1490, 700));
             dialog.setResizable(true);
             dialog.showAndWait();
 
@@ -297,10 +333,9 @@ public class ControllerHomePageController {
 
             Parent root = loader.load();
 
-            // 🔹 Itt kérjük le a controllert
             ArrivalsDialogController ctrl = loader.getController();
             if (assignedAirport != null) {
-                ctrl.init(assignedAirport);   // 🔹 átadjuk a controller otthoni repterét
+                ctrl.init(assignedAirport);
             }
 
             Stage dialog = new Stage();
@@ -319,13 +354,11 @@ public class ControllerHomePageController {
     }
 
     private void refreshWeather() {
-        // Ha nincs assignedAirport, nincs mit lekérdezni
         if (assignedAirport == null) {
             setStatus("Nincs hozzárendelt repülőtér, nem tudok időjárást lekérni.");
             return;
         }
 
-        // Ha valamiért a label-ek nem injektálódtak, inkább lépjünk ki csendben
         if (weatherEmojiLabel == null ||
                 temperatureLabel == null ||
                 conditionLabel == null ||
@@ -335,6 +368,7 @@ public class ControllerHomePageController {
                 feelsLikeLabel == null ||
                 updatedAtLabel == null ||
                 metarLabel == null) {
+
             System.out.println("ControllerHomePage: weather label-ek nem injektálódtak, kihagyom a frissítést.");
             return;
         }
@@ -410,14 +444,40 @@ public class ControllerHomePageController {
         System.out.println("ControllerHomePageController: onRefreshDashboard()");
         refreshWeather();
         refreshTodayArrivalsCount();
+        refreshTodayDeparturesCount();
     }
 
     public void onCreateFlight(ActionEvent event) {
         System.out.println("ControllerHomePageController: onCreateFlight()");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Controller/NewFlightDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            NewFlightDialogController ctrl = loader.getController();
+            if (assignedAirport != null) {
+                ctrl.init(assignedAirport);
+            }
+
+            Stage dialog = new Stage();
+            if (greetingLabel != null && greetingLabel.getScene() != null) {
+                dialog.initOwner(greetingLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Új járat létrehozása");
+            dialog.setScene(new Scene(root, 800, 650));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void onOpenWeatherAssistant(ActionEvent event) {
         System.out.println("ControllerHomePageController: onOpenWeatherAssistant()");
     }
-
 }

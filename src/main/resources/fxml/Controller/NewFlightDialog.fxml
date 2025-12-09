@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.NewFlightDialogController"
+            prefWidth="700" prefHeight="600">
+
+    <!-- Felső cím -->
+    <top>
+        <VBox spacing="4" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="14" left="18" right="18" bottom="10"/>
+            </padding>
+            <children>
+                <Label text="Új járat létrehozása"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label fx:id="titleLabel"
+                       text="Otthoni repülőtér: (betöltés alatt)"
+                       style="-fx-text-fill: #6b7280; -fx-font-size: 12px;"/>
+                <Label fx:id="subtitleLabel"
+                       text="Kérlek, töltsd ki az alábbi adatokat."
+                       style="-fx-text-fill: #6b7280; -fx-font-size: 12px;"/>
+            </children>
+        </VBox>
+    </top>
+
+    <!-- Középső űrlap -->
+    <center>
+        <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+            <content>
+                <VBox spacing="12">
+                    <padding>
+                        <Insets top="8" left="18" right="18" bottom="16"/>
+                    </padding>
+                    <children>
+
+                        <!-- Légitársaság (otthoni reptérről elérhető) -->
+                        <GridPane hgap="10" vgap="8">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="180"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <children>
+                                <Label text="Légitársaság (otthoni reptérről):"
+                                       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="airlineCombo"
+                                          promptText="Válassz légitársaságot"
+                                          GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                <!-- Célrepülőtér / város -->
+                                <Label text="Célrepülőtér / város:"
+                                       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="destinationAirportCombo"
+                                          promptText="Válassz célrepülőteret"
+                                          GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                <!-- Szabad repülőgép -->
+                                <Label text="Szabad repülőgép:"
+                                       GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="aircraftCombo"
+                                          promptText="Válassz repülőgépet"
+                                          GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                <!-- Otthoni reptér terminál -->
+                                <Label text="Indulási terminál (otthoni reptér):"
+                                       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="departureTerminalCombo"
+                                          promptText="Válassz terminált"
+                                          GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                <!-- Célreptér terminál -->
+                                <Label text="Érkezési terminál (célreptér):"
+                                       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="arrivalTerminalCombo"
+                                          promptText="Válassz terminált"
+                                          GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                                <!-- Otthoni reptér kapu -->
+                                <Label text="Indulási kapu (otthoni reptér):"
+                                       GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="departureGateCombo"
+                                          promptText="Válassz kaput"
+                                          GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                                <!-- Célreptér kapu -->
+                                <Label text="Érkezési kapu (célreptér):"
+                                       GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="arrivalGateCombo"
+                                          promptText="Válassz kaput"
+                                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                                <!-- Indulási dátum / idő -->
+                                <Label text="Indulási dátum:"
+                                       GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                                <DatePicker fx:id="departureDatePicker"
+                                            GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                                <Label text="Indulási idő (HH:MM):"
+                                       GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                                <TextField fx:id="departureTimeField"
+                                           promptText="pl. 14:30"
+                                           GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+                                <!-- Érkezési dátum / idő -->
+                                <Label text="Érkezési dátum:"
+                                       GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                                <DatePicker fx:id="arrivalDatePicker"
+                                            GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+                                <Label text="Érkezési idő (HH:MM):"
+                                       GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+                                <TextField fx:id="arrivalTimeField"
+                                           promptText="pl. 16:05"
+                                           GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+
+                                <!-- Járatszám -->
+                                <Label text="Járatszám:"
+                                       GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+                                <TextField fx:id="flightNumberField"
+                                           promptText="pl. FW1234"
+                                           GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+                            </children>
+                        </GridPane>
+
+                        <!-- Hiba / státusz üzenet -->
+                        <Label fx:id="errorLabel"
+                               text=""
+                               style="-fx-text-fill: red; -fx-font-size: 11px;"/>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <!-- Alsó gombok -->
+    <bottom>
+        <HBox spacing="8" BorderPane.alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="8" left="18" right="18" bottom="12"/>
+            </padding>
+            <children>
+                <Label fx:id="statusLabel"
+                       text=""
+                       HBox.hgrow="ALWAYS"/>
+
+                <Button text="Mégse" onAction="#onCancel"/>
+                <Button text="Mentés" onAction="#onSave"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

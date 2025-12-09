@@ -91,11 +91,12 @@
                                 <Label text="Összes induló járat (ma)"
                                        style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
 
-                                <Label fx:id="totalArrivalsLabel"
+                                <!-- 🔹 EZ A LABEL KAP ID-T -->
+                                <Label fx:id="totalDeparturesLabel"
                                        text="—"
                                        style="-fx-text-fill: #e5e7eb; -fx-font-size: 22px; -fx-font-weight: bold;"/>
 
-                                <Label text="A tábla backendje később kerül bekötésre."
+                                <Label text="A tábla az adott nap induló járatait mutatja."
                                        wrapText="true"
                                        style="-fx-text-fill: #6b7280; -fx-font-size: 11px;"/>
                             </children>
@@ -123,7 +124,7 @@
                                 <Label text="Induló járatok listája"
                                        style="-fx-text-fill: #e5e7eb; -fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-                                <Label text="• UI kész, adatok később"
+                                <Label text="• Csak az adott napra szűrt adatok"
                                        style="-fx-text-fill: #6b7280; -fx-font-size: 11px;"/>
                             </children>
                         </HBox>
@@ -133,8 +134,9 @@
                                    VBox.vgrow="ALWAYS"
                                    style="-fx-background-color: transparent;">
 
-                            <!-- Indulási repülőtér -->
                             <columns>
+
+                                <!-- Érkezési repülőtér (destinationName) -->
                                 <TableColumn fx:id="arrivalAirportCol"
                                              text="Érkezési repülőtér"
                                              prefWidth="150.0" />
@@ -149,11 +151,12 @@
                                              text="Járatszám"
                                              prefWidth="120.0" />
 
-                                <!-- Tervezett érkezés -->
+                                <!-- Tervezett indulás -->
                                 <TableColumn fx:id="scheduledDepartureCol"
                                              text="Tervezett indulás"
                                              prefWidth="150.0" />
 
+                                <!-- Tervezett érkezés -->
                                 <TableColumn fx:id="scheduledArrivalCol"
                                              text="Tervezett érkezés"
                                              prefWidth="150.0" />
@@ -163,6 +166,7 @@
                                              text="Státusz"
                                              prefWidth="120.0" />
 
+                                <!-- Becsült indulás -->
                                 <TableColumn fx:id="estimatedDepartureCol"
                                              text="Becsült indulás"
                                              prefWidth="150.0" />
@@ -172,12 +176,12 @@
                                              text="Becsült érkezés"
                                              prefWidth="150.0" />
 
-                                <!-- Tényleges érkezés -->
-
+                                <!-- Tényleges indulás -->
                                 <TableColumn fx:id="actualDepartureCol"
                                              text="Tényleges indulás"
                                              prefWidth="150.0" />
 
+                                <!-- Tényleges érkezés -->
                                 <TableColumn fx:id="actualArrivalCol"
                                              text="Tényleges érkezés"
                                              prefWidth="150.0" />
@@ -196,6 +200,7 @@
                                 <TableColumn fx:id="updatedAtCol"
                                              text="Utolsó frissítés"
                                              prefWidth="150.0" />
+
                             </columns>
                         </TableView>
 
