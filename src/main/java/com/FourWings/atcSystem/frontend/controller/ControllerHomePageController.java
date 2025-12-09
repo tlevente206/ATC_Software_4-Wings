@@ -107,7 +107,20 @@ public class ControllerHomePageController {
     @FXML
     public void initialize() {
 
-        // Itt még NINCS user/airport, csak az FXML elemek léteznek
+        // FULLSCREEN KOMPATIBILITÁS – NPE BIZTOS VERZIÓ
+        if (rootPane != null) {
+            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    // Figyeljük a windowProperty-t is, mert a Scene még lehet "gazda" nélkül
+                    newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
+                        if (newWin instanceof Stage stage) {
+                            stage.setMaximized(true);   // ✅ csak akkor hívjuk, ha tényleg van Stage
+                        }
+                    });
+                }
+            });
+        }
+
         if (statusLabel != null) {
             statusLabel.setText("Várakozás a felhasználói adatokra…");
         }
@@ -118,8 +131,6 @@ public class ControllerHomePageController {
         setupButton(createFlight, "create");
         setupButton(openWeatherAssistant, " ");
         setupButton(logoutButton, "log");
-
-        System.out.println("ControllerHomePage: initialize() lefutott");
     }
 
     private void setupButton(javafx.scene.control.Button btn, String type) {
@@ -261,6 +272,8 @@ public class ControllerHomePageController {
             loader.setControllerFactory(SpringContext::getBean);
 
             Parent root = loader.load();
+            ArrivalsDialogController ctrl = loader.getController();
+            ctrl.init(assignedAirport);
 
             Stage dialog = new Stage();
             // ugyanúgy, mint az indulóknál: használjuk ownernek a greetingLabel-t

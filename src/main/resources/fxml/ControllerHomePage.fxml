@@ -13,6 +13,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.controller.ControllerHomePageController"
+            fx:id="rootPane"
             style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #020617);">
 
     <!-- FELSŐ RÉSZ: köszönés + reptér + gombok -->
@@ -139,7 +140,9 @@
 
     <!-- KÖZÉP: 4 elkülönített szegmens (card-szerű dizájn) -->
     <center>
-        <GridPane hgap="18" vgap="18" BorderPane.alignment="CENTER">
+        <GridPane hgap="18" vgap="18" BorderPane.alignment="CENTER"
+                  GridPane.hgrow="ALWAYS"
+                  GridPane.vgrow="ALWAYS">
             <padding>
                 <Insets top="10" left="20" right="20" bottom="20"/>
             </padding>
@@ -148,6 +151,7 @@
                 <!-- IDŐJÁRÁS BLOKK (bal oldal, nagy, 2 sort foglal) -->
                 <VBox fx:id="weatherCard"
                       GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.rowSpan="2"
+                      GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
                       spacing="10"
                       onMouseClicked="#onOpenWeatherDetails"
                       style="
@@ -230,6 +234,7 @@
                 <VBox fx:id="departuresCard"
                       onMouseClicked="#onShowDepartures"
                       GridPane.rowIndex="0" GridPane.columnIndex="1"
+                      GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
                       spacing="8"
                       style="
                         -fx-background-color: #020617;
@@ -261,6 +266,7 @@
                 <!-- ÉRKEZŐ JÁRATOK SZEGMENS -->
                 <VBox fx:id="arrivalsCard"
                       GridPane.rowIndex="0" GridPane.columnIndex="2"
+                      GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
                       spacing="8"
                       onMouseClicked="#onShowArrivals"
                       style="
@@ -292,6 +298,7 @@
 
                 <!-- SZABAD KAPUK SZEGMENS -->
                 <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                      GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
                       spacing="8"
                       style="
                         -fx-background-color: #020617;
