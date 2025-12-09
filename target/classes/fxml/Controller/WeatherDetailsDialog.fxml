@@ -142,7 +142,7 @@
 
                     </children>
                 </HBox>
-                
+
                 <!-- ALSÓ KÁRTYA: Meteorológiai térkép -->
                 <VBox spacing="8"
                       style="

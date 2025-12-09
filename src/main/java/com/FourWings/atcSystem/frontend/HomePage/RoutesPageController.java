@@ -18,7 +18,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -100,9 +99,17 @@ public class RoutesPageController {
             }
         });
 
-        // --- ÚJ: dupla kattintás a járatra -> részletek dialógus ---
+        // --- MÓDOSÍTOTT: RowFactory a duplakattintáshoz ÉS a színezéshez ---
+
+        // Induló járatok színezése és klikk kezelés
         departuresTable.setRowFactory(tv -> {
-            TableRow<Flight> row = new TableRow<>();
+            TableRow<Flight> row = new TableRow<>() {
+                @Override
+                protected void updateItem(Flight item, boolean empty) {
+                    super.updateItem(item, empty);
+                    applyRowColor(this, item, empty); // Színezés meghívása
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     showFlightDetailsDialog(row.getItem());
@@ -111,8 +118,15 @@ public class RoutesPageController {
             return row;
         });
 
+        // Érkező járatok színezése és klikk kezelés
         arrivalsTable.setRowFactory(tv -> {
-            TableRow<Flight> row = new TableRow<>();
+            TableRow<Flight> row = new TableRow<>() {
+                @Override
+                protected void updateItem(Flight item, boolean empty) {
+                    super.updateItem(item, empty);
+                    applyRowColor(this, item, empty); // Színezés meghívása
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     showFlightDetailsDialog(row.getItem());
@@ -120,6 +134,44 @@ public class RoutesPageController {
             });
             return row;
         });
+    }
+
+    // ----------------- SZÍNEZÉS LOGIKA (Visszaállítva) -----------------
+    private void applyRowColor(TableRow<Flight> row, Flight item, boolean empty) {
+        if (item == null || empty) {
+            row.setStyle("");
+        } else {
+            String status = "";
+            try {
+                // Megpróbáljuk lekérni a státuszt a getStatusText() metódussal
+                Method method = item.getClass().getMethod("getStatusText");
+                Object result = method.invoke(item);
+                if (result != null) status = result.toString();
+            } catch (Exception e) {
+                // Ha nincs ilyen metódus, vagy hiba van, üres marad
+            }
+
+            String s = status.toLowerCase();
+
+            // --- Színek beállítása ---
+            if (s.contains("landed") || s.contains("arrived")) {
+                row.setStyle("-fx-background-color: #c8e6c9;"); // Zöld
+            } else if (s.contains("airborne") || s.contains("flying")) {
+                row.setStyle("-fx-background-color: #b3e5fc;"); // Kék
+            } else if (s.contains("taxi")) {
+                row.setStyle("-fx-background-color: #ffe0b2;"); // Narancs
+            } else if (s.contains("boarding") || s.contains("go to")) {
+                row.setStyle("-fx-background-color: #b2dfdb;"); // Türkiz
+            } else if (s.contains("delayed") || s.contains("late")) {
+                row.setStyle("-fx-background-color: #fff9c4;"); // Sárga
+            } else if (s.contains("cancelled")) {
+                row.setStyle("-fx-background-color: #ffcdd2;"); // Piros
+            } else if (s.contains("sched")) {
+                row.setStyle("-fx-background-color: #e0f7fa;"); // Halványkék
+            } else {
+                row.setStyle(""); // Alapértelmezett
+            }
+        }
     }
 
     // ----------------- TÉRKÉP KEZELÉS -----------------
@@ -232,8 +284,7 @@ public class RoutesPageController {
         return null;
     }
 
-    // ----------------- ÚJ: JÁRAT DIALÓGUS – AIRCRAFT + AIRLINE TABOK -----------------
-
+    // ----------------- JÁRAT DIALÓGUS -----------------
 
     private void showFlightDetailsDialog(Flight flight) {
         if (flight == null) return;
@@ -255,7 +306,6 @@ public class RoutesPageController {
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
             dialog.getDialogPane().setContent(root);
 
-// >>> IDE JÖN A MÉRET BEÁLLÍTÁS <<<
             double DIALOG_WIDTH = 800;
             double DIALOG_HEIGHT = 700;
 
@@ -266,10 +316,7 @@ public class RoutesPageController {
             dialog.getDialogPane().setMaxWidth(DIALOG_WIDTH);
             dialog.getDialogPane().setMaxHeight(DIALOG_HEIGHT);
 
-// hogy ne legyen átméretezhető:
             dialog.setResizable(false);
-// <<< IDÁIG >>>
-
             dialog.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
@@ -283,106 +330,10 @@ public class RoutesPageController {
         return o == null ? "" : o.toString();
     }
 
-    // aircraft adatlap
-    private GridPane buildAircraftPane(Aircraft aircraft) {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(8);
-
-        if (aircraft == null) {
-            grid.add(new Label("Nincs repülőgép adat ehhez a járathoz."), 0, 0);
-            return grid;
-        }
-
-        int row = 0;
-        grid.add(new Label("Lajstromjel:"), 0, row);
-        grid.add(new Label(safe(aircraft.getRegistration())), 1, row++);
-
-        grid.add(new Label("Típus ICAO:"), 0, row);
-        grid.add(new Label(safe(aircraft.getTypeIcao())), 1, row++);
-
-        grid.add(new Label("Max. utaskapacitás:"), 0, row);
-        grid.add(new Label(safe(aircraft.getMaxSeatCapacity())), 1, row++);
-
-        grid.add(new Label("Cargo kapacitás (alap):"), 0, row);
-        grid.add(new Label(safe(aircraft.getCargoCapacityBase())), 1, row++);
-
-        grid.add(new Label("Bázis reptér ID:"), 0, row);
-        grid.add(new Label(safe(aircraft.getBaseAirportId())), 1, row++);
-
-        grid.add(new Label("Gyártási év:"), 0, row);
-        grid.add(new Label(safe(aircraft.getManufactureYear())), 1, row++);
-
-        grid.add(new Label("Státusz:"), 0, row);
-        grid.add(new Label(safe(aircraft.getStatus())), 1, row++);
-
-        grid.add(new Label("Megjegyzés:"), 0, row);
-        grid.add(new Label(safe(aircraft.getNote())), 1, row++);
-
-        return grid;
-    }
-
-    // airline adatlap
-    private GridPane buildAirlinePane(Airline airline) {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(8);
-
-        if (airline == null) {
-            grid.add(new Label("Nincs légitársaság adat ehhez a járathoz."), 0, 0);
-            return grid;
-        }
-
-        int row = 0;
-        grid.add(new Label("Név:"), 0, row);
-        grid.add(new Label(safe(airline.getName())), 1, row++);
-
-        grid.add(new Label("ICAO kód:"), 0, row);
-        grid.add(new Label(safe(airline.getIcaoCode())), 1, row++);
-
-        grid.add(new Label("IATA kód:"), 0, row);
-        grid.add(new Label(safe(airline.getIataCode())), 1, row++);
-
-        grid.add(new Label("Ország:"), 0, row);
-        grid.add(new Label(safe(airline.getCountry())), 1, row++);
-
-        grid.add(new Label("Alapítás éve:"), 0, row);
-        grid.add(new Label(safe(airline.getFoundedYear())), 1, row++);
-
-        grid.add(new Label("Aktív:"), 0, row);
-        grid.add(new Label(airline.getActive() != null && airline.getActive() ? "Igen" : "Nem"), 1, row++);
-
-        grid.add(new Label("Üzleti modell:"), 0, row);
-        grid.add(new Label(safe(airline.getBusinessMode())), 1, row++);
-
-        grid.add(new Label("Bázis reptér:"), 0, row);
-        grid.add(new Label(airline.getBaseAirport() != null
-                ? safe(airline.getBaseAirport().getName())
-                : ""), 1, row++);
-
-        grid.add(new Label("Weboldal:"), 0, row);
-        grid.add(new Label(safe(airline.getWebsiteUrl())), 1, row++);
-
-        grid.add(new Label("Telefon:"), 0, row);
-        grid.add(new Label(safe(airline.getPhoneMain())), 1, row++);
-
-        grid.add(new Label("Email:"), 0, row);
-        grid.add(new Label(safe(airline.getEmailMain())), 1, row++);
-
-        grid.add(new Label("Központ címe:"), 0, row);
-        grid.add(new Label(safe(airline.getHeadquartersAddress())), 1, row++);
-
-        grid.add(new Label("Megjegyzés:"), 0, row);
-        grid.add(new Label(safe(airline.getNote())), 1, row++);
-
-        return grid;
-    }
-
-    // Aircraft feloldása: először próbáljuk getAircraft()-tal, ha nincs, getAircraftId() + repo
+    // Aircraft feloldása
     private Aircraft resolveAircraft(Flight flight) {
         if (flight == null) return null;
 
-        // 1) ha van getAircraft() metódus
         try {
             Method m = flight.getClass().getMethod("getAircraft");
             Object obj = m.invoke(flight);
@@ -391,7 +342,6 @@ public class RoutesPageController {
             }
         } catch (Exception ignored) {}
 
-        // 2) ha van getAircraftId() és long/Long-ot ad vissza
         Long id = null;
         try {
             Method m = flight.getClass().getMethod("getAircraftId");
@@ -408,22 +358,18 @@ public class RoutesPageController {
         return null;
     }
 
-    // Airline feloldása: először getAirline(), aztán ICAO/IATA, végül airlineId
+    // Airline feloldása
     private Airline resolveAirline(Flight flight) {
         if (flight == null) return null;
 
-        // 1) ha van getAirline() metódus és közvetlenül visszaad egy Airline-t
         try {
             Method m = flight.getClass().getMethod("getAirline");
             Object obj = m.invoke(flight);
             if (obj instanceof Airline a) {
                 return a;
             }
-        } catch (Exception ignored) {
-            // ha nincs ilyen metódus vagy hiba van, lépünk tovább
-        }
+        } catch (Exception ignored) {}
 
-        // 2) Próbáljuk ICAO kóddal
         String code = tryGetStringProperty(flight, "getAirlineIcao");
         if (code == null) code = tryGetStringProperty(flight, "getAirlineIcaoCode");
         if (code != null && !code.isBlank()) {
@@ -431,7 +377,6 @@ public class RoutesPageController {
             if (found.isPresent()) return found.get();
         }
 
-        // 3) Ha nincs ICAO, próbáljuk IATA-val
         code = tryGetStringProperty(flight, "getAirlineIata");
         if (code == null) code = tryGetStringProperty(flight, "getAirlineIataCode");
         if (code != null && !code.isBlank()) {
@@ -439,7 +384,6 @@ public class RoutesPageController {
             if (found.isPresent()) return found.get();
         }
 
-        // 4) airlineId alapján (ha van ilyen meződ a Flight-ban)
         Long id = null;
         try {
             Method m = flight.getClass().getMethod("getAirlineId");
@@ -453,7 +397,6 @@ public class RoutesPageController {
             return airlineService.findByIdWithAirport(id).orElse(null);
         }
 
-        // semmilyen info nincs róla
         return null;
     }
 
@@ -590,14 +533,12 @@ public class RoutesPageController {
         menuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
             switch (newVal) {
-                case "Főoldal" ->
-                        SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
-                case "Repülők" ->
-                        SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
-                case "Repterek" ->
-                        SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
-                case "Repülőutak" ->
-                        SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
+                case "Főoldal" -> SceneManager.switchTo("HomePage.fxml", "ATC – Főoldal", WIDTH, HEIGHT);
+                case "Repülők" -> SceneManager.switchTo("HomePage/PlanesPage.fxml", "ATC – Repülők", WIDTH, HEIGHT);
+                case "Repterek" -> SceneManager.switchTo("HomePage/AirportsPage.fxml", "ATC – Repterek", WIDTH, HEIGHT);
+                case "Repülőutak" -> SceneManager.switchTo("HomePage/RoutesPage.fxml", "ATC – Útvonalak", WIDTH, HEIGHT);
+                case "Kapuk(Ez inkább a repterekhez menne)" -> SceneManager.switchTo("HomePage/GatesPage.fxml", "ATC – Kapuk", WIDTH, HEIGHT);
+                case "Terminál(Ez is inkább reptér)" -> SceneManager.switchTo("HomePage/TerminalPage.fxml", "ATC – Terminál", WIDTH, HEIGHT);
             }
         });
     }
