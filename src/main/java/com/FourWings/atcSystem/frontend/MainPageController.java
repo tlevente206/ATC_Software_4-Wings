@@ -1,5 +1,6 @@
 package com.FourWings.atcSystem.frontend;
 
+import com.FourWings.atcSystem.frontend.controller.ControllerHomePageController;
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.AuthService;
@@ -234,6 +235,9 @@ public class MainPageController {
 
     private void openControllerHomePage(Stage stage, User user) throws Exception {
         var ctrl = SceneManager.switchTo("ControllerHomePage.fxml", "ATC – Irányító munkaállomás", 1100, 700);
+        if (ctrl instanceof ControllerHomePageController controllerHome) {
+            controllerHome.initWithUser(user);
+        }
     }
 
     @FXML
