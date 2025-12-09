@@ -33,15 +33,17 @@
                                        text="Jó napot, Controller!"
                                        style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-                                <!-- Reptér címsor -->
                                 <Label fx:id="airportTitleLabel"
-                                       text="Otthoni repülőtér: LHBP – Budapest Liszt Ferenc"
+                                       text="Otthoni repülőtér: betöltés alatt…"
                                        style="-fx-text-fill: #cbd5f5; -fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-                                <!-- Alcím -->
                                 <Label fx:id="subtitleLabel"
                                        text="Áttekintés: időjárás, kapuk és mai járatok."
                                        style="-fx-text-fill: #9ca3af;"/>
+
+                                <Label fx:id="airportBasicLabel"
+                                       text="Reptér adatok betöltés alatt…"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
                             </children>
                         </VBox>
 
@@ -126,10 +128,10 @@
                 <Line startX="0" startY="0" endX="0" endY="0"
                       stroke="#1f2937" strokeWidth="1"/>
 
-                <!-- Alap reptér infó -->
-                <Label fx:id="airportBasicLabel"
-                       text="LHBP – Budapest Liszt Ferenc (Budapest)"
-                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+<!--                &lt;!&ndash; Alap reptér infó &ndash;&gt;-->
+<!--                <Label fx:id="airportBasicLabel"-->
+<!--                       text="LHBP – Budapest Liszt Ferenc (Budapest)"-->
+<!--                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>-->
 
             </children>
         </VBox>

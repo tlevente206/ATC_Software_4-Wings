@@ -29,6 +29,9 @@ public class ControllerHomePageController {
     @FXML private Label greetingLabel;
     @FXML private Label airportLabel;
     @FXML private Label statusLabel;
+    @FXML private Label airportTitleLabel;
+    @FXML private Label subtitleLabel;
+    @FXML private Label airportBasicLabel;
     @FXML private javafx.scene.control.Button refreshButton;
     @FXML private javafx.scene.control.Button showDepartures;
     @FXML private javafx.scene.control.Button showArrivals;
@@ -169,15 +172,30 @@ public class ControllerHomePageController {
             greetingLabel.setText(greeting + ", " + name + "!");
         }
 
-        // Repülőtér basic info
-        if (airportLabel != null) {
-            if (assignedAirport != null) {
-                airportLabel.setText(
-                        safe(assignedAirport.getIcaoCode()) + " – " +
-                                safe(assignedAirport.getName())
+        // Reptér címek – ITT ÍRATJUK KI AZ OTTHONI REPTÉRT
+        if (assignedAirport != null) {
+            String icao = safe(assignedAirport.getIcaoCode());
+            String airportName = safe(assignedAirport.getName());
+            String city = safe(assignedAirport.getCity());
+
+            if (airportTitleLabel != null) {
+                airportTitleLabel.setText("Otthoni repülőtér: " + icao + " – " + airportName);
+            }
+            if (subtitleLabel != null) {
+                subtitleLabel.setText("Áttekintés: időjárás, kapuk és mai járatok a "
+                        + airportName + " repülőtéren.");
+            }
+            if (airportBasicLabel != null) {
+                airportBasicLabel.setText(
+                        icao + " – " + airportName + (city.isBlank() ? "" : " (" + city + ")")
                 );
-            } else {
-                airportLabel.setText("Nincs hozzárendelt repülőtér");
+            }
+        } else {
+            if (airportTitleLabel != null) {
+                airportTitleLabel.setText("Otthoni repülőtér: nincs hozzárendelve");
+            }
+            if (airportBasicLabel != null) {
+                airportBasicLabel.setText("Nincs hozzárendelt repülőtér");
             }
         }
 
