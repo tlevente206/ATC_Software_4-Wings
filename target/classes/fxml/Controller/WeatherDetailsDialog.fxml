@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.web.WebView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -141,8 +142,8 @@
 
                     </children>
                 </HBox>
-
-                <!-- ALSÓ KÁRTYA: METAR / részletes jelentés -->
+                
+                <!-- ALSÓ KÁRTYA: Meteorológiai térkép -->
                 <VBox spacing="8"
                       style="
                           -fx-background-color: #020617;
@@ -154,30 +155,15 @@
                           -fx-padding: 14;
                       ">
                     <children>
-                        <Label text="METAR / részletes jelentés"
+                        <Label text="Meteorológiai térkép"
                                style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
 
-                        <Label text="Nyers METAR:"
-                               style="-fx-font-size: 12px; -fx-text-fill: #9ca3af;"/>
+                        <Label text="Az aktuális repülőtér pozícióját zöld pont jelöli a térképen."
+                               style="-fx-font-size: 11px; -fx-text-fill: #9ca3af;"/>
 
-                        <TextArea fx:id="metarLabel"
-                                  editable="false"
-                                  wrapText="true"
-                                  prefRowCount="4"
-                                  text="METAR adatok itt fognak megjelenni."
-                                  style="
-                                      -fx-font-family: 'JetBrains Mono', 'Consolas', monospace;
-                                      -fx-control-inner-background: #020617;
-                                      -fx-text-fill: #e5e7eb;
-                                      -fx-highlight-fill: #1d4ed8;
-                                      -fx-highlight-text-fill: white;
-                                      -fx-border-color: #1f2937;
-                                      -fx-border-radius: 8;
-                                      -fx-background-radius: 8;
-                                  "/>
-
-                        <Label text="További részletes paraméterek (pl. harmatpont, felhőalap, stb.) később ide kerülhetnek."
-                               style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+                        <WebView fx:id="weatherMapView"
+                                 prefHeight="260.0"
+                                 prefWidth="800.0" />
                     </children>
                 </VBox>
 
