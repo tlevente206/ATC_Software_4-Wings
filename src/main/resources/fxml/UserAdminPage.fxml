@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.UserAdminPageController"
-            prefWidth="1400.0" prefHeight="900.0"
-            style="-fx-background-color: black;"
-            stylesheets="@/styles/admin-matrix.css">
+<BorderPane fx:id="root" prefHeight="900.0" prefWidth="1400.0" stylesheets="@/styles/admin-matrix.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.UserAdminPageController">
+<!--            style="-fx-background-color: black;"-->
+
 
     <top>
         <VBox spacing="8" BorderPane.alignment="CENTER">
             <children>
-                <Label text="Felhasználókezelés – Admin felület"
-                       styleClass="matrix-label">
+                <Label styleClass="matrix-label" text="Felhasználókezelés – Admin felület">
                     <font>
-                        <Font size="26"/>
+                        <Font size="26" />
                     </font>
                     <padding>
-                        <Insets top="10" right="10" bottom="5" left="10"/>
+                        <Insets bottom="5" left="10" right="10" top="10" />
                     </padding>
                 </Label>
 
                 <ToolBar>
                     <items>
-                        <Button fx:id="refreshButton" text="Lista frissítése" onAction="#onRefresh" styleClass="matrix-button"/>
-                        <Button fx:id="addUserButton" text="Új felhasználó" onAction="#onAddNewUser" styleClass="matrix-button"/>
-                        <Button fx:id="editUserButton" text="Kijelölt szerkesztése" onAction="#onEditSelectedUser" styleClass="matrix-button"/>
-                        <Button fx:id="deleteUserButton" text="Kijelölt törlése" onAction="#onDeleteUser" styleClass="matrix-button"/>
-                        <Separator/>
-                        <Label text="Keresés:" styleClass="matrix-label"/>
-                        <TextField fx:id="searchField" promptText="Név / felhasználónév / e-mail" prefWidth="250" styleClass="matrix-textfield"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="backToAdminButton" text="Vissza az admin főoldalra" onAction="#onBackToAdmin" styleClass="matrix-button"/>
+                        <Button fx:id="refreshButton" onAction="#onRefresh" styleClass="matrix-button" text="Lista frissítése" />
+                        <Button fx:id="addUserButton" onAction="#onAddNewUser" styleClass="matrix-button" text="Új felhasználó" />
+                        <Button fx:id="editUserButton" onAction="#onEditSelectedUser" styleClass="matrix-button" text="Kijelölt szerkesztése" />
+                        <Button fx:id="deleteUserButton" onAction="#onDeleteUser" styleClass="matrix-button" text="Kijelölt törlése" />
+                        <Separator />
+                        <Label styleClass="matrix-label" text="Keresés:" />
+                        <TextField fx:id="searchField" prefWidth="250" promptText="Név / felhasználónév / e-mail" styleClass="matrix-textfield" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="backToAdminButton" onAction="#onBackToAdmin" styleClass="matrix-button" text="Vissza az admin főoldalra" />
                     </items>
                 </ToolBar>
             </children>
@@ -45,15 +48,15 @@
     </top>
 
     <center>
-        <TableView fx:id="usersTable" BorderPane.alignment="CENTER" styleClass="matrix-table">
+        <TableView fx:id="usersTable" styleClass="matrix-table" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
-                <TableColumn fx:id="nameColumn" text="Név" prefWidth="230"/>
-                <TableColumn fx:id="usernameColumn" text="Felhasználónév" prefWidth="200"/>
-                <TableColumn fx:id="emailColumn" text="E-mail" prefWidth="300"/>
-                <TableColumn fx:id="phoneColumn" text="Telefon" prefWidth="180"/>
-                <TableColumn fx:id="roleColumn" text="Szerepkör" prefWidth="120"/>
-                <TableColumn fx:id="airportColumn" text="Irányító reptere" prefWidth="260"/>
+                <TableColumn fx:id="idColumn" prefWidth="80" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="230" text="Név" />
+                <TableColumn fx:id="usernameColumn" prefWidth="200" text="Felhasználónév" />
+                <TableColumn fx:id="emailColumn" prefWidth="300" text="E-mail" />
+                <TableColumn fx:id="phoneColumn" prefWidth="180" text="Telefon" />
+                <TableColumn fx:id="roleColumn" prefWidth="120" text="Szerepkör" />
+                <TableColumn fx:id="airportColumn" prefWidth="300.0" text="Irányító reptere" />
             </columns>
         </TableView>
     </center>
@@ -61,7 +64,7 @@
     <bottom>
         <HBox BorderPane.alignment="CENTER_LEFT">
             <children>
-                <Label fx:id="statusLabel" text="Készen áll." styleClass="matrix-label"/>
+                <Label fx:id="statusLabel" styleClass="matrix-label" text="Készen áll." />
             </children>
         </HBox>
     </bottom>
