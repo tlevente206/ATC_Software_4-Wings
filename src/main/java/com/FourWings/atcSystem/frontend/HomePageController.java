@@ -9,25 +9,21 @@ import com.FourWings.atcSystem.model.gate.Gate;
 import com.FourWings.atcSystem.model.gate.GateService;
 import com.FourWings.atcSystem.model.user.User;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.util.StringConverter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,6 +35,7 @@ public class HomePageController {
     private final AirportsService airportService;
     private final FlightService flightService;
     private final GateService gateService;
+    private final com.FourWings.atcSystem.service.WeatherService weatherService;
 
     @FXML private ComboBox<String> menuComboBox;
     @FXML private Button dataButton;
@@ -50,15 +47,43 @@ public class HomePageController {
     @FXML private Label totalFlightsLabel;
     @FXML private Label delayedFlightsLabel;
     @FXML private Label freeGatesLabel;
-    @FXML private PieChart statusPieChart;
-    @FXML private BarChart<String, Number> trafficBarChart;
+
+    // ÚJ: időjárás + térkép kártya
+    @FXML private Label weatherInfoLabel;
+    @FXML private Pane airportMapPane;
+    @FXML private Label airportMapInfoLabel;
+
+    // --- IDŐJÁRÁS KÁRTYA (alsó sor bal oldala) ---
+    @FXML private Label weatherTitleLabel;
+    @FXML private Label weatherEmojiLabel;
+    @FXML private Label weatherTempLabel;
+    @FXML private Label weatherConditionLabel;
+    @FXML private Label weatherWindLabel;
+    @FXML private Label weatherVisibilityLabel;
+    @FXML private Label weatherPressureLabel;
+    @FXML private Label weatherFeelsLikeLabel;
+    @FXML private Label weatherUpdatedAtLabel;
+    @FXML private Label weatherMetarLabel;
+
+    // --- TÉRKÉP KÁRTYA (alsó sor jobb oldala) ---
+    @FXML private javafx.scene.web.WebView airportMapWebView;
+
+    private javafx.scene.web.WebEngine airportMapEngine;
+    private boolean airportMapLoaded = false;
 
     private User loggedUser;
 
-    public HomePageController(AirportsService airportService, FlightService flightService, GateService gateService) {
+    // térképhez eltároljuk az aktuális reptér koordinátáit
+    private Double mapLat;
+    private Double mapLon;
+
+    public HomePageController(AirportsService airportService,
+                              FlightService flightService,
+                              GateService gateService, com.FourWings.atcSystem.service.WeatherService weatherService) {
         this.airportService = airportService;
         this.flightService = flightService;
         this.gateService = gateService;
+        this.weatherService = weatherService;
     }
 
     public void initWithUser(User user) {
@@ -72,60 +97,59 @@ public class HomePageController {
 
         if (filterTodayCheckBox != null) {
             filterTodayCheckBox.setSelected(true);
-            filterTodayCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> onRefresh());
+            // Mindig a mai napot nézzük, a checkbox csak információ
+            filterTodayCheckBox.setDisable(true);
+        }
+
+        // térkép újrarajzolása, ha változik a pane mérete
+        if (airportMapPane != null) {
+            airportMapPane.widthProperty().addListener((obs, o, n) -> redrawAirportOnMap());
+            airportMapPane.heightProperty().addListener((obs, o, n) -> redrawAirportOnMap());
         }
 
         loadAirports();
     }
 
     private void updateDashboard(Airports airport) {
-        if (airport == null) return;
+        if (airport == null) {
+            totalFlightsLabel.setText("0");
+            delayedFlightsLabel.setText("0");
+            freeGatesLabel.setText("0");
+            updateWeatherCard(null);
+            updateAirportMap(null);
+            return;
+        }
 
-        // 1. Minden adat lekérése (Nyers adatok)
+        // 1. Nyers adatok
         List<Flight> allDepartures = flightService.getDeparturesForAirport(airport);
         List<Flight> allArrivals = flightService.getArrivalsForAirport(airport);
         List<Gate> gates = gateService.getGatesForAirport(airport);
 
-        // 2. Szűrés a diagramokhoz és a forgalmi adatokhoz (Ma / Összes)
-        List<Flight> filteredDepartures;
-        List<Flight> filteredArrivals;
+        // 2. Mai induló / érkező JÁRATSZÁM (menetrend szerint)
+        LocalDate today = LocalDate.now();
 
-        if (filterTodayCheckBox != null && filterTodayCheckBox.isSelected()) {
-            LocalDate today = LocalDate.now();
-            filteredDepartures = allDepartures.stream()
-                    .filter(f -> isSameDay(f.getActualDeparture(), today))
-                    .collect(Collectors.toList());
-            filteredArrivals = allArrivals.stream()
-                    .filter(f -> isSameDay(f.getActualArrival(), today))
-                    .collect(Collectors.toList());
-        } else {
-            filteredDepartures = new ArrayList<>(allDepartures);
-            filteredArrivals = new ArrayList<>(allArrivals);
-        }
+        List<Flight> todayDepartures = allDepartures.stream()
+                .filter(f -> f.getScheduledDeparture() != null &&
+                        isSameDay(f.getScheduledDeparture(), today))
+                .collect(Collectors.toList());
 
-        // Ez a lista a képernyőn megjelenő statisztikákhoz (diagramok) kell
-        List<Flight> displayedFlights = new ArrayList<>();
-        displayedFlights.addAll(filteredDepartures);
-        displayedFlights.addAll(filteredArrivals);
+        List<Flight> todayArrivals = allArrivals.stream()
+                .filter(f -> f.getScheduledArrival() != null &&
+                        isSameDay(f.getScheduledArrival(), today))
+                .collect(Collectors.toList());
 
-        // --- KPI 1 & 2: Ezeknek reagálniuk kell a szűrőre ---
-        totalFlightsLabel.setText(String.valueOf(displayedFlights.size()));
+        // BAL KPI: mai induló járatok
+        totalFlightsLabel.setText(String.valueOf(todayDepartures.size()));
 
-        long delayedCount = displayedFlights.stream()
-                .filter(f -> isStatus(f, "DELAYED"))
-                .count();
-        delayedFlightsLabel.setText(String.valueOf(delayedCount));
+        // KÖZÉPSŐ KPI: mai érkező járatok
+        delayedFlightsLabel.setText(String.valueOf(todayArrivals.size()));
 
-        // --- KPI 3: SZABAD KAPUK (JAVÍTÁS: MINDIG AZ ÖSSZES ADATBÓL) ---
-        // A kapu fizikai állapota nem függ attól, hogy mire szűrünk a képernyőn.
-        // Ezért itt létrehozunk egy listát az ÖSSZES aktív járatról (szűrés nélkül).
+        // 3. SZABAD KAPUK – maradhat az ÖSSZES járat alapján
         List<Flight> allFlightsPhysical = new ArrayList<>();
         allFlightsPhysical.addAll(allDepartures);
         allFlightsPhysical.addAll(allArrivals);
 
         Set<Long> occupiedGateIds = new HashSet<>();
-
-        // Itt az allFlightsPhysical-on megyünk végig, NEM a displayedFlights-on!
         for (Flight f : allFlightsPhysical) {
             if (f.getGate() != null && isFlightOccupyingGate(f)) {
                 occupiedGateIds.add(f.getGate().getId());
@@ -142,51 +166,159 @@ public class HomePageController {
 
         freeGatesLabel.setText(String.valueOf(freeGates));
 
-        // --- KÖRDIAGRAM (Marad a szűrt listánál) ---
-        long landed = displayedFlights.stream().filter(f -> isStatus(f, "LANDED", "ARRIVED")).count();
-        long active = displayedFlights.stream().filter(f -> isStatus(f, "AIRBORNE", "TAXING", "BOARDING", "DEPARTED")).count();
-        long cancelled = displayedFlights.stream().filter(f -> isStatus(f, "CANCELLED")).count();
-        long scheduled = displayedFlights.stream().filter(f -> isStatus(f, "SCHEDULED", "READY")).count();
+        // 4. Időjárás + térkép kártyák
+        updateWeatherCard(airport);
+        updateAirportMap(airport);
+    }
 
-        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
-        if (landed > 0) pieData.add(new PieChart.Data("Landolt (" + landed + ")", landed));
-        if (active > 0) pieData.add(new PieChart.Data("Aktív (" + active + ")", active));
-        if (delayedCount > 0) pieData.add(new PieChart.Data("Késik (" + delayedCount + ")", delayedCount));
-        if (cancelled > 0) pieData.add(new PieChart.Data("Törölve (" + cancelled + ")", cancelled));
-        if (scheduled > 0) pieData.add(new PieChart.Data("Tervezett (" + scheduled + ")", scheduled));
+    // --- IDŐJÁRÁS KÁRTYA ---
 
-        statusPieChart.setData(pieData);
-        statusPieChart.setTitle(filterTodayCheckBox.isSelected() ? "Mai státuszok" : "Összesített státuszok");
-        if (pieData.isEmpty()) statusPieChart.setTitle("Nincs megjeleníthető adat");
+    // ------------------------------
+//  Időjárás kártya (OpenWeather)
+// ------------------------------
+    private void updateWeatherCard(Airports airport) {
+        if (airport == null) {
+            if (weatherTitleLabel != null) {
+                weatherTitleLabel.setText("Nincs kiválasztott repülőtér");
+            }
+            if (weatherEmojiLabel != null)      weatherEmojiLabel.setText("—");
+            if (weatherTempLabel != null)       weatherTempLabel.setText("—");
+            if (weatherConditionLabel != null)  weatherConditionLabel.setText("—");
+            if (weatherWindLabel != null)       weatherWindLabel.setText("—");
+            if (weatherVisibilityLabel != null) weatherVisibilityLabel.setText("—");
+            if (weatherPressureLabel != null)   weatherPressureLabel.setText("—");
+            if (weatherFeelsLikeLabel != null)  weatherFeelsLikeLabel.setText("—");
+            if (weatherUpdatedAtLabel != null)  weatherUpdatedAtLabel.setText("—");
+            if (weatherMetarLabel != null)      weatherMetarLabel.setText("—");
+            return;
+        }
 
-        // --- OSZLOPDIAGRAM (Marad a szűrt listánál) ---
-        trafficBarChart.getData().clear();
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Járatszám");
-        series.getData().add(new XYChart.Data<>("Induló", filteredDepartures.size()));
-        series.getData().add(new XYChart.Data<>("Érkező", filteredArrivals.size()));
-        trafficBarChart.getData().add(series);
+        try {
+            var info = weatherService.getCurrentWeatherForAirport(airport);
+
+            String city = airport.getCity() != null ? airport.getCity() : "";
+            String title = airport.getIcaoCode() + " – " + airport.getName()
+                    + (city.isBlank() ? "" : " (" + city + ")");
+
+            if (weatherEmojiLabel != null)      weatherEmojiLabel.setText(info.emoji());
+            if (weatherTempLabel != null)       weatherTempLabel.setText(String.format("%.1f °C", info.temperatureC()));
+            if (weatherConditionLabel != null)  weatherConditionLabel.setText(info.conditionText());
+            if (weatherWindLabel != null)       weatherWindLabel.setText(info.windText());
+            if (weatherVisibilityLabel != null) weatherVisibilityLabel.setText("Látótávolság: " + info.visibilityText());
+            if (weatherPressureLabel != null)   weatherPressureLabel.setText("Légnyomás: " + info.pressureText());
+            if (weatherFeelsLikeLabel != null)  weatherFeelsLikeLabel.setText(info.feelsLikeText());
+            if (weatherUpdatedAtLabel != null)  weatherUpdatedAtLabel.setText("Frissítve: " + info.updatedAtText());
+            if (weatherMetarLabel != null)      weatherMetarLabel.setText(info.metarRaw());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (weatherTitleLabel != null) {
+                weatherTitleLabel.setText("Nem sikerült időjárási adatot lekérni.");
+            }
+        }
+    }
+
+    // --- TÉRKÉP KÁRTYA ---
+
+    // ------------------------------
+//  Térkép kártya – zöld pötty a reptérre
+//  weather.html / showAirport(lat, lon, label)
+// ------------------------------
+    private void updateAirportMap(Airports airport) {
+        if (airportMapWebView == null) {
+            return;
+        }
+
+        if (airport == null) {
+            // Ha akarod, itt ürítheted a térképet JS-sel (airportLayer.clearLayers())
+            return;
+        }
+
+        java.math.BigDecimal latBD = airport.getLatitude();
+        java.math.BigDecimal lonBD = airport.getLongitude();
+        if (latBD == null || lonBD == null) {
+            return;
+        }
+
+        double lat = latBD.doubleValue();
+        double lon = lonBD.doubleValue();
+
+        String city = airport.getCity() != null ? airport.getCity() : "";
+        String label = airport.getIcaoCode() + " – " + airport.getName()
+                + (city.isBlank() ? "" : " (" + city + ")");
+
+        if (airportMapEngine == null) {
+            airportMapEngine = airportMapWebView.getEngine();
+            airportMapEngine.setJavaScriptEnabled(true);
+
+            String url = getClass()
+                    .getResource("/weather-map.html")   // IDE REFEReL a fenti HTML-ed
+                    .toExternalForm();
+
+            double finalLat = lat;
+            double finalLon = lon;
+            String finalLabel = label.replace("'", "\\'");
+
+            airportMapEngine.getLoadWorker().stateProperty().addListener((obs, old, state) -> {
+                if (state == javafx.concurrent.Worker.State.SUCCEEDED) {
+                    airportMapLoaded = true;
+                    callShowAirport(finalLat, finalLon, finalLabel);
+                }
+            });
+
+            airportMapEngine.load(url);
+
+        } else if (airportMapLoaded) {
+            callShowAirport(lat, lon, label);
+        }
+    }
+
+    private void callShowAirport(double lat, double lon, String label) {
+        if (airportMapEngine == null) return;
+        String safeLabel = label.replace("'", "\\'");
+        String script = String.format(
+                "showAirport(%f, %f, '%s')",
+                lat, lon, safeLabel
+        );
+        airportMapEngine.executeScript(script);
+    }
+
+    private void redrawAirportOnMap() {
+        if (airportMapPane == null) return;
+        airportMapPane.getChildren().clear();
+
+        if (mapLat == null || mapLon == null) return;
+
+        double w = airportMapPane.getWidth();
+        double h = airportMapPane.getHeight();
+        if (w <= 0 || h <= 0) return;
+
+        // Egyszerű "világtérkép" vetítés:
+        // hosszúság: [-180 .. 180] -> [padding .. w-padding]
+        // szélesség: [-90 .. 90]   -> [padding .. h-padding] (és felül az északi félteke)
+        double padding = 30;
+
+        double x = padding + (mapLon + 180.0) / 360.0 * (w - 2 * padding);
+        double y = padding + (90.0 - mapLat) / 180.0 * (h - 2 * padding);
+
+        Circle dot = new Circle(x, y, 7, Color.LIMEGREEN);
+        dot.setStroke(Color.BLACK);
+        dot.setStrokeWidth(1.5);
+
+        airportMapPane.getChildren().add(dot);
     }
 
     // --- SEGÉDMETÓDUSOK ---
 
-    // Ez dönti el, hogy egy repülő ÉPPEN elfoglalja-e a kaput
     private boolean isFlightOccupyingGate(Flight f) {
         if (f.getStatus() == null) return false;
         String s = f.getStatus().name().toUpperCase();
 
-        // Ezek a státuszok jelentik azt, hogy a gép fizikailag a kapunál van:
         return s.equals("BOARDING") ||
-                s.equals("LANDED") ||   // Épp leszállt, begurult
-                s.equals("READY") ||    // Indulásra kész
-                s.equals("LOADING") ||  // Rakodás
-                s.equals("DELAYED");    // Késik, de valószínűleg ott áll (vagy várakozik rá)
-
-        // Ami NEM foglalja a kaput:
-        // SCHEDULED (még nincs ott)
-        // AIRBORNE (már/még levegőben)
-        // DEPARTED (felszállt)
-        // CANCELLED (törölve)
+                s.equals("LANDED") ||
+                s.equals("READY") ||
+                s.equals("LOADING") ||
+                s.equals("DELAYED");
     }
 
     private boolean isSameDay(LocalDateTime dateTime, LocalDate today) {
@@ -254,5 +386,9 @@ public class HomePageController {
     @FXML public void onGoToPersonalData(ActionEvent event) {
         UserDataPageController ctrl = SceneManager.switchTo("UserDataPage.fxml", "ATC – Saját adatok", WIDTH, HEIGHT);
         if (ctrl != null) ctrl.initWithUser(loggedUser);
+    }
+
+    private String nullSafe(String s) {
+        return s != null ? s : "";
     }
 }
