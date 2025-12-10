@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+
+<?import javafx.scene.web.WebView?>
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.controller.FlightDetailsDialogController"
+            prefWidth="900" prefHeight="650"
+            style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #020617);">
+
+    <!-- FELSŐ SÁV: cím + bezárás -->
+    <top>
+        <HBox spacing="10" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="14" left="18" right="18" bottom="10"/>
+            </padding>
+            <children>
+                <VBox spacing="4">
+                    <children>
+                        <Label fx:id="titleLabel"
+                               text="Járat részletei"
+                               style="-fx-text-fill: #e5e7eb; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+                        <Label fx:id="subtitleLabel"
+                               text="Légitársaság, repülőgép és útvonal áttekintése."
+                               style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                    </children>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Bezárás"
+                        onAction="#onClose"
+                        style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: #4b5563;
+                            -fx-border-radius: 999;
+                            -fx-text-fill: #e5e7eb;
+                            -fx-font-size: 12px;
+                            -fx-padding: 6 14 6 14;
+                        ">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- KÖZÉP: 3 SZEGMENS (Légitársaság, Gép, Térkép) -->
+    <center>
+        <VBox spacing="12" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="0" left="18" right="18" bottom="16"/>
+            </padding>
+            <children>
+
+                <!-- 1. KÁRTYA: Légitársaság -->
+                <VBox spacing="8"
+                      style="
+                          -fx-background-color: #020617;
+                          -fx-background-radius: 14;
+                          -fx-border-color: #1f2937;
+                          -fx-border-radius: 14;
+                          -fx-padding: 12;
+                      ">
+                    <children>
+                        <Label text="Légitársaság"
+                               style="-fx-text-fill: #e5e7eb; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                        <GridPane hgap="10" vgap="6">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="140"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                            <children>
+                                <Label text="Név:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="airlineNameLabel"
+                                       text="—"
+                                       GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+
+                                <Label text="Kód:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="airlineCodeLabel"
+                                       text="—"
+                                       GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+
+                                <Label text="Ország:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="airlineCountryLabel"
+                                       text="—"
+                                       GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+
+                <!-- 2. KÁRTYA: Repülőgép -->
+                <VBox spacing="8"
+                      style="
+                          -fx-background-color: #020617;
+                          -fx-background-radius: 14;
+                          -fx-border-color: #1f2937;
+                          -fx-border-radius: 14;
+                          -fx-padding: 12;
+                      ">
+                    <children>
+                        <Label text="Repülőgép"
+                               style="-fx-text-fill: #e5e7eb; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                        <GridPane hgap="10" vgap="6">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="140"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                            <children>
+                                <Label text="Lajstromjel:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="aircraftRegLabel"
+                                       text="—"
+                                       GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+
+                                <Label text="Típus ICAO:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="aircraftTypeLabel"
+                                       text="—"
+                                       GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+
+                                <Label text="Max. férőhely:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="aircraftSeatsLabel"
+                                       text="—"
+                                       GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+
+                                <Label text="Gyártási év:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="aircraftYearLabel"
+                                       text="—"
+                                       GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+
+                                <Label text="Státusz:" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                                <Label fx:id="aircraftStatusLabel"
+                                       text="—"
+                                       GridPane.rowIndex="4" GridPane.columnIndex="1"
+                                       style="-fx-text-fill: #e5e7eb; -fx-font-size: 12px;"/>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+
+                <!-- 3. KÁRTYA: Térkép + útvonal -->
+                <VBox spacing="8"
+                      VBox.vgrow="ALWAYS"
+                      style="
+                          -fx-background-color: #020617;
+                          -fx-background-radius: 14;
+                          -fx-border-color: #1f2937;
+                          -fx-border-radius: 14;
+                          -fx-padding: 12;
+                      ">
+                    <children>
+                        <Label text="Útvonal térképen"
+                               style="-fx-text-fill: #e5e7eb; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                        <Label fx:id="routeLabel"
+                               text="Indulás és érkezés megjelenítése."
+                               style="-fx-text-fill: #9ca3af; -fx-font-size: 11px;"/>
+
+                        <StackPane VBox.vgrow="ALWAYS">
+                            <children>
+                                <!-- Háttér “térkép” -->
+                                <Rectangle width="0" height="0"
+                                           arcWidth="12" arcHeight="12"
+                                           StackPane.alignment="CENTER"
+                                           style="-fx-fill: linear-gradient(to bottom right, #020617, #0b1120);"/>
+                                <!-- Erre rajzolunk majd: vonal + pöttyök -->
+                                <WebView fx:id="mapWebView"
+                                         prefWidth="600"
+                                         prefHeight="260"/>
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>

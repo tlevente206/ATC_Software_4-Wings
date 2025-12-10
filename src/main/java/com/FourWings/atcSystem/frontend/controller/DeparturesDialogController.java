@@ -1,15 +1,21 @@
 package com.FourWings.atcSystem.frontend.controller;
 
+import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.flight.Flight;
 import com.FourWings.atcSystem.model.flight.FlightService;
 import com.FourWings.atcSystem.model.flight.FlightStatus;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +61,19 @@ public class DeparturesDialogController {
         statusCol.setEditable(true);
         estimatedArrivalCol.setEditable(true);
         actualArrivalCol.setEditable(true);
+        departuresTable.setRowFactory(tv -> {
+            var row = new javafx.scene.control.TableRow<Flight>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()
+                        && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2) {
+
+                    Flight clicked = row.getItem();
+                    openFlightDetails(clicked);
+                }
+            });
+            return row;
+        });
     }
 
     /**
@@ -187,6 +206,35 @@ public class DeparturesDialogController {
 
     private String safe(String s) {
         return s != null ? s : "";
+    }
+
+    private void openFlightDetails(Flight flight) {
+        if (flight == null) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/FlightDetailsDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            FlightDetailsDialogController ctrl = loader.getController();
+            ctrl.init(flight);
+
+            Stage dialog = new Stage();
+            if (titleLabel != null && titleLabel.getScene() != null) {
+                dialog.initOwner(titleLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Járat részletei – " + flight.getFlightNumber());
+            dialog.setScene(new Scene(root));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @FXML
