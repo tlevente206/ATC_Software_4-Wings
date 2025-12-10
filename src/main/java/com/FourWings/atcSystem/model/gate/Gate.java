@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "gates")
+@EqualsAndHashCode(exclude = "terminal")   // 🔹 EZ A LÉNYEG
 public class Gate {
 
     @Id
@@ -43,17 +44,4 @@ public class Gate {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Override
-    public String toString() {
-        return "Gate{" +
-                "id=" + id +
-                ", terminal=" + terminal +
-                ", code='" + code + '\'' +
-                ", status=" + status +
-                ", note='" + note + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

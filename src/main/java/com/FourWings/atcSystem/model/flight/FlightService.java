@@ -168,4 +168,9 @@ public class FlightService {
             f.setAircraftStatusText("");
         }
     }
+
+    @Transactional
+    public Flight createFlight(Flight flight) {
+        return repo.save(flight);
+    }
 }

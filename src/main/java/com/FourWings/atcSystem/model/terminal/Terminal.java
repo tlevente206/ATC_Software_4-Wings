@@ -8,13 +8,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "terminals")
 @ToString(exclude = "airport")
+@EqualsAndHashCode(exclude = "airport")
 public class Terminal {
 
     @Id
@@ -29,7 +31,7 @@ public class Terminal {
     @Column(name = "code", length = 20, nullable = false)
     private String code;
 
-    @Convert(converter = TerminalStatusConverter.class) // DB-ben kisbetűs
+    @Convert(converter = TerminalStatusConverter.class)
     @Column(name = "status")
     private TerminalStatus status;
 
@@ -55,21 +57,4 @@ public class Terminal {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Override
-    public String toString() {
-        return "Terminal{" +
-                "id=" + id +
-                ", airport=" + airport +
-                ", code='" + code + '\'' +
-                ", status=" + status +
-                ", gatesCount=" + gatesCount +
-                ", hasDeparturesHall=" + hasDeparturesHall +
-                ", hasArrivalsHall=" + hasArrivalsHall +
-                ", hasCargoFacility=" + hasCargoFacility +
-                ", note='" + note + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

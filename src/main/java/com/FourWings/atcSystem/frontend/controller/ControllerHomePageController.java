@@ -472,6 +472,10 @@ public class ControllerHomePageController {
             dialog.setResizable(true);
             dialog.showAndWait();
 
+            if (ctrl.isSavedSuccessfully()) {
+                refreshTodayDeparturesCount();  // ← IDE azt írd, ami nálad tényleg tölti a táblát
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

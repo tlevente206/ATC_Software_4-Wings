@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.model.gate;
 
 import com.FourWings.atcSystem.model.airport.Airports;
+import com.FourWings.atcSystem.model.terminal.Terminal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,5 +29,13 @@ public class GateService {
     @Transactional(readOnly = true)
     public List<Gate> getGatesForAirport(Airports airport) {
         return repo.findByAirport(airport);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Gate> getGatesForTerminal(Terminal terminal) {
+        if (terminal == null) {
+            return List.of();
+        }
+        return repo.findByTerminal(terminal);
     }
 }

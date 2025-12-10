@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.model.gate;
 
 import com.FourWings.atcSystem.model.airport.Airports;
+import com.FourWings.atcSystem.model.terminal.Terminal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,5 +23,7 @@ public interface GateRepository extends JpaRepository<Gate,Long> {
             "JOIN g.terminal t " +
             "WHERE t.airport = :airport")
     List<Gate> findByAirport(@Param("airport") Airports airport);
+
+    List<Gate> findByTerminal(Terminal terminal);
 }
 

@@ -3,6 +3,7 @@ package com.FourWings.atcSystem.model.terminal;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TerminalRepository extends JpaRepository<Terminal, Long> {
@@ -11,4 +12,5 @@ public interface TerminalRepository extends JpaRepository<Terminal, Long> {
     Terminal findTopByOrderByIdDesc();
 
     Optional<Terminal> findByAirport_IdAndCode(Long airportId, String code);
+    List<Terminal> findByAirport_Id(Long airportId);
 }
