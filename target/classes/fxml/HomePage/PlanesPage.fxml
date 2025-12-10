@@ -14,6 +14,11 @@
     <children>
         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;" text="Repülőgépek adatbázisa"/>
 
+        <Button layoutX="920" layoutY="14"
+                text="🌗 Téma"
+                onAction="#onToggleTheme"
+                styleClass="theme-toggle button"/>
+
         <Button fx:id="logoutButton" layoutX="1080.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés"/>
 
         <ComboBox fx:id="menuComboBox" layoutX="25.0" layoutY="80.0" prefWidth="220.0">

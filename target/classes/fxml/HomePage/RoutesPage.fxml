@@ -25,6 +25,11 @@
                style="-fx-font-size: 24px; -fx-font-weight: bold;"
                text="Repülőutak és Térkép" />
 
+        <Button layoutX="920" layoutY="14"
+                text="🌗 Téma"
+                onAction="#onToggleTheme"
+                styleClass="theme-toggle button"/>
+
         <Button layoutX="1080.0" layoutY="14.0"
                 onAction="#onLogout"
                 style="-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-weight: bold;"

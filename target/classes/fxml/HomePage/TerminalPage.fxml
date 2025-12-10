@@ -37,6 +37,11 @@
 
         <Button layoutX="730.0" layoutY="70.0" onAction="#onRefresh" text="Frissítés" />
 
+        <Button layoutX="920" layoutY="14"
+                text="🌗 Téma"
+                onAction="#onToggleTheme"
+                styleClass="theme-toggle button"/>
+
         <HBox alignment="CENTER" layoutX="25.0" layoutY="120.0" prefWidth="1150.0" spacing="40.0" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
             <VBox alignment="CENTER">
                 <Label style="-fx-text-fill: #777; -fx-font-size: 14px;" text="Összes Kapu" />

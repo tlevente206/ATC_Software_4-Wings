@@ -17,6 +17,11 @@
 
         <Button layoutX="1080.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés" />
 
+        <Button layoutX="920" layoutY="14"
+                text="🌗 Téma"
+                onAction="#onToggleTheme"
+                styleClass="theme-toggle button"/>
+
         <ComboBox fx:id="menuComboBox" layoutX="25.0" layoutY="70.0" prefWidth="220.0">
             <items>
                 <FXCollections fx:factory="observableArrayList">
