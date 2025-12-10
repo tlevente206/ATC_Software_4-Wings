@@ -84,6 +84,16 @@ public class ArrivalsDialogController {
     @FXML
     public void initialize() {
         setupTable();
+        arrivalsTable.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<Flight> row = new javafx.scene.control.TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Flight selected = row.getItem();
+                    openFlightDetails(selected);
+                }
+            });
+            return row;
+        });
     }
 
     private void setupTable() {
@@ -101,6 +111,35 @@ public class ArrivalsDialogController {
 
     private String safe(String s) {
         return s != null ? s : "";
+    }
+
+    private void openFlightDetails(Flight flight) {
+        if (flight == null) return;
+
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/fxml/FlightDetailsDialog.fxml")
+            );
+            loader.setControllerFactory(com.FourWings.atcSystem.config.SpringContext::getBean);
+
+            javafx.scene.Parent root = loader.load();
+
+            FlightDetailsDialogController ctrl = loader.getController();
+            ctrl.init(flight);
+
+            javafx.stage.Stage dialog = new javafx.stage.Stage();
+            if (arrivalsTable != null && arrivalsTable.getScene() != null) {
+                dialog.initOwner(arrivalsTable.getScene().getWindow());
+            }
+            dialog.initModality(javafx.stage.Modality.WINDOW_MODAL);
+            dialog.setTitle("Járat részletei – " + flight.getFlightNumber());
+            dialog.setScene(new javafx.scene.Scene(root, 900, 650));
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
