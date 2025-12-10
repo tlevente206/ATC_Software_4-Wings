@@ -38,7 +38,7 @@
                     <String fx:value="Repülők"/>
                     <String fx:value="Repterek"/>
                     <String fx:value="Repülőutak"/>
-                    <String fx:value="Terminál"/>
+<!--                    <String fx:value="Terminál"/>-->
                 </FXCollections>
             </items>
         </ComboBox>
