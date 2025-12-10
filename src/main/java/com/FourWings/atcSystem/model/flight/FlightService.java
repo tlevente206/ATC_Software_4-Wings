@@ -129,6 +129,15 @@ public class FlightService {
         f.setEstimatedArrivalText(
                 f.getEstimatedArrival() != null ? f.getEstimatedArrival().format(FORMATTER) : ""
         );
+        f.setActualDepartureText(
+                f.getActualDeparture() != null ? f.getActualDeparture().format(FORMATTER) : ""
+        );
+        f.setActualArrivalText(
+                f.getActualArrival() != null ? f.getActualArrival().format(FORMATTER) : ""
+        );
+        f.setActualDepartureText(
+                f.getActualDeparture() != null ? f.getActualDeparture().format(FORMATTER) : ""
+        );
 
         // --- Kapukód ---
         if (f.getGate() != null && f.getGate().getCode() != null) {

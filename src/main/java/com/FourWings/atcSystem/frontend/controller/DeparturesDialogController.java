@@ -3,10 +3,12 @@ package com.FourWings.atcSystem.frontend.controller;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.flight.Flight;
 import com.FourWings.atcSystem.model.flight.FlightService;
+import com.FourWings.atcSystem.model.flight.FlightStatus;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
@@ -31,7 +33,7 @@ public class DeparturesDialogController {
     @FXML private TableColumn<Flight, String> flightNumberCol;
     @FXML private TableColumn<Flight, String> scheduledDepartureCol;
     @FXML private TableColumn<Flight, String> scheduledArrivalCol;
-    @FXML private TableColumn<Flight, String> statusCol;
+    @FXML private TableColumn<Flight, FlightStatus> statusCol;
     @FXML private TableColumn<Flight, String> estimatedDepartureCol;
     @FXML private TableColumn<Flight, String> estimatedArrivalCol;
     @FXML private TableColumn<Flight, String> actualDepartureCol;
@@ -49,6 +51,10 @@ public class DeparturesDialogController {
     @FXML
     public void initialize() {
         setupTable();
+        departuresTable.setEditable(true);
+        statusCol.setEditable(true);
+        estimatedArrivalCol.setEditable(true);
+        actualArrivalCol.setEditable(true);
     }
 
     /**
@@ -108,14 +114,15 @@ public class DeparturesDialogController {
         scheduledArrivalCol.setCellValueFactory(new PropertyValueFactory<>("scheduledArrivalText"));
 
         // Státusz szöveg
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("statusText"));
+        // Státusz (enum)
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         // Becsült indulás / érkezés
         estimatedDepartureCol.setCellValueFactory(new PropertyValueFactory<>("estimatedDepartureText"));
         estimatedArrivalCol.setCellValueFactory(new PropertyValueFactory<>("estimatedArrivalText"));
 
         // Tényleges indulás / érkezés – itt nyers LocalDateTime toString megy
-        actualDepartureCol.setCellValueFactory(new PropertyValueFactory<>("actualDeparture"));
+        actualDepartureCol.setCellValueFactory(new PropertyValueFactory<>("actualDepartureText"));
         actualArrivalCol.setCellValueFactory(new PropertyValueFactory<>("actualArrival"));
 
         // Légijármű: típus ICAO kód
@@ -126,6 +133,56 @@ public class DeparturesDialogController {
 
         // Utolsó frissítés – updatedAt (LocalDateTime -> toString)
         updatedAtCol.setCellValueFactory(new PropertyValueFactory<>("updatedAt"));
+        statusCol.setCellFactory(
+                ComboBoxTableCell.forTableColumn(FlightStatus.values())
+        );
+
+        statusCol.setOnEditCommit(event -> {
+            Flight flight = event.getRowValue();
+            flight.setStatus(event.getNewValue());
+            flightService.save(flight);
+            departuresTable.refresh();
+        });
+
+        estimatedArrivalCol.setCellFactory(
+                javafx.scene.control.cell.TextFieldTableCell.forTableColumn()
+        );
+
+        estimatedArrivalCol.setOnEditCommit(event -> {
+            Flight flight = event.getRowValue();
+            flight.setEstimatedArrivalFromText(event.getNewValue());
+            flightService.save(flight);
+        });
+
+        actualArrivalCol.setCellFactory(
+                javafx.scene.control.cell.TextFieldTableCell.forTableColumn()
+        );
+
+        actualArrivalCol.setOnEditCommit(event -> {
+            Flight flight = event.getRowValue();
+            flight.setActualArrivalFromText(event.getNewValue());
+            flightService.save(flight);
+        });
+
+        estimatedDepartureCol.setCellFactory(
+                javafx.scene.control.cell.TextFieldTableCell.forTableColumn()
+        );
+
+        estimatedDepartureCol.setOnEditCommit(event -> {
+            Flight flight = event.getRowValue();
+            flight.setEstimatedDepartureFromText(event.getNewValue());
+            flightService.save(flight);
+        });
+
+        actualDepartureCol.setCellFactory(
+                javafx.scene.control.cell.TextFieldTableCell.forTableColumn()
+        );
+
+        actualDepartureCol.setOnEditCommit(event -> {
+            Flight flight = event.getRowValue();
+            flight.setActualDepartureFromText(event.getNewValue());
+            flightService.save(flight);
+        });
     }
 
     private String safe(String s) {

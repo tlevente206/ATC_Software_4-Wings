@@ -121,6 +121,9 @@ public class Flight {
     private String aircraftRegistration;
 
     @Transient
+    private String actualDepartureText;
+
+    @Transient
     private String aircraftTypeIcao;
 
     @Transient
@@ -131,6 +134,11 @@ public class Flight {
 
     @Transient
     private String aircraftStatusText;
+
+
+
+    @Transient
+    private String actualArrivalText;
 
     @Override
     public boolean equals(Object o) {
@@ -158,5 +166,68 @@ public class Flight {
                 ", estimatedDeparture=" + estimatedDeparture +
                 ", estimatedArrival=" + estimatedArrival +
                 '}';
+    }
+
+    // --- Szöveges mezőkből dátum/idő beállítása (UI szerkesztéshez) ---
+
+    private static final java.time.format.DateTimeFormatter UI_FORMATTER =
+            java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+
+    public void setEstimatedArrivalFromText(String text) {
+        if (text == null || text.isBlank()) {
+            this.estimatedArrival = null;
+            this.estimatedArrivalText = "";
+            return;
+        }
+        try {
+            this.estimatedArrival = LocalDateTime.parse(text, UI_FORMATTER);
+            this.estimatedArrivalText = text;
+        } catch (Exception e) {
+            // ha rossz a formátum, NEM írjuk felül a meglévőt
+        }
+    }
+
+    public void setActualArrivalFromText(String text) {
+        if (text == null || text.isBlank()) {
+            this.actualArrival = null;
+            this.actualArrivalText = "";
+            return;
+        }
+        try {
+            this.actualArrival = LocalDateTime.parse(text, UI_FORMATTER);
+            this.actualArrivalText = text;
+        } catch (Exception e) {
+            // ha rossz a formátum, NEM írjuk felül a meglévőt
+        }
+    }
+
+
+
+    public void setEstimatedDepartureFromText(String text) {
+        if (text == null || text.isBlank()) {
+            this.estimatedDeparture = null;
+            this.estimatedDepartureText = "";
+            return;
+        }
+        try {
+            this.estimatedDeparture = LocalDateTime.parse(text, UI_FORMATTER);
+            this.estimatedDepartureText = text;
+        } catch (Exception e) {
+            // rossz formátum esetén nem írjuk felül
+        }
+    }
+
+    public void setActualDepartureFromText(String text) {
+        if (text == null || text.isBlank()) {
+            this.actualDeparture = null;
+            this.actualDepartureText = "";
+            return;
+        }
+        try {
+            this.actualDeparture = LocalDateTime.parse(text, UI_FORMATTER);
+            this.actualDepartureText = text;
+        } catch (Exception e) {
+            // rossz formátum esetén nem írjuk felül
+        }
     }
 }
