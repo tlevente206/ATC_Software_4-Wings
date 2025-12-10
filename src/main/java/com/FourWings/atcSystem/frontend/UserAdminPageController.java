@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class UserAdminPageController {
     // --- FXML elemek ----
 
     @FXML
-    private AnchorPane root;   // >>>> HOZZÁADVA: háttérhez kell
+    private BorderPane root;    // >>>> HOZZÁADVA: háttérhez kell
 
     @FXML
     private TableView<User> usersTable;

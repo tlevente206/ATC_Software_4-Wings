@@ -9,30 +9,22 @@
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.AdminPageController"
-            style="-fx-background-color: black;">
-
-    <stylesheets>
-        <!-- FONTOS: útvonal a resources mappához képest -->
-        <URL value="@/css/admin-matrix.css"/>
-    </stylesheets>
+            style="-fx-background-color: black;"
+            stylesheets="@/styles/admin-matrix.css">
 
     <Label layoutX="180" layoutY="25"
            text="Admin bejelentkezve"
-           style="-fx-text-fill: #00ff88;
-                  -fx-font-size: 26px;
-                  -fx-font-weight: bold;
-                  -fx-effect: dropshadow(gaussian, #00ff88, 20, 0.4, 0, 0);" />
+           styleClass="matrix-label"/>
 
     <Button fx:id="FelhasznalokButton"
             layoutX="220" layoutY="110"
             text="Felhasználók"
-            onAction="#goToUserAdminPage" />
+            onAction="#goToUserAdminPage"
+            styleClass="matrix-button"/>
 
     <Button fx:id="logoutButton"
             text="Kijelentkezés"
             onAction="#onLogout"
             layoutX="450" layoutY="15"
-            style="-fx-border-color: #ff4444;
-                   -fx-text-fill: #ff4444;" />
-
+            styleClass="matrix-button logout-button"/>
 </AnchorPane>
