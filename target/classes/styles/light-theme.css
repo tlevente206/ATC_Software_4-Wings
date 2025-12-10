@@ -78,6 +78,6 @@
 }
 
 .table-row-cell:filled:selected {
-    -fx-background-color: #00a1ff !important;
+    -fx-background-color: #00a1ff;
     -fx-text-fill: white;
 }

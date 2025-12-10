@@ -7,7 +7,7 @@
 }
 
 /* Zöld text glow */
-.label, .text, .table-view, .table-cell {
+.label, .text, .table-cell {
     -fx-text-fill: #00ff88;
     -fx-effect: dropshadow(gaussian, #00ff88, 20, 0.4, 0, 0);
 }
@@ -52,8 +52,8 @@
    TABLEVIEW – MATRIX STYLE
    ─────────────────────────────────────────────── */
 .table-view {
-    -fx-background-color: black;
-    -fx-control-inner-background: black;
+    -fx-background-color: black !important;
+    -fx-control-inner-background: black !important;
     -fx-table-cell-border-color: #00ff44;
     -fx-table-header-border-color: #00ff44;
     -fx-border-color: #00ff44;
@@ -74,10 +74,10 @@
     -fx-font-size: 15px;
 }
 
-/* kijelölés */
+/* kijelölés: zöld háttér, fehér szöveg */
 .table-row-cell:filled:selected {
     -fx-background-color: rgba(0, 255, 136, 0.35);
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 
 .table-row-cell:hover {
