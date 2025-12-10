@@ -36,7 +36,7 @@ public class AdminPageController {
 
     @FXML private AnchorPane root;   // vagy BorderPane root
 
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize() {
         MatrixRainBackground.apply(root);
     }
 
