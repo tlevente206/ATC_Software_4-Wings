@@ -38,4 +38,15 @@ public class GateService {
         }
         return repo.findByTerminal(terminal);
     }
+
+    @Transactional(readOnly = true)
+    public long countFreeGatesForAirport(Airports airport) {
+        if (airport == null) {
+            return 0L;
+        }
+        // Itt azt az enum értéket használd, ami NÁLAD a "szabad" vagy "elérhető" kaput jelenti:
+        return repo.countByAirportAndStatus(airport, GateStatus.ACTIVE);
+        // Ha nálad pl. FREE, OPEN stb. a neve, akkor azt írd:
+        // return repo.countByAirportAndStatus(airport, GateStatus.FREE);
+    }
 }

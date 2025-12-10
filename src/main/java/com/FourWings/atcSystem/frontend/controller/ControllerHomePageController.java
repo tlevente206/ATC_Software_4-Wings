@@ -5,6 +5,7 @@ import com.FourWings.atcSystem.config.SpringContext;
 import com.FourWings.atcSystem.frontend.FlightWeatherAssistantDialogController;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.flight.FlightService;
+import com.FourWings.atcSystem.model.gate.GateService;
 import com.FourWings.atcSystem.model.user.User;
 import com.FourWings.atcSystem.service.WeatherService;
 import com.FourWings.atcSystem.service.dto.AirportWeatherInfo;
@@ -30,6 +31,7 @@ public class ControllerHomePageController {
     private Airports assignedAirport;
     private final WeatherService weatherService;
     private final FlightService flightService;
+    private final GateService gateService;
 
     // --- FXML elemek ---
     @FXML private BorderPane rootPane;
@@ -59,6 +61,7 @@ public class ControllerHomePageController {
     // 🔹 Dashboard kis kártyák számai
     @FXML private Label arrivalsCountLabel;
     @FXML private Label departuresCountLabel;
+    @FXML private Label freeGatesCountLabel;
 
     private static final String NORMAL_STYLE =
             "-fx-background-color: rgba(248,250,252,0.06);" +
@@ -113,9 +116,10 @@ public class ControllerHomePageController {
                     "-fx-cursor: hand;";
 
     public ControllerHomePageController(WeatherService weatherService,
-                                        FlightService flightService) {
+                                        FlightService flightService, GateService gateService) {
         this.weatherService = weatherService;
         this.flightService = flightService;
+        this.gateService = gateService;
     }
 
     @FXML
@@ -279,6 +283,7 @@ public class ControllerHomePageController {
         refreshWeather();
         refreshTodayArrivalsCount();
         refreshTodayDeparturesCount();
+        refreshFreeGatesCount();
     }
 
     private String safe(String s) {
@@ -446,6 +451,7 @@ public class ControllerHomePageController {
         refreshWeather();
         refreshTodayArrivalsCount();
         refreshTodayDeparturesCount();
+        refreshFreeGatesCount();
     }
 
     public void onCreateFlight(ActionEvent event) {
@@ -479,6 +485,7 @@ public class ControllerHomePageController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            refreshFreeGatesCount();
         }
     }
 
@@ -511,6 +518,22 @@ public class ControllerHomePageController {
         } catch (Exception ex) {
             ex.printStackTrace();
             setStatus("Hiba az időjárás asszisztens megnyitásakor: " + ex.getMessage());
+        }
+    }
+
+    // 🔹 Szabad kapuk száma
+    private void refreshFreeGatesCount() {
+        if (assignedAirport == null || freeGatesCountLabel == null) return;
+
+        try {
+            // Itt azt használd, ami a GateService-ben van:
+            // pl. long free = gateService.countFreeGatesForAirport(assignedAirport);
+            long free = gateService.countFreeGatesForAirport(assignedAirport);
+
+            freeGatesCountLabel.setText(String.valueOf(free));
+        } catch (Exception e) {
+            e.printStackTrace();
+            freeGatesCountLabel.setText("—");
         }
     }
 }

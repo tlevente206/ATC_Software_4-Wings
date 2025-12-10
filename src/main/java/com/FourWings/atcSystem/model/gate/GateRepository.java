@@ -25,5 +25,14 @@ public interface GateRepository extends JpaRepository<Gate,Long> {
     List<Gate> findByAirport(@Param("airport") Airports airport);
 
     List<Gate> findByTerminal(Terminal terminal);
+
+    @Query("""
+    SELECT COUNT(g) FROM Gate g
+    JOIN g.terminal t
+    WHERE t.airport = :airport
+      AND g.status = :status
+""")
+    long countByAirportAndStatus(@Param("airport") Airports airport,
+                                 @Param("status") GateStatus status);
 }
 

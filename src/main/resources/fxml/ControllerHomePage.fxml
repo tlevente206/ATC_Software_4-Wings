@@ -317,7 +317,7 @@
                                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
                             </children>
                         </HBox>
-                        <Label fx:id="freeGatesLabel"
+                        <Label fx:id="freeGatesCountLabel"
                                text="0"
                                style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: white;"/>
                         <Label text="Jelenleg elérhető, szabad státuszú kapuk száma."
