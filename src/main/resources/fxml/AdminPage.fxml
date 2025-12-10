@@ -26,5 +26,5 @@
             text="Kijelentkezés"
             onAction="#onLogout"
             layoutX="450" layoutY="15"
-            styleClass="matrix-button logout-button"/>
+            styleClass="matrix-button"/>
 </AnchorPane>

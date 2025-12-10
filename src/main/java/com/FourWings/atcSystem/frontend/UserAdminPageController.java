@@ -319,6 +319,6 @@ private void reloadUsers() {
 
     @FXML
     private void onBackToAdmin(ActionEvent event) {
-        SceneManager.switchTo("AdminPage.fxml", "ATC – Admin Dashboard", 600, 400);
+        SceneManager.switchTo("AdminPage.fxml", "ATC – Admin Dashboard", 800, 400);
     }
 }
