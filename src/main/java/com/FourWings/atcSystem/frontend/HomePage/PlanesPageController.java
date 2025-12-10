@@ -9,7 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.stereotype.Component;
@@ -19,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-class AircraftPageController {
+public class PlanesPageController {
 
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 600; // Frissítettem 800-ra a dashboardhoz igazítva
@@ -56,7 +58,7 @@ class AircraftPageController {
     private Map<Long, String> airlineNameMap;
 
     // Konstruktor
-    public AircraftPageController(AircraftService aircraftService, AirlineRepository airlineRepository) {
+    public PlanesPageController(AircraftService aircraftService, AirlineRepository airlineRepository) {
         this.aircraftService = aircraftService;
         this.airlineRepository = airlineRepository;
     }
@@ -191,5 +193,29 @@ class AircraftPageController {
 
     @FXML private void onLogout() {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
+    }
+
+    // ----------------- D A R K  /  L I G H T   T É M A   V Á L T Á S -----------------
+
+    private boolean darkMode = true;
+
+    @FXML
+    private void onToggleTheme() {
+        Scene scene = searchField.getScene();
+        if (scene == null) return;
+
+        // Stíluslapok törlése
+        scene.getStylesheets().clear();
+
+        // Váltás dark / light között
+        if (darkMode) {
+            scene.getStylesheets().add(getClass().getResource("/styles/light-theme.css").toExternalForm());
+            statusLabel.setText("Világos mód bekapcsolva");
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
+            statusLabel.setText("Sötét mód bekapcsolva");
+        }
+
+        darkMode = !darkMode;
     }
 }

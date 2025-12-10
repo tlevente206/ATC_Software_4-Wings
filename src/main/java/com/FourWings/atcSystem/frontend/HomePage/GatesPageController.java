@@ -48,12 +48,6 @@ public class GatesPageController {
     }
 
     @FXML
-    private void onToggleTheme() {
-        ThemeManager.toggleTheme();
-        SceneManager.reloadCurrentScene();  // új funkció
-    }
-
-    @FXML
     public void initialize() {
         setupMenuNavigation();
         setupAirportSelector();
@@ -188,4 +182,6 @@ public class GatesPageController {
             }
         });
     }
+
+
 }

@@ -9,7 +9,7 @@
             style="-fx-background-color: #ffeecc;"
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.HomePage.AircraftPageController">
+            fx:controller="com.FourWings.atcSystem.frontend.HomePage.PlanesPageController">
 
     <children>
         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;" text="Repülőgépek adatbázisa"/>
