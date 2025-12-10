@@ -2,6 +2,7 @@ package com.FourWings.atcSystem.frontend.controller;
 
 import com.FourWings.atcSystem.config.SceneManager;
 import com.FourWings.atcSystem.config.SpringContext;
+import com.FourWings.atcSystem.frontend.FlightWeatherAssistantDialogController;
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.flight.FlightService;
 import com.FourWings.atcSystem.model.user.User;
@@ -483,5 +484,33 @@ public class ControllerHomePageController {
 
     public void onOpenWeatherAssistant(ActionEvent event) {
         System.out.println("ControllerHomePageController: onOpenWeatherAssistant()");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/FlightWeatherAssistantDialog.fxml")
+            );
+            loader.setControllerFactory(SpringContext::getBean);
+
+            Parent root = loader.load();
+
+            // ha van ilyen controllered:
+            FlightWeatherAssistantDialogController ctrl = loader.getController();
+            if (assignedAirport != null) {
+                ctrl.init(assignedAirport);   // ugyanúgy, mint a WeatherDetails-nél
+            }
+
+            Stage dialog = new Stage();
+            if (greetingLabel != null && greetingLabel.getScene() != null) {
+                dialog.initOwner(greetingLabel.getScene().getWindow());
+            }
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setTitle("Időjárás asszisztens");
+            dialog.setScene(new Scene(root, 900, 650)); // méretet ízlés szerint
+            dialog.setResizable(true);
+            dialog.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            setStatus("Hiba az időjárás asszisztens megnyitásakor: " + ex.getMessage());
+        }
     }
 }

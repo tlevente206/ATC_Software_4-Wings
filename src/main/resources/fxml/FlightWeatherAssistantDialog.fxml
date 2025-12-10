@@ -1,48 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.FlightWeatherAssistantDialogController"
-            prefWidth="600" prefHeight="420">
+            prefWidth="900" prefHeight="650"
+            style="-fx-background-color: linear-gradient(to bottom, #0f172a, #020617);">
 
-    <children>
+    <!-- FELSŐ SÁV -->
+    <top>
+        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(to right, #1d4ed8, #2563eb);">
+            <padding>
+                <Insets top="12" left="18" right="18" bottom="10"/>
+            </padding>
+            <children>
+                <Label text="Időjárás asszisztens"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
 
-        <Label text="Időjárás asszisztens"
-               layoutX="20" layoutY="20">
-            <font>
-                <Font size="22"/>
-            </font>
-        </Label>
+                <Label text="Válassz repülőteret, és kérj időjárási javaslatot a járat üzemeltetéséhez."
+                       style="-fx-text-fill: #dbeafe; -fx-font-size: 11px;"/>
+            </children>
+        </VBox>
+    </top>
 
-        <Label text="Repülőtér:" layoutX="20" layoutY="70"/>
+    <!-- KÖZÉP: kártyák -->
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;"
+                    BorderPane.alignment="CENTER">
+            <content>
+                <VBox spacing="14"
+                      style="-fx-background-color: linear-gradient(to bottom, #0f172a, #020617);">
+                    <padding>
+                        <Insets top="14" left="18" right="18" bottom="14"/>
+                    </padding>
+                    <children>
 
-        <ComboBox fx:id="airportCombo"
-                  layoutX="90" layoutY="65"
-                  prefWidth="260"/>
+                        <!-- 1. KÁRTYA: beállítások -->
+                        <VBox spacing="10"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
+                            <children>
+                                <Label text="Beállítások"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
 
-        <Button text="Elemzés"
-                layoutX="370" layoutY="65"
-                onAction="#onAnalyzeWeather"/>
+                                <GridPane hgap="10" vgap="8">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="180"/>
+                                        <ColumnConstraints hgrow="ALWAYS"/>
+                                        <ColumnConstraints prefWidth="130"/>
+                                    </columnConstraints>
+                                    <children>
 
-        <Label fx:id="statusLabel"
-               layoutX="20" layoutY="110"
-               text="Státusz: -"/>
+                                        <!-- Repülőtér -->
+                                        <Label text="Repülőtér:"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="airportCombo"
+                                                  promptText="Válassz repülőteret"
+                                                  GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
 
-        <TextArea fx:id="resultArea"
-                  layoutX="20" layoutY="140"
-                  prefWidth="560" prefHeight="220"
-                  wrapText="true"/>
+                                        <Button text="Elemzés"
+                                                onAction="#onAnalyzeWeather"
+                                                GridPane.rowIndex="0" GridPane.columnIndex="2"
+                                                style="
+                                                    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a);
+                                                    -fx-text-fill: white;
+                                                    -fx-font-weight: bold;
+                                                    -fx-background-radius: 999;
+                                                    -fx-padding: 6 18 6 18;
+                                                ">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Button>
 
-        <Label fx:id="errorLabel"
-               layoutX="20" layoutY="370"
-               textFill="red"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
 
-        <Button text="Bezárás"
-                layoutX="500" layoutY="365"
-                onAction="#onClose"/>
-    </children>
-</AnchorPane>
+                        <!-- 2. KÁRTYA: eredmény -->
+                        <VBox spacing="10"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
+                            <children>
+                                <Label text="Elemzés eredménye"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
+
+                                <TextArea fx:id="resultArea"
+                                          prefRowCount="10"
+                                          wrapText="true"
+                                          style="
+                                              -fx-control-inner-background: #020617;
+                                              -fx-text-fill: #e5e7eb;
+                                              -fx-background-radius: 10;
+                                              -fx-border-radius: 10;
+                                          "/>
+                            </children>
+                        </VBox>
+
+                        <!-- Hibaüzenet -->
+                        <Label fx:id="errorLabel"
+                               text=""
+                               style="-fx-text-fill: #f87171; -fx-font-size: 11px;"/>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <!-- ALSÓ SOR: státusz + gomb -->
+    <bottom>
+        <BorderPane BorderPane.alignment="CENTER_RIGHT"
+                    style="-fx-background-color: transparent;">
+            <padding>
+                <Insets top="6" left="18" right="18" bottom="10"/>
+            </padding>
+
+            <!-- bal oldalt státusz -->
+            <left>
+                <Label fx:id="statusLabel"
+                       text="Státusz: -"
+                       style="-fx-text-fill: #9ca3af; -fx-font-size: 11px;"/>
+            </left>
+
+            <!-- jobb oldalt Bezárás -->
+            <right>
+                <Button text="Bezárás"
+                        onAction="#onClose"
+                        style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: #6b7280;
+                            -fx-border-radius: 999;
+                            -fx-text-fill: #e5e7eb;
+                            -fx-padding: 6 18 6 18;
+                        ">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+            </right>
+        </BorderPane>
+    </bottom>
+
+</BorderPane>

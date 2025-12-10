@@ -3,134 +3,241 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.Cursor?>
 
 <BorderPane xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.controller.NewFlightDialogController"
-            prefWidth="700" prefHeight="600">
+            style="-fx-background-color: linear-gradient(to bottom, #0f172a, #020617);">
 
-    <!-- Felső cím -->
+    <!-- FELSŐ SÁV: cím + otthoni reptér -->
     <top>
-        <VBox spacing="4" BorderPane.alignment="CENTER_LEFT">
+        <VBox spacing="6" BorderPane.alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(to right, #1d4ed8, #2563eb);">
             <padding>
-                <Insets top="14" left="18" right="18" bottom="10"/>
+                <Insets top="12" left="18" right="18" bottom="10"/>
             </padding>
             <children>
                 <Label text="Új járat létrehozása"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
+
+                <!-- otthoni repülőtér -->
                 <Label fx:id="titleLabel"
                        text="Otthoni repülőtér: (betöltés alatt)"
-                       style="-fx-text-fill: #6b7280; -fx-font-size: 12px;"/>
+                       style="-fx-font-size: 13px; -fx-text-fill: #e5e7eb;"/>
+
+                <!-- magyarázó szöveg -->
                 <Label fx:id="subtitleLabel"
-                       text="Kérlek, töltsd ki az alábbi adatokat."
-                       style="-fx-text-fill: #6b7280; -fx-font-size: 12px;"/>
+                       text="Először válassz légitársaságot, majd célrepteret és erőforrásokat."
+                       style="-fx-text-fill: #dbeafe; -fx-font-size: 11px;"/>
             </children>
         </VBox>
     </top>
 
-    <!-- Középső űrlap -->
+    <!-- KÖZÉP: kártyás űrlap, dashboard stílusban -->
     <center>
-        <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;"
+                    BorderPane.alignment="CENTER">
             <content>
-                <VBox spacing="12">
+                <VBox spacing="14"
+                      style="-fx-background-color: linear-gradient(to bottom, #0f172a, #020617);">
                     <padding>
-                        <Insets top="8" left="18" right="18" bottom="16"/>
+                        <Insets top="14" left="18" right="18" bottom="14"/>
                     </padding>
                     <children>
 
-                        <!-- Légitársaság (otthoni reptérről elérhető) -->
-                        <GridPane hgap="10" vgap="8">
-                            <columnConstraints>
-                                <ColumnConstraints prefWidth="180"/>
-                                <ColumnConstraints hgrow="ALWAYS"/>
-                            </columnConstraints>
-
+                        <!-- 1. KÁRTYA: járat alapadatai -->
+                        <VBox spacing="10"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
                             <children>
-                                <Label text="Légitársaság (otthoni reptérről):"
-                                       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="airlineCombo"
-                                          promptText="Válassz légitársaságot"
-                                          GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <Label text="Járat alapadatai"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
 
-                                <!-- Célrepülőtér / város -->
-                                <Label text="Célrepülőtér / város:"
-                                       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="destinationAirportCombo"
-                                          promptText="Válassz célrepülőteret"
-                                          GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <GridPane hgap="10" vgap="8">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="190"/>
+                                        <ColumnConstraints hgrow="ALWAYS"/>
+                                    </columnConstraints>
+                                    <children>
 
-                                <!-- Szabad repülőgép -->
-                                <Label text="Szabad repülőgép:"
-                                       GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="aircraftCombo"
-                                          promptText="Válassz repülőgépet"
-                                          GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                        <!-- Légitársaság -->
+                                        <Label text="Légitársaság (otthoni reptérről):"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="airlineCombo"
+                                                  promptText="Válassz légitársaságot"
+                                                  GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
 
-                                <!-- Otthoni reptér terminál -->
-                                <Label text="Indulási terminál (otthoni reptér):"
-                                       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="departureTerminalCombo"
-                                          promptText="Válassz terminált"
-                                          GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                        <!-- Célrepülőtér -->
+                                        <Label text="Célrepülőtér / város:"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="destinationAirportCombo"
+                                                  promptText="Válassz célrepülőteret"
+                                                  GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
 
-                                <!-- Célreptér terminál -->
-                                <Label text="Érkezési terminál (célreptér):"
-                                       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="arrivalTerminalCombo"
-                                          promptText="Válassz terminált"
-                                          GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                                        <!-- Repülőgép -->
+                                        <Label text="Szabad repülőgép:"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="aircraftCombo"
+                                                  promptText="Válassz repülőgépet"
+                                                  GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
 
-                                <!-- Otthoni reptér kapu -->
-                                <Label text="Indulási kapu (otthoni reptér):"
-                                       GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="departureGateCombo"
-                                          promptText="Válassz kaput"
-                                          GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-                                <!-- Célreptér kapu -->
-                                <Label text="Érkezési kapu (célreptér):"
-                                       GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="arrivalGateCombo"
-                                          promptText="Válassz kaput"
-                                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-
-                                <!-- Indulási dátum / idő -->
-                                <Label text="Indulási dátum:"
-                                       GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-                                <DatePicker fx:id="departureDatePicker"
-                                            GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-
-                                <Label text="Indulási idő (HH:MM):"
-                                       GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-                                <TextField fx:id="departureTimeField"
-                                           promptText="pl. 14:30"
-                                           GridPane.rowIndex="8" GridPane.columnIndex="1"/>
-
-                                <!-- Érkezési dátum / idő -->
-                                <Label text="Érkezési dátum:"
-                                       GridPane.rowIndex="9" GridPane.columnIndex="0"/>
-                                <DatePicker fx:id="arrivalDatePicker"
-                                            GridPane.rowIndex="9" GridPane.columnIndex="1"/>
-
-                                <Label text="Érkezési idő (HH:MM):"
-                                       GridPane.rowIndex="10" GridPane.columnIndex="0"/>
-                                <TextField fx:id="arrivalTimeField"
-                                           promptText="pl. 16:05"
-                                           GridPane.rowIndex="10" GridPane.columnIndex="1"/>
-
-                                <!-- Járatszám -->
-                                <Label text="Járatszám:"
-                                       GridPane.rowIndex="11" GridPane.columnIndex="0"/>
-                                <TextField fx:id="flightNumberField"
-                                           promptText="pl. FW1234"
-                                           GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+                                        <!-- Járatszám -->
+                                        <Label text="Járatszám:"
+                                               GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <TextField fx:id="flightNumberField"
+                                                   promptText="pl. FW1234"
+                                                   GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                                   style="-fx-background-radius: 8; -fx-text-fill: #e5e7eb;"/>
+                                    </children>
+                                </GridPane>
                             </children>
-                        </GridPane>
+                        </VBox>
 
-                        <!-- Hiba / státusz üzenet -->
+                        <!-- 2. KÁRTYA: terminálok és kapuk -->
+                        <VBox spacing="10"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
+                            <children>
+                                <Label text="Terminálok és kapuk"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
+
+                                <GridPane hgap="10" vgap="8">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="190"/>
+                                        <ColumnConstraints hgrow="ALWAYS"/>
+                                    </columnConstraints>
+                                    <children>
+
+                                        <!-- Indulási terminál -->
+                                        <Label text="Indulási terminál (otthoni reptér):"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="departureTerminalCombo"
+                                                  promptText="Válassz terminált"
+                                                  GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
+
+                                        <!-- Érkezési terminál -->
+                                        <Label text="Érkezési terminál (célreptér):"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="arrivalTerminalCombo"
+                                                  promptText="Válassz terminált"
+                                                  GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
+
+                                        <!-- Indulási kapu -->
+                                        <Label text="Indulási kapu (otthoni reptér):"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="departureGateCombo"
+                                                  promptText="Válassz kaput"
+                                                  GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
+
+                                        <!-- Érkezési kapu -->
+                                        <Label text="Érkezési kapu (célreptér):"
+                                               GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <ComboBox fx:id="arrivalGateCombo"
+                                                  promptText="Válassz kaput"
+                                                  GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                                  style="-fx-background-radius: 8;"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <!-- 3. KÁRTYA: időpontok -->
+                        <VBox spacing="10"
+                              style="
+                                  -fx-background-color: #020617;
+                                  -fx-background-radius: 14;
+                                  -fx-border-radius: 14;
+                                  -fx-border-color: #1d4ed8;
+                                  -fx-border-width: 1;
+                                  -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.9), 16, 0.2, 0, 6);
+                                  -fx-padding: 14;
+                              ">
+                            <children>
+                                <Label text="Időpontok"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e5e7eb;"/>
+
+                                <GridPane hgap="10" vgap="8">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="190"/>
+                                        <ColumnConstraints hgrow="ALWAYS"/>
+                                    </columnConstraints>
+                                    <children>
+
+                                        <!-- Indulási dátum -->
+                                        <Label text="Indulási dátum:"
+                                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <DatePicker fx:id="departureDatePicker"
+                                                    GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                        <!-- Indulási idő -->
+                                        <Label text="Indulási idő (HH:MM):"
+                                               GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <TextField fx:id="departureTimeField"
+                                                   promptText="pl. 14:30"
+                                                   GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                                   style="-fx-background-radius: 8; -fx-text-fill: #e5e7eb;"/>
+
+                                        <!-- Érkezési dátum -->
+                                        <Label text="Érkezési dátum:"
+                                               GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <DatePicker fx:id="arrivalDatePicker"
+                                                    GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                        <!-- Érkezési idő -->
+                                        <Label text="Érkezési idő (HH:MM):"
+                                               GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #9ca3af;"/>
+                                        <TextField fx:id="arrivalTimeField"
+                                                   promptText="pl. 16:05"
+                                                   GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                                   style="-fx-background-radius: 8; -fx-text-fill: #e5e7eb;"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <!-- Hibaüzenet -->
                         <Label fx:id="errorLabel"
                                text=""
-                               style="-fx-text-fill: red; -fx-font-size: 11px;"/>
+                               style="-fx-text-fill: #f87171; -fx-font-size: 11px;"/>
 
                     </children>
                 </VBox>
@@ -138,21 +245,56 @@
         </ScrollPane>
     </center>
 
-    <!-- Alsó gombok -->
+    <!-- ALSÓ SOR: státusz + gombok -->
     <bottom>
-        <HBox spacing="8" BorderPane.alignment="CENTER_RIGHT">
+        <BorderPane BorderPane.alignment="CENTER_RIGHT"
+                    style="-fx-background-color: transparent;">
             <padding>
-                <Insets top="8" left="18" right="18" bottom="12"/>
+                <Insets top="6" left="18" right="18" bottom="10"/>
             </padding>
-            <children>
+
+            <!-- bal oldalt státuszszöveg -->
+            <left>
                 <Label fx:id="statusLabel"
                        text=""
-                       HBox.hgrow="ALWAYS"/>
+                       style="-fx-text-fill: #9ca3af; -fx-font-size: 11px;"/>
+            </left>
 
-                <Button text="Mégse" onAction="#onCancel"/>
-                <Button text="Mentés" onAction="#onSave"/>
-            </children>
-        </HBox>
+            <!-- jobb oldalt gombok -->
+            <right>
+                <HBox spacing="8">
+                    <children>
+                        <Button text="Mégse"
+                                onAction="#onCancel"
+                                style="
+                                    -fx-background-color: transparent;
+                                    -fx-border-color: #6b7280;
+                                    -fx-border-radius: 999;
+                                    -fx-text-fill: #e5e7eb;
+                                    -fx-padding: 6 18 6 18;
+                                ">
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </Button>
+
+                        <Button text="Mentés"
+                                onAction="#onSave"
+                                style="
+                                    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a);
+                                    -fx-text-fill: white;
+                                    -fx-font-weight: bold;
+                                    -fx-background-radius: 999;
+                                    -fx-padding: 6 20 6 20;
+                                ">
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </Button>
+                    </children>
+                </HBox>
+            </right>
+        </BorderPane>
     </bottom>
 
 </BorderPane>

@@ -19,6 +19,7 @@ public class FlightWeatherAssistantDialogController {
 
     private final AirportsService airportsService;
     private final FlightWeatherAdvisorService advisorService;
+    private Airports homeAirport;
 
     public FlightWeatherAssistantDialogController(AirportsService airportsService,
                                                   FlightWeatherAdvisorService advisorService) {
@@ -36,6 +37,14 @@ public class FlightWeatherAssistantDialogController {
         // Repterek betöltése DB-ből
         List<Airports> airports = airportsService.getAllAirports(); // ha más a metódus neve, írd át
         airportCombo.setItems(FXCollections.observableArrayList(airports));
+
+        if (homeAirport != null) {
+            // ha már tudjuk az otthoni repteret, válaszd ki alapból
+            selectAirportInCombo(homeAirport);
+        } else if (!airports.isEmpty()) {
+            // fallback: ha nincs otthoni, akkor az első legyen kiválasztva
+            airportCombo.getSelectionModel().selectFirst();
+        }
 
         // hogyan jelenjen meg a ComboBox-ban
         airportCombo.setCellFactory(listView -> new ListCell<>() {
@@ -62,6 +71,15 @@ public class FlightWeatherAssistantDialogController {
                 }
             }
         });
+    }
+
+    public void init(Airports homeAirport) {
+        this.homeAirport = homeAirport;
+
+        // ha már be van töltve a ComboBox, válaszd ki
+        if (airportCombo != null && homeAirport != null) {
+            selectAirportInCombo(homeAirport);
+        }
     }
 
     @FXML
@@ -106,6 +124,15 @@ public class FlightWeatherAssistantDialogController {
         });
 
         new Thread(task, "weather-analyze").start();
+    }
+
+    private void selectAirportInCombo(Airports target) {
+        if (airportCombo == null || airportCombo.getItems() == null || target == null) return;
+
+        airportCombo.getItems().stream()
+                .filter(a -> a.getId() != null && a.getId().equals(target.getId()))
+                .findFirst()
+                .ifPresent(a -> airportCombo.getSelectionModel().select(a));
     }
 
     @FXML
