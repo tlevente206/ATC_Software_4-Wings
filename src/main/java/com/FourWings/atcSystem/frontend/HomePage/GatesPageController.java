@@ -10,12 +10,15 @@ import com.FourWings.atcSystem.model.gate.Gate;
 import com.FourWings.atcSystem.model.gate.GateService;
 import com.FourWings.atcSystem.model.gate.GateStatus; // Importálni kell az Enumot!
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -184,4 +187,30 @@ public class GatesPageController {
     }
 
 
+    // ----------------- D A R K  /  L I G H T   T É M A   V Á L T Á S -----------------
+
+    private boolean darkMode = true;
+
+    @FXML private TextField searchField;
+
+    @FXML
+    private void onToggleTheme() {
+
+        Scene scene = searchField.getScene();
+        if (scene == null) return;
+
+        // Stíluslapok törlése
+        scene.getStylesheets().clear();
+
+        // Váltás dark / light között
+        if (darkMode) {
+            scene.getStylesheets().add(getClass().getResource("/styles/light-theme.css").toExternalForm());
+            statusLabel.setText("Világos mód bekapcsolva");
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
+            statusLabel.setText("Sötét mód bekapcsolva");
+        }
+
+        darkMode = !darkMode;
+    }
 }

@@ -162,6 +162,7 @@ public class AirportsPageController {
         loadAirportData();
     }
 
+
     @FXML private void onLogout() {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
