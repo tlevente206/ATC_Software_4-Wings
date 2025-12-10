@@ -77,22 +77,12 @@
     -fx-font-size: 15px;
 }
 
-/* kijelölés: zöld háttér, fehér szöveg */
-/*.matrix-table .table-row-cell:filled:selected {*/
-/*    -fx-background-color: rgba(255, 255, 255, 0.60);*/
-/*    -fx-text-fill: white;*/
-/*}*/
-
-/*.matrix-table .table-row-cell:hover {*/
-/*    -fx-background-color: rgba(0, 255, 136, 0.15);*/
-/*    -fx-text-fill: green;*/
-/*}*/
 .matrix-table .table-row-cell:hover {
-    -fx-background-color: rgba(0, 255, 136, 0.25); /* világosabb zöld */
+    -fx-background-color: rgba(0, 255, 136, 0.25);
 }
 
 .matrix-table .table-row-cell:hover .table-cell {
-    -fx-text-fill: rgba(0, 255, 136, 0.25); /* fehér szöveg hover alatt */
+    -fx-text-fill: rgba(0, 255, 136, 0.25);
 }
 
 .matrix-table .table-row-cell:selected {
