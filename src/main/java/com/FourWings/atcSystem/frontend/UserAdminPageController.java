@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,10 @@ public class UserAdminPageController {
     }
 
     // --- FXML elemek ----
+
+    @FXML
+    private AnchorPane root;   // >>>> HOZZÁADVA: háttérhez kell
+
     @FXML
     private TableView<User> usersTable;
 
@@ -67,7 +72,10 @@ public class UserAdminPageController {
 
     @FXML
     public void initialize() {
-        // oszlopok bindelése
+
+        // >>>> MÁTRIX HÁTTÉR AKTIVÁLÁSA <<<<
+        MatrixRainBackground.apply(root);
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -75,7 +83,6 @@ public class UserAdminPageController {
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        // Szerepkör szép szöveggel
         roleColumn.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(UserRole role, boolean empty) {
@@ -92,7 +99,6 @@ public class UserAdminPageController {
             }
         });
 
-        // Hozzárendelt repülőtér oszlop (ICAO – Név)
         airportColumn.setCellValueFactory(cellData -> {
             User u = cellData.getValue();
             Airports ap = u.getAssignedAirport();
@@ -187,7 +193,7 @@ public class UserAdminPageController {
         });
     }
 
-    private void reloadUsers() {
+private void reloadUsers() {
         users.setAll(userService.getAllUsers());
 
         if (filteredUsers == null) {

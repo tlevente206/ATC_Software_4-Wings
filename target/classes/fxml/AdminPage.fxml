@@ -4,18 +4,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<AnchorPane fx:id="root"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.FourWings.atcSystem.frontend.AdminPageController"
+            style="-fx-background-color: black;">
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FourWings.atcSystem.frontend.AdminPageController">
-   <children>
-      <Label layoutX="243.0" layoutY="21.0" text="Admin bejelentkezve" />
-      <Button fx:id="FelhasznalokButton" layoutX="255.0" layoutY="59.0" mnemonicParsing="false" onAction="#goToUserAdminPage" text="Felhasznalok" />
-       <Button fx:id="logoutButton"
-               text="Kijelentkezés"
-               onAction="#onLogout"
-               layoutX="500"
-               layoutY="10"/>
-<!--       <Button text="Időjárás asszisztens"-->
-<!--               onAction="#onOpenWeatherAssistant"-->
-<!--               layoutX="20.0" layoutY="200.0" />-->
-   </children>
+    <stylesheets>
+        <URL value="@data:text/css,
+            Button {
+                -fx-background-color: transparent;
+                -fx-border-color: #00ff88;
+                -fx-border-width: 2;
+                -fx-text-fill: #00ff88;
+                -fx-font-size: 18px;
+                -fx-background-radius: 8;
+                -fx-border-radius: 8;
+                -fx-padding: 10 20 10 20;
+            }
+            Button:hover {
+                -fx-scale-x: 1.08;
+                -fx-scale-y: 1.08;
+                -fx-background-color: #00ff8844;
+            }
+        "/>
+    </stylesheets>
+
+    <Label layoutX="180" layoutY="25"
+           text="Admin bejelentkezve"
+           style="-fx-text-fill: #00ff88;
+                  -fx-font-size: 26px;
+                  -fx-font-weight: bold;
+                  -fx-effect: dropshadow(gaussian, #00ff88, 20, 0.4, 0, 0);" />
+
+    <Button fx:id="FelhasznalokButton"
+            layoutX="220" layoutY="110"
+            text="Felhasználók"
+            onAction="#goToUserAdminPage" />
+
+    <Button fx:id="logoutButton"
+            text="Kijelentkezés"
+            onAction="#onLogout"
+            layoutX="450" layoutY="15"
+            style="-fx-border-color: #ff4444;
+                   -fx-text-fill: #ff4444;" />
+
 </AnchorPane>

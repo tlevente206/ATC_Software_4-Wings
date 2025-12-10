@@ -4,51 +4,80 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.layout.Region?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane fx:id="root"
+            xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.FourWings.atcSystem.frontend.UserAdminPageController"
-            prefWidth="1400.0" prefHeight="900.0">
+            prefWidth="1400" prefHeight="900"
+            style="-fx-background-color: black;">
+
+    <stylesheets>
+        <URL value="@data:text/css,
+            Button {
+                -fx-background-color: transparent;
+                -fx-border-color: #00ff88;
+                -fx-border-width: 2;
+                -fx-text-fill: #00ff88;
+                -fx-font-size: 14px;
+                -fx-background-radius: 6;
+                -fx-border-radius: 6;
+                -fx-padding: 6 12 6 12;
+            }
+            Button:hover {
+                -fx-scale-x: 1.1;
+                -fx-scale-y: 1.1;
+                -fx-background-color: #00ff8844;
+            }
+            TableView {
+                -fx-background-color: black;
+                -fx-base: black;
+                -fx-control-inner-background: black;
+                -fx-table-cell-border-color: #00ff55;
+                -fx-selection-bar: #00ff88;
+                -fx-selection-bar-non-focused: #009955;
+            }
+            Label {
+                -fx-text-fill: #00ff88;
+            }
+        "/>
+    </stylesheets>
 
     <top>
         <VBox spacing="8" BorderPane.alignment="CENTER">
             <children>
 
-                <Label text="Felhasználókezelés – Admin felület">
-                    <font>
-                        <Font size="26"/>
-                    </font>
+                <Label text="Felhasználókezelés – Admin felület"
+                       style="-fx-font-size: 30px;
+                              -fx-font-weight: bold;
+                              -fx-effect: dropshadow(gaussian, #00ff88, 20, 0.4, 0, 0);"
+                >
                     <padding>
                         <Insets top="10" right="10" bottom="5" left="10"/>
                     </padding>
                 </Label>
 
-                <ToolBar>
+                <ToolBar style="-fx-background-color: #001a00;
+                                -fx-border-color: #00ff88;
+                                -fx-border-width: 0 0 2 0;">
                     <items>
+
                         <Button fx:id="refreshButton" text="Lista frissítése" onAction="#onRefresh"/>
-                        <Button fx:id="addUserButton"
-                                text="Új felhasználó"
-                                onAction="#onAddNewUser"/>
-                        <Button fx:id="editUserButton"
-                                text="Kijelölt szerkesztése"
-                                onAction="#onEditSelectedUser"/>
-                        <Button fx:id="deleteUserButton"
-                                text="Kijelölt törlése"
-                                onAction="#onDeleteUser"/>
+                        <Button fx:id="addUserButton" text="Új felhasználó" onAction="#onAddNewUser"/>
+                        <Button fx:id="editUserButton" text="Kijelölt szerkesztése" onAction="#onEditSelectedUser"/>
+                        <Button fx:id="deleteUserButton" text="Kijelölt törlése" onAction="#onDeleteUser"/>
 
                         <Separator/>
 
                         <Label text="Keresés:"/>
                         <TextField fx:id="searchField"
                                    promptText="Név / felhasználónév / e-mail"
-                                   prefWidth="250"/>
+                                   prefWidth="250"
+                                   style="-fx-text-fill: #00ff88; -fx-background-color: #000000AA; -fx-border-color: #00ff88;" />
 
                         <Region HBox.hgrow="ALWAYS"/>
 
-                        <Button fx:id="backToAdminButton"
-                                text="Vissza az admin főoldalra"
-                                onAction="#onBackToAdmin"/>
+                        <Button fx:id="backToAdminButton" text="Vissza az admin főoldalra" onAction="#onBackToAdmin"/>
                     </items>
                 </ToolBar>
 
@@ -57,7 +86,7 @@
     </top>
 
     <center>
-        <TableView fx:id="usersTable" BorderPane.alignment="CENTER">
+        <TableView fx:id="usersTable">
             <columns>
                 <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
                 <TableColumn fx:id="nameColumn" text="Név" prefWidth="230"/>
@@ -65,19 +94,19 @@
                 <TableColumn fx:id="emailColumn" text="E-mail" prefWidth="300"/>
                 <TableColumn fx:id="phoneColumn" text="Telefon" prefWidth="180"/>
                 <TableColumn fx:id="roleColumn" text="Szerepkör" prefWidth="120"/>
-                <!-- ÚJ: hozzárendelt repülőtér -->
                 <TableColumn fx:id="airportColumn" text="Irányító reptere" prefWidth="260"/>
             </columns>
         </TableView>
     </center>
 
     <bottom>
-        <HBox BorderPane.alignment="CENTER_LEFT">
+        <HBox BorderPane.alignment="CENTER_LEFT"
+              style="-fx-background-color: #001a00;
+                     -fx-border-color: #00ff88;
+                     -fx-border-width: 2 0 0 0;">
             <children>
                 <Label fx:id="statusLabel" text="Készen áll.">
-                    <padding>
-                        <Insets top="5" right="10" bottom="8" left="10"/>
-                    </padding>
+                    <padding><Insets top="5" right="10" bottom="8" left="10"/></padding>
                 </Label>
             </children>
         </HBox>

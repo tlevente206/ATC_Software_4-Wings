@@ -10,9 +10,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
 @Component
@@ -29,6 +33,13 @@ public class AdminPageController {
     public void initWithUser(User user) {
         this.loggedUser = user;
     }
+
+    @FXML private AnchorPane root;   // vagy BorderPane root
+
+    public void initialize(URL url, ResourceBundle rb) {
+        MatrixRainBackground.apply(root);
+    }
+
 
     @FXML
     public void goToUserAdminPage(ActionEvent event) throws Exception{
