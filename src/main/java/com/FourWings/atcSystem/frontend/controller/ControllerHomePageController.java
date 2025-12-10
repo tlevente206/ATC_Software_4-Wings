@@ -125,18 +125,6 @@ public class ControllerHomePageController {
     @FXML
     public void initialize() {
 
-        // FULLSCREEN KOMPATIBILITÁS – NPE BIZTOS VERZIÓ
-        if (rootPane != null) {
-            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
-                        if (newWin instanceof Stage stage) {
-                            stage.setMaximized(true);
-                        }
-                    });
-                }
-            });
-        }
 
         if (statusLabel != null) {
             statusLabel.setText("Várakozás a felhasználói adatokra…");

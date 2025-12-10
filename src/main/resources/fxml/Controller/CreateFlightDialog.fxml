@@ -7,7 +7,9 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.controller.CreateFlightDialogController">
+            fx:controller="com.FourWings.atcSystem.frontend.controller.CreateFlightDialogController"
+            stylesheets="@../../css/new-flight-dialog.css"
+            styleClass="new-flight-dialog">
 
     <!-- CÍMSOR -->
     <top>
@@ -55,6 +57,7 @@
                 <Label text="Járatszám:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                 <TextField fx:id="flightNumberField"
                            promptText="pl. LH123"
+                           style="-fx-text-fill: black; -fx-prompt-text-fill: #6b7280;"
                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                 <Label text="Másik repülőtér:"
@@ -71,8 +74,10 @@
 
                 <Label text="Idő (HH:mm):"
                        GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+
                 <TextField fx:id="timeField"
                            promptText="pl. 14:30"
+                           style="-fx-text-fill: black; -fx-prompt-text-fill: #6b7280;"
                            GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                 <Label text="Státusz:"
@@ -86,6 +91,7 @@
                        GridPane.valignment="TOP"/>
                 <TextArea fx:id="noteArea"
                           prefRowCount="3"
+                          style="-fx-text-fill: black; -fx-prompt-text-fill: #6b7280;"
                           GridPane.rowIndex="6" GridPane.columnIndex="1"/>
             </children>
         </GridPane>

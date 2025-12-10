@@ -1,0 +1,12 @@
+.new-flight-dialog .text-field,
+.new-flight-dialog .text-field:focused,
+.new-flight-dialog .text-area,
+.new-flight-dialog .text-area:focused {
+    -fx-text-fill: black !important;
+    -fx-prompt-text-fill: #6b7280 !important;
+    -fx-control-inner-background: white;
+}
+
+.new-flight-dialog {
+    -fx-background-color: yellow;
+}

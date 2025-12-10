@@ -106,9 +106,9 @@
                                                GridPane.rowIndex="3" GridPane.columnIndex="0"
                                                style="-fx-text-fill: #9ca3af;"/>
                                         <TextField fx:id="flightNumberField"
-                                                   promptText="pl. FW1234"
-                                                   GridPane.rowIndex="3" GridPane.columnIndex="1"
-                                                   style="-fx-background-radius: 8; -fx-text-fill: #e5e7eb;"/>
+                                                   promptText="pl. LH123"
+                                                   style="-fx-text-fill: black; -fx-prompt-text-fill: #6b7280;"
+                                                   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
                                     </children>
                                 </GridPane>
                             </children>
@@ -209,10 +209,11 @@
                                         <Label text="Indulási idő (HH:MM):"
                                                GridPane.rowIndex="1" GridPane.columnIndex="0"
                                                style="-fx-text-fill: #9ca3af;"/>
+
                                         <TextField fx:id="departureTimeField"
                                                    promptText="pl. 14:30"
-                                                   GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                                   style="-fx-background-radius: 8; -fx-text-fill: #e5e7eb;"/>
+                                                   style="-fx-text-fill: black; -fx-prompt-text-fill: #6b7280;"
+                                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                                         <!-- Érkezési dátum -->
                                         <Label text="Érkezési dátum:"
@@ -228,7 +229,7 @@
                                         <TextField fx:id="arrivalTimeField"
                                                    promptText="pl. 16:05"
                                                    GridPane.rowIndex="3" GridPane.columnIndex="1"
-                                                   style="-fx-background-radius: 8; -fx-text-fill: #e5e7eb;"/>
+                                                   style="-fx-background-radius: 8; -fx-text-fill: black; -fx-prompt-text-fill: #6b7280;"/>
                                     </children>
                                 </GridPane>
                             </children>

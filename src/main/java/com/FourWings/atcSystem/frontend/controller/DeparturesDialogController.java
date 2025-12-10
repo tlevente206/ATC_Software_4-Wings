@@ -14,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -61,18 +62,29 @@ public class DeparturesDialogController {
         statusCol.setEditable(true);
         estimatedArrivalCol.setEditable(true);
         actualArrivalCol.setEditable(true);
-        departuresTable.setRowFactory(tv -> {
-            var row = new javafx.scene.control.TableRow<Flight>();
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty()
-                        && event.getButton() == MouseButton.PRIMARY
-                        && event.getClickCount() == 2) {
+//        departuresTable.setRowFactory(tv -> {
+//            var row = new javafx.scene.control.TableRow<Flight>();
+//            row.setOnMouseClicked(event -> {
+//                if (!row.isEmpty()
+//                        && event.getButton() == MouseButton.PRIMARY
+//                        && event.getClickCount() == 2) {
+//
+//                    Flight clicked = row.getItem();
+//                    openFlightDetails(clicked);
+//                }
+//            });
+//            return row;
+//        });
 
-                    Flight clicked = row.getItem();
-                    openFlightDetails(clicked);
+        // ENTER-re nyíljon meg a részletek ablak
+        departuresTable.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                Flight selected = departuresTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    openFlightDetails(selected);
+                    event.consume(); // ne csináljon mást az ENTER
                 }
-            });
-            return row;
+            }
         });
     }
 

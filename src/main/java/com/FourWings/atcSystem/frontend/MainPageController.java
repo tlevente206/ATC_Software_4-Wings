@@ -235,6 +235,10 @@ public class MainPageController {
 
     private void openControllerHomePage(Stage stage, User user) throws Exception {
         var ctrl = SceneManager.switchTo("ControllerHomePage.fxml", "ATC – Irányító munkaállomás", 1100, 700);
+
+        // Itt tesszük fullscreenre, MIUTÁN már megvan az új Scene
+        stage.setMaximized(true);
+
         if (ctrl instanceof ControllerHomePageController controllerHome) {
             controllerHome.initWithUser(user);
         }
