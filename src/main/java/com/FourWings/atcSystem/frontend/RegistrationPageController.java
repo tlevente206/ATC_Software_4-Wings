@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -39,6 +40,7 @@ public class RegistrationPageController {
     @FXML private TextField phoneInput;
     @FXML private Button registerButton;
     @FXML private TextField userInput;
+    @Setter
     @FXML private Label registerLabel;
     @FXML private Button backToMainPageButton;
 
@@ -116,22 +118,36 @@ public class RegistrationPageController {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
 
+    public int validateForm(String username, String password) {
+        if (username.isEmpty() || password.isEmpty()) {
+            return 1;
+        }
+        if (!USERNAME_PATTERN.matcher(username).matches()) {
+            return 2;
+        }
+        if (password.length() < 8) {
+            return 3;
+        }
+        return 0;
+    }
+
     @FXML
     public void register(ActionEvent event) {
         String username = userInput.getText().trim();
         String password = passInput.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            registerLabel.setText("Kitöltés kötelező: felhasználónév és jelszó.");
-            return;
-        }
-        if (!USERNAME_PATTERN.matcher(username).matches()) {
-            registerLabel.setText("Felhasználónév: 3–20 karakter, csak betűk, számok, ._- engedélyezett.");
-            return;
-        }
-        if (password.length() < 8) {
-            registerLabel.setText("Jelszó túl rövid (min. 8 karakter).");
-            return;
+        switch (validateForm(username, password)) {
+            case 1:
+                registerLabel.setText("Kitöltés kötelező: felhasználónév és jelszó.");
+                return;
+            case 2:
+                registerLabel.setText("Felhasználónév: 3–20 karakter, csak betűk, számok, ._- engedélyezett.");
+                return;
+            case 3:
+                registerLabel.setText("Jelszó túl rövid (min. 8 karakter).");
+                return;
+            default:
+                registerLabel.setText("");
         }
 
         // Profilkép kötelező
