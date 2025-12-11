@@ -230,7 +230,7 @@ public class MainPageController {
     }
 
     private void openAdminPage(Stage stage, User user) throws Exception {
-        var ctrl = SceneManager.switchTo("AdminPage.fxml", "ATC – Admin Dashboard", 600, 400);
+        var ctrl = SceneManager.switchTo("AdminPage.fxml", "ATC – Admin Dashboard", 800, 400);
     }
 
     private void openControllerHomePage(Stage stage, User user) throws Exception {

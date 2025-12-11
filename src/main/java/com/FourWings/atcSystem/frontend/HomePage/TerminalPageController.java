@@ -1,6 +1,7 @@
 package com.FourWings.atcSystem.frontend.HomePage;
 
 import com.FourWings.atcSystem.config.SceneManager;
+import com.FourWings.atcSystem.config.ThemeManager;
 import com.FourWings.atcSystem.model.aircraft.Aircraft; // Aircraft import
 import com.FourWings.atcSystem.model.airport.Airports;
 import com.FourWings.atcSystem.model.airport.AirportsService;
@@ -26,6 +27,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class TerminalPageController {
+
+    @FXML
+    private void onToggleTheme() {
+        ThemeManager.toggleTheme();
+        SceneManager.reloadCurrentScene();
+    }
+
 
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 600;

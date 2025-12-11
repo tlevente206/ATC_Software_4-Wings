@@ -23,11 +23,11 @@
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Főoldal" />
-                <String fx:value="Kapuk(Ez inkább a repterekhez menne)" />
+                <String fx:value="Kapuk" />
                 <String fx:value="Repülők" />
                 <String fx:value="Repterek" />
                 <String fx:value="Repülőutak" />
-                <String fx:value="Terminál(Ez is inkább reptér)" />
+<!--                <String fx:value="Terminál" />-->
             </FXCollections>
         </items>
     </ComboBox>
@@ -36,6 +36,11 @@
         <ComboBox fx:id="airportSelector" layoutX="420.0" layoutY="70.0" prefWidth="300.0" promptText="-- Válassz egy repteret --" />
 
         <Button layoutX="730.0" layoutY="70.0" onAction="#onRefresh" text="Frissítés" />
+
+        <Button layoutX="920" layoutY="14"
+                text="🌗 Téma"
+                onAction="#onToggleTheme"
+                styleClass="theme-toggle button"/>
 
         <HBox alignment="CENTER" layoutX="25.0" layoutY="120.0" prefWidth="1150.0" spacing="40.0" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
             <VBox alignment="CENTER">

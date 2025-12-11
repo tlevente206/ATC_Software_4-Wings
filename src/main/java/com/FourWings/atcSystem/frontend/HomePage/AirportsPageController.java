@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.stereotype.Component;
@@ -155,11 +156,39 @@ public class AirportsPageController {
         });
     }
 
+
+
     @FXML private void onRefresh() {
         loadAirportData();
     }
 
+
     @FXML private void onLogout() {
         SceneManager.switchTo("MainPage.fxml", "ATC – Bejelentkezés", 800, 400);
     }
+
+    // ----------------- D A R K  /  L I G H T   T É M A   V Á L T Á S -----------------
+
+    private boolean darkMode = true;
+
+    @FXML
+    private void onToggleTheme() {
+        Scene scene = searchField.getScene();
+        if (scene == null) return;
+
+        // Stíluslapok törlése
+        scene.getStylesheets().clear();
+
+        // Váltás dark / light között
+        if (darkMode) {
+            scene.getStylesheets().add(getClass().getResource("/styles/light-theme.css").toExternalForm());
+            statusLabel.setText("Világos mód bekapcsolva");
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
+            statusLabel.setText("Sötét mód bekapcsolva");
+        }
+
+        darkMode = !darkMode;
+    }
+
 }

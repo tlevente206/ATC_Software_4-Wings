@@ -1,0 +1,83 @@
+.root-pane {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f2f2f5);
+}
+
+.title-label {
+    -fx-text-fill: #0077cc;
+    -fx-font-weight: bold;
+    -fx-font-size: 26px;
+}
+
+/* Gombok */
+.button {
+    -fx-background-radius: 10;
+    -fx-padding: 8 18;
+    -fx-background-color: #2d8ef0;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-transition: all 0.25s;
+}
+
+.button:hover {
+    -fx-background-color: #64a9f3;
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
+}
+
+.button:pressed {
+    -fx-scale-x: 0.90;
+    -fx-scale-y: 0.90;
+}
+
+/* Logout */
+.logout-button {
+    -fx-background-color: #d9534f !important;
+}
+.logout-button:hover {
+    -fx-background-color: #ff6b6b !important;
+}
+
+/* Téma váltó */
+.theme-toggle {
+    -fx-background-color: #00a1ff;
+    -fx-text-fill: white;
+}
+.theme-toggle:hover {
+    -fx-background-color: #47bdff;
+}
+
+/* TextField */
+.search-field {
+    -fx-background-color: #e9e9eb;
+    -fx-text-fill: #333;
+    -fx-prompt-text-fill: #707070;
+    -fx-background-radius: 8;
+}
+
+/* Combobox */
+.menu-combo {
+    -fx-background-color: #e9e9eb;
+    -fx-text-fill: #333;
+    -fx-background-radius: 8;
+}
+
+/* Táblázat */
+.modern-table {
+    -fx-background-color: #fafafa;
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #222;
+    -fx-transition: all 0.20s;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e6e6e6;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #00a1ff;
+    -fx-text-fill: white;
+}

@@ -1,0 +1,96 @@
+.root-pane {
+    -fx-background-color: linear-gradient(to bottom, #1d1f21, #2b2d31);
+}
+
+/* Cím */
+.title-label {
+    -fx-text-fill: #00d9ff;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+/* Gombok (globális modern megjelenés) */
+.button {
+    -fx-background-radius: 10;
+    -fx-padding: 8 18;
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-transition: all 0.25s ease-in-out;
+}
+
+/* Hover animáció */
+.button:hover {
+    -fx-background-color: #60a5fa;
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.45), 12, 0.3, 0, 0);
+}
+
+/* Click animáció */
+.button:pressed {
+    -fx-scale-x: 0.90;
+    -fx-scale-y: 0.90;
+}
+
+/* Logout button speciális */
+.logout-button {
+    -fx-background-color: #e63946 !important;
+}
+.logout-button:hover {
+    -fx-background-color: #ff6b6b !important;
+}
+
+/* Téma váltó */
+.theme-toggle {
+    -fx-background-color: #00d9ff;
+    -fx-text-fill: black;
+}
+.theme-toggle:hover {
+    -fx-background-color: #2ee8ff;
+}
+
+/* TextField */
+.search-field {
+    -fx-background-color: #3a3d42;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #858585;
+    -fx-background-radius: 8;
+    -fx-padding: 6 10;
+}
+
+/* ComboBox */
+.menu-combo {
+    -fx-background-color: #3a3d42;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+}
+
+/* Táblázat */
+.table-view {
+    -fx-background-color: blue;
+    -fx-table-cell-border-color: #444;
+    -fx-text-background-color: #ffffff;
+}
+
+.modern-table {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #1a1a1a;
+}
+
+.table-row-cell {
+    -fx-background-color: #2b2d31;
+    -fx-text-fill: white;
+    -fx-padding: 4;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #3a3d42;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #00d9ff !important;
+    -fx-text-fill: black;
+}

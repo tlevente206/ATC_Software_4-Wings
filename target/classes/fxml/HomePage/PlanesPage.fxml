@@ -9,10 +9,15 @@
             style="-fx-background-color: #ffeecc;"
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.HomePage.AircraftPageController">
+            fx:controller="com.FourWings.atcSystem.frontend.HomePage.PlanesPageController">
 
     <children>
         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px;" text="Repülőgépek adatbázisa"/>
+
+        <Button layoutX="920" layoutY="14"
+                text="🌗 Téma"
+                onAction="#onToggleTheme"
+                styleClass="theme-toggle button"/>
 
         <Button fx:id="logoutButton" layoutX="1080.0" layoutY="14.0" onAction="#onLogout" text="Kijelentkezés"/>
 
@@ -20,11 +25,11 @@
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="Főoldal"/>
-                    <String fx:value="Kapuk(Ez inkább a repterekhez menne)"/>
+                    <String fx:value="Kapuk"/>
                     <String fx:value="Repülők"/>
                     <String fx:value="Repterek"/>
                     <String fx:value="Repülőutak"/>
-                    <String fx:value="Terminál(Ez is inkább reptér)"/>
+<!--                    <String fx:value="Terminál"/>-->
                 </FXCollections>
             </items>
         </ComboBox>
