@@ -50,7 +50,7 @@
 
             <Label layoutX="177.0" layoutY="278.0" text="Ha nincs fiókod, regisztrálj:" />
             <Button fx:id="registerButton" layoutX="188.0" layoutY="300.0" mnemonicParsing="false" onAction="#goToRegister" prefHeight="25.0" prefWidth="120.0" text="Regisztráció" />
-            <Label fx:id="statusLabel" layoutX="166.0" layoutY="274.0" prefHeight="41.0" prefWidth="262.0" />
+            <Label fx:id="statusLabel" layoutX="188.0" layoutY="350.0" prefHeight="41.0" prefWidth="262.0" />
         </children>
     </AnchorPane>
 </HBox>

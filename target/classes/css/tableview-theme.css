@@ -1,0 +1,12 @@
+.table-row-cell:selected {
+    -fx-background-color: #007bff !important;
+    -fx-text-fill: white !important;
+}
+
+.table-row-cell:focused:selected {
+    -fx-background-color: #006ae6 !important;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e0f0ff;
+}

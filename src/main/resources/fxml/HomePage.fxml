@@ -54,25 +54,26 @@
                         style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-weight: bold;"
                         text="Kijelentkezés"/>
 
-                <Button fx:id="dataButton"
-                        layoutX="960.0" layoutY="20.0"
-                        onAction="#onGoToPersonalData"
-                        style="-fx-background-color: white; -fx-text-fill: #0055ff; -fx-font-weight: bold;"
-                        text="Saját adatok"/>
 
-                <HBox alignment="CENTER_LEFT" layoutX="26.0" layoutY="80.0" spacing="15.0">
-                    <ComboBox fx:id="menuComboBox" prefWidth="180.0" style="-fx-background-color: white;">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Főoldal" />
-                                <String fx:value="Kapuk" />
-                                <String fx:value="Repülők" />
-                                <String fx:value="Repterek" />
-                                <String fx:value="Repülőutak" />
-<!--                                <String fx:value="Terminál" />-->
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
+
+                <!-- FELSŐ SZŰRŐSÁV -->
+                <HBox alignment="CENTER_LEFT"
+                      layoutX="26.0" layoutY="80.0"
+                      spacing="15.0">
+                    <children>
+                        <ComboBox fx:id="menuComboBox"
+                                  prefWidth="180.0"
+                                  style="-fx-background-color: white;">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Főoldal"/>
+                                    <String fx:value="Kapuk"/>
+                                    <String fx:value="Repülők"/>
+                                    <String fx:value="Repterek"/>
+                                    <String fx:value="Repülőutak"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
 
                         <Label style="-fx-font-weight: bold;"
                                text="Reptér választása:"
@@ -83,14 +84,7 @@
                                   promptText="-- Válassz repteret --"
                                   style="-fx-background-color: white;"/>
 
-                        <CheckBox fx:id="filterTodayCheckBox"
-                                  selected="true"
-                                  text="Csak a mai járatok"
-                                  textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="12.0"/>
-                            </font>
-                        </CheckBox>
+
 
                         <Button onAction="#onRefresh"
                                 style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;"

@@ -142,6 +142,20 @@ public class RoutesPageController {
             });
             return row;
         });
+
+        // Ha a fókusz elmegy az induló járatok tábláról, töröljük a kijelölést
+        departuresTable.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                departuresTable.getSelectionModel().clearSelection();
+            }
+        });
+
+        // Ha a fókusz elmegy az érkező járatok tábláról, töröljük a kijelölést
+        arrivalsTable.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                arrivalsTable.getSelectionModel().clearSelection();
+            }
+        });
     }
 
     // ----------------- SZÍNEZÉS LOGIKA (Visszaállítva) -----------------

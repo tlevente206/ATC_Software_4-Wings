@@ -25,10 +25,7 @@
                style="-fx-font-size: 24px; -fx-font-weight: bold;"
                text="Repülőutak és Térkép" />
 
-        <Button layoutX="920" layoutY="14"
-                text="🌗 Téma"
-                onAction="#onToggleTheme"
-                styleClass="theme-toggle button"/>
+
 
         <Button layoutX="1080.0" layoutY="14.0"
                 onAction="#onLogout"
@@ -60,10 +57,11 @@
             <TextField fx:id="searchField" prefWidth="120.0" promptText="Járat / Hely" />
 
             <Button onAction="#onRefresh" text="Frissítés" />
+            <Button text="🌗 Téma"
+                    onAction="#onToggleTheme"
+                    styleClass="theme-toggle button"/>
 
-            <Button onAction="#onShowMap"
-                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;"
-                    text="Járatinformáció (Térkép)" />
+
         </HBox>
 
         <SplitPane dividerPositions="0.5" layoutX="25.0" layoutY="100.0"
@@ -75,6 +73,7 @@
                                text="INDULÓ JÁRATOK"
                                AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
                         <TableView fx:id="departuresTable"
+                                   stylesheets="@../../css/tableview-theme.css"
                                    AnchorPane.bottomAnchor="0.0"
                                    AnchorPane.leftAnchor="0.0"
                                    AnchorPane.rightAnchor="0.0"
@@ -100,6 +99,7 @@
                                text="ÉRKEZŐ JÁRATOK"
                                AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
                         <TableView fx:id="arrivalsTable"
+                                   stylesheets="@../../css/tableview-theme.css"
                                    AnchorPane.bottomAnchor="0.0"
                                    AnchorPane.leftAnchor="0.0"
                                    AnchorPane.rightAnchor="0.0"
