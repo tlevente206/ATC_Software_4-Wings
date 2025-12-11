@@ -10,9 +10,10 @@
     </parent>
     <groupId>com.FourWings</groupId>
     <artifactId>ATC_system</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>ATC_system</name>
     <description>ATC_system</description>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>
@@ -33,10 +34,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -116,7 +113,18 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- Spring Boot plugin: ebből lesz a futtatható JAR -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- verzió általában a parentből jön, ha van spring-boot-starter-parent -->
+                <configuration>
+                    <!-- IDE FIGYELEM: ezt a saját main classodra állítsd! -->
+                    <mainClass>com.FourWings.atcSystem.AtcSystemApplication</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
 
 </project>
