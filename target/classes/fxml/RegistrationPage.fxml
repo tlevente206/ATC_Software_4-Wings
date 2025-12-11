@@ -12,32 +12,79 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.FourWings.atcSystem.frontend.RegistrationPageController">
+            fx:controller="com.FourWings.atcSystem.frontend.RegistrationPageController"
+            style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1d4ed8, #2563eb);">
 
     <children>
         <!-- CÍM -->
-        <Label layoutX="215.0" layoutY="28.0" text="Regisztráció">
+        <Label layoutX="215.0" layoutY="28.0" text="Regisztráció"
+               style="-fx-text-fill: white;">
             <font>
                 <Font size="33.0" />
             </font>
         </Label>
 
         <!-- Felső instrukció -->
-        <Label layoutX="119.0" layoutY="84.0" text="Add meg az adataidat" />
+        <Label layoutX="119.0" layoutY="84.0" text="Add meg az adataidat"
+               style="-fx-text-fill: #e5e7eb;" />
 
         <!-- Mezők -->
-        <TextField fx:id="nevInput" layoutX="98.0" layoutY="109.0" />
-        <TextField fx:id="userInput" layoutX="98.0" layoutY="144.0" />
-        <TextField fx:id="emailInput" layoutX="98.0" layoutY="175.0" />
-        <PasswordField fx:id="passInput" layoutX="98.0" layoutY="206.0" />
-        <TextField fx:id="phoneInput" layoutX="98.0" layoutY="239.0" />
+        <TextField fx:id="nevInput"
+                   layoutX="98.0" layoutY="109.0"
+                   promptText="Név"
+                   style="
+                       -fx-background-radius: 10;
+                       -fx-text-fill: black;
+                       -fx-prompt-text-fill: #9ca3af;
+                   "/>
+
+        <TextField fx:id="userInput"
+                   layoutX="98.0" layoutY="144.0"
+                   promptText="Felhasználónév"
+                   style="
+                       -fx-background-radius: 10;
+                       -fx-text-fill: black;
+                       -fx-prompt-text-fill: #9ca3af;
+                   "/>
+
+        <TextField fx:id="emailInput"
+                   layoutX="98.0" layoutY="175.0"
+                   promptText="E-mail"
+                   style="
+                       -fx-background-radius: 10;
+                       -fx-text-fill: black;
+                       -fx-prompt-text-fill: #9ca3af;
+                   "/>
+
+        <PasswordField fx:id="passInput"
+                       layoutX="98.0" layoutY="206.0"
+                       promptText="Jelszó"
+                       style="
+                           -fx-background-radius: 10;
+                           -fx-text-fill: black;
+                           -fx-prompt-text-fill: #9ca3af;
+                       "/>
+
+        <TextField fx:id="phoneInput"
+                   layoutX="98.0" layoutY="239.0"
+                   promptText="Telefon"
+                   style="
+                       -fx-background-radius: 10;
+                       -fx-text-fill: black;
+                       -fx-prompt-text-fill: #9ca3af;
+                   "/>
 
         <!-- Mezőcímkék -->
-        <Label layoutX="38.0" layoutY="113.0" text="Nev" />
-        <Label layoutX="25.0" layoutY="148.0" text="Felh. nev" />
-        <Label layoutX="32.0" layoutY="179.0" text="E-mail" />
-        <Label layoutX="32.0" layoutY="210.0" text="Jelszo" />
-        <Label layoutX="29.0" layoutY="243.0" text="Telefon" />
+        <Label layoutX="38.0" layoutY="113.0" text="Név"
+               style="-fx-text-fill: #e5e7eb;" />
+        <Label layoutX="25.0" layoutY="148.0" text="Felh. név"
+               style="-fx-text-fill: #e5e7eb;" />
+        <Label layoutX="32.0" layoutY="179.0" text="E-mail"
+               style="-fx-text-fill: #e5e7eb;" />
+        <Label layoutX="32.0" layoutY="210.0" text="Jelszó"
+               style="-fx-text-fill: #e5e7eb;" />
+        <Label layoutX="29.0" layoutY="243.0" text="Telefon"
+               style="-fx-text-fill: #e5e7eb;" />
 
         <!-- PROFILKÉP BLOKK JOBB OLDALT -->
         <HBox layoutX="340.0" layoutY="120.0" spacing="10">
@@ -45,31 +92,61 @@
                 <ImageView fx:id="profileImageView"
                            fitWidth="100" fitHeight="100"
                            preserveRatio="true"
-                           style="-fx-border-color: gray; -fx-border-width: 1;" />
+                           style="
+                               -fx-border-color: #bfdbfe;
+                               -fx-border-width: 2;
+                               -fx-border-radius: 12;
+                               -fx-background-radius: 12;
+                               -fx-background-color: rgba(15,23,42,0.6);
+                           " />
                 <Button text="Profilkép választása"
-                        onAction="#onSelectProfileImage" />
+                        onAction="#onSelectProfileImage"
+                        style="
+                            -fx-background-color: #2563eb;
+                            -fx-text-fill: white;
+                            -fx-background-radius: 999;
+                            -fx-font-weight: bold;
+                            -fx-padding: 6 14 6 14;
+                        " />
             </children>
         </HBox>
 
         <Label fx:id="imageErrorLabel"
                layoutX="340.0"
                layoutY="230.0"
-               textFill="red"/>
+               textFill="red"
+               style="-fx-text-fill: #f97373;" />
 
         <!-- GOMBOK -->
         <Button fx:id="registerButton"
-                layoutX="174.0" layoutY="286.0"
+                layoutX="160.0" layoutY="286.0"
                 mnemonicParsing="false"
                 onAction="#register"
-                text="Regisztracio" />
+                text="Regisztráció"
+                style="
+                    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a);
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                    -fx-background-radius: 999;
+                    -fx-padding: 6 20 6 20;
+                " />
 
         <Button fx:id="backToMainPageButton"
-                layoutX="273.0" layoutY="286.0"
+                layoutX="287.0" layoutY="286.0"
                 mnemonicParsing="false"
                 onAction="#backToMainPage"
-                text="Bejelentkezés" />
+                text="Bejelentkezés"
+                style="
+                    -fx-background-color: transparent;
+                    -fx-border-color: #e5e7eb;
+                    -fx-border-radius: 999;
+                    -fx-text-fill: #e5e7eb;
+                    -fx-padding: 6 18 6 18;
+                " />
 
         <!-- Visszajelző label -->
-        <Label fx:id="registerLabel" layoutX="104.0" layoutY="338.0" />
+        <Label fx:id="registerLabel"
+               layoutX="104.0" layoutY="338.0"
+               style="-fx-text-fill: #fee2e2;" />
     </children>
 </AnchorPane>
